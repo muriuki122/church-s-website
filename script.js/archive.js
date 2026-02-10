@@ -1,276 +1,298 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. STATE AND CONSTANTS ---
-    const ITEMS_PER_PAGE = 9;
+    // --- 1. CONFIGURATION ---
+    const ITEMS_PER_PAGE = 12;
+    let currentLanguage = 'en';
+    let currentPage = 1;
+    let currentPreviewIndex = -1;
+    let currentQuarter = '1';
     let allDocuments = [];
     let mainFilteredDocuments = [];
     let lessonFilteredDocuments = [];
-    let currentPage = 1;
-    let currentLanguage = 'en';
-    let currentPreviewIndex = 0;
-    let currentQuarter = '1';
 
-    // --- 2. TRANSLATIONS WITH NAVIGATION SUPPORT ---
+    // --- 2. TRANSLATIONS ---
     const translations = {
         en: {
-            siteTitle: "PDF Archive",
-            heroTitle: "Explore Our Document Collection",
-            heroSubtitle: "Browse, preview, and download from our extensive library.",
-            searchPlaceholder: "Search documents by title or category...",
-            categoriesTitle: "Categories",
-            documentsTitle: "Documents",
-            footerText: "© 2025 PDF Archive. All rights reserved.",
-            downloadBtn: "Download",
-            previewBtn: "Preview",
-            allCategories: "All Categories",
-            docCount: "documents",
-            noDocuments: "No Documents Found",
-            noDocumentsHelp: "Try adjusting your search or filter criteria.",
-            prevBtn: "Previous",
-            nextBtn: "Next",
-            page: "Page",
-            // Navigation translations
-            navHome: "Home",
-            navWatchOnline: "Watch Online",
-            navAboutUs: "About Us",
-            navArchives: "Archives",
-            navContact: "Contact",
-            // Bible lesson translations
-            bibleLessons: "Bible Lessons",
-            searchLessons: "Search lessons...",
-            noLessons: "No lessons found for this quarter.",
-            memoryVerse: "Memory Verse",
-            viewLesson: "View Lesson",
-            comingSoon: "Coming Soon",
-            lessonNotAvailable: "Lessons for this quarter will be available soon."
+            siteTitle: 'M.T. Zion Archive',
+            navHome: 'Home',
+            navWatchOnline: 'Watch Online',
+            navAboutUs: 'About Us',
+            navArchives: 'Archives',
+            navContact: 'Contact',
+            pageTitle: 'Document Archive',
+            searchPlaceholder: 'Search documents...',
+            categoryFilter: 'All Categories',
+            docCount: 'documents found',
+            previewBtn: 'Preview',
+            downloadBtn: 'Download',
+            prevBtn: 'Previous',
+            nextBtn: 'Next',
+            noDocuments: 'No documents found',
+            noDocumentsHelp: 'Try adjusting your search or filter criteria',
+            allCategories: 'All Categories',
+            lessonsTitle: 'Bible Lessons',
+            lessonsSearch: 'Search lessons...',
+            q1: 'Q1 (Jan-Mar)',
+            q2: 'Q2 (Apr-Jun)',
+            q3: 'Q3 (Jul-Sep)',
+            q4: 'Q4 (Oct-Dec)',
+            comingSoon: 'Coming Soon',
+            lessonNotAvailable: 'This quarter\'s lessons are not available yet.',
+            memoryVerse: 'Memory Verse',
+            viewLesson: 'View Lesson'
         },
         sw: {
-            siteTitle: "Kumbukumbu ya PDF",
-            heroTitle: "Gundua Mkusanyiko Wetu wa Nyaraka",
-            heroSubtitle: "Vinjari, hakiki, na pakua kutoka kwa maktaba yetu pana.",
-            searchPlaceholder: "Tafuta nyaraka kwa jina au kategoria...",
-            categoriesTitle: "Kategoria",
-            documentsTitle: "Nyaraka",
-            footerText: "© 2025 Kumbukumbu ya PDF. Haki zote zimehifadhiwa.",
-            downloadBtn: "Pakua",
-            previewBtn: "Hakiki",
-            allCategories: "Kategoria Zote",
-            docCount: "nyaraka",
-            noDocuments: "Hakuna Nyaraka Zilizopatikana",
-            noDocumentsHelp: "Jaribu kurekebisha utafutaji au kichujio chako.",
-            prevBtn: "Iliyotangulia",
-            nextBtn: "Inayofuata",
-            page: "Ukurasa",
-            // Navigation translations
-            navHome: "Nyumbani",
-            navWatchOnline: "Tazama Mtandaoni",
-            navAboutUs: "Kuhusu Sisi",
-            navArchives: "Kumbukumbu",
-            navContact: "Wasiliana",
-            // Bible lesson translations
-            bibleLessons: "Masomo ya Biblia",
-            searchLessons: "Tafuta masomo...",
-            noLessons: "Hakuna masomo yaliyopatikana kwa robo hii.",
-            memoryVerse: "Sura ya Kumbukumbu",
-            viewLesson: "Tazama Somo",
-            comingSoon: "Inakuja Hivi Karibuni",
-            lessonNotAvailable: "Masomo kwa robo hii yatapatikana hivi karibuni."
+            siteTitle: 'Hifadhidata ya M.T. Zion',
+            navHome: 'Nyumbani',
+            navWatchOnline: 'Tazama Mtandaoni',
+            navAboutUs: 'Kuhusu Sisi',
+            navArchives: 'Maktaba',
+            navContact: 'Wasiliana',
+            pageTitle: 'Maktaba ya Nyaraka',
+            searchPlaceholder: 'Tafuta nyaraka...',
+            categoryFilter: 'Aina Zote',
+            docCount: 'nyaraka zimepatikana',
+            previewBtn: 'Onyesha',
+            downloadBtn: 'Pakua',
+            prevBtn: 'Iliyopita',
+            nextBtn: 'Ifuatayo',
+            noDocuments: 'Hakuna nyaraka zimepatikana',
+            noDocumentsHelp: 'Jaribu kubadilisha utafutaji wako au vigezo vya kuchuja',
+            allCategories: 'Aina Zote',
+            lessonsTitle: 'Masomo ya Biblia',
+            lessonsSearch: 'Tafuta masomo...',
+            q1: 'R1 (Jan-Machi)',
+            q2: 'R2 (Apr-Jun)',
+            q3: 'R3 (Jul-Sep)',
+            q4: 'R4 (Okt-Des)',
+            comingSoon: 'Inakuja Hivi Karibuni',
+            lessonNotAvailable: 'Masomo ya robo hii hayapatikani bado.',
+            memoryVerse: 'Suru ya Kumbukumbu',
+            viewLesson: 'Ona Masomo'
         },
         rw: {
-            siteTitle: "Ububiko bwa PDF",
-            heroTitle: "Shakisha Itsinda ry'Inyandiko Zacu",
-            heroSubtitle: "Rondora, urebe mbere, kandi ukuremo amakuru mu bubiko bwacu bwagutse.",
-            searchPlaceholder: "Shakisha inyandiko ku mutwe cyangwa icyiciro...",
-            categoriesTitle: "Ibyiciro",
-            documentsTitle: "Inyandiko",
-            footerText: "© 2025 Ububiko bwa PDF. Amahoro yose arinda.",
-            downloadBtn: "Kuramo",
-            previewBtn: "Reba mbere",
-            allCategories: "Ibyiciro Byose",
-            docCount: "inyandiko",
-            noDocuments: "Nta Nyandiko Zabonetse",
-            noDocumentsHelp: "Gerageza guhindura ushakisha cyangwa ibisanzwe.",
-            prevBtn: "Ibanjirije",
-            nextBtn: "Ikurikira",
-            page: "Urupapuro",
-            // Navigation translations
-            navHome: "Ahabanza",
-            navWatchOnline: "Reba kuri interineti",
-            navAboutUs: "Twebwe",
-            navArchives: "Ububiko",
-            navContact: "Twandikire",
-            // Bible lesson translations
-            bibleLessons: "Amasomo y'ibitabo",
-            searchLessons: "Shakisha amasomo...",
-            noLessons: "Nta masomo yabonetse muri iyi gahunda.",
-            memoryVerse: "Umugani wo kumibwa",
-            viewLesson: "Reba Somo",
-            comingSoon: "Uza Hivi Karibuni",
-            lessonNotAvailable: "Amasomo muri iyi gahunda azaba hivi karibuni."
+            siteTitle: 'Ububiko bwa M.T. Zion',
+            navHome: 'Ahabanza',
+            navWatchOnline: 'Kureba kuri Interineti',
+            navAboutUs: 'Ibyerekeye',
+            navArchives: 'Ububiko',
+            navContact: 'Twandikire',
+            pageTitle: 'Ububiko bwa Inyandiko',
+            searchPlaceholder: 'Shakisha inyandiko...',
+            categoryFilter: 'Amitwe Yose',
+            docCount: 'inyandiko zabonetse',
+            previewBtn: 'Kureba',
+            downloadBtn: 'Kureka',
+            prevBtn: 'Ibura',
+            nextBtn: 'Ikurikira',
+            noDocuments: 'Nta nyandiko zabonetse',
+            noDocumentsHelp: 'Gerageza guhindura ishakisha ryawe canke ibipimo byo gukurikiza',
+            allCategories: 'Amitwe Yose',
+            lessonsTitle: 'Amasomo ya Bibiliya',
+            lessonsSearch: 'Shakisha amasomo...',
+            q1: 'S1 (Mut-Wer)',
+            q2: 'S2 (Msh-Gic',
+            q3: 'S3 (Kam-Nze',
+            q4: 'S4 (Uku-Gic',
+            comingSoon: 'Kuzagera Vuba',
+            lessonNotAvailable: 'Amasomo ya kwegi siyaboneka bityo.',
+            memoryVerse: 'Umugabane Wibuka',
+            viewLesson: 'Kureba Amasomo'
         }
     };
 
     // --- 3. BIBLE LESSONS DATA ---
-    // This structure allows you to easily update lessons for each quarter
-    // Simply add or modify lessons in the appropriate quarter array
     const bibleLessons = {
-        1: { // Q1 (January - March)
-            title: "First Quarter 2026",
+        1: {
+            title: 'First Quarter (January-March)',
             available: true,
             lessons: [
                 {
-                    id: "q1-1",
-                    title: "First Quarter Lesson 2026",
-                    date: "January - March 2026",
-                    description: "Quarterly Bible study lessons for spiritual growth and understanding.",
-                    memoryVerse: "Study to shew thyself approved unto God - 2 Timothy 2:15",
-                    pdfUrl: "lessons/Lesson 1st quarter 2026- FINAL.pdf"
+                    id: 'q1-1',
+                    title: 'Lesson 1: The Creation',
+                    date: 'January 7, 2024',
+                    description: 'Understanding the creation story and its significance.',
+                    memoryVerse: 'In the beginning God created the heavens and the earth. - Genesis 1:1',
+                    pdfUrl: 'lessons/q1/lesson-1-creation.pdf'
+                },
+                {
+                    id: 'q1-2',
+                    title: 'Lesson 2: The Fall',
+                    date: 'January 14, 2024',
+                    description: 'The story of Adam and Eve and the consequences of sin.',
+                    memoryVerse: 'For the wages of sin is death, but the gift of God is eternal life. - Romans 6:23',
+                    pdfUrl: 'lessons/q1/lesson-2-fall.pdf'
+                },
+                {
+                    id: 'q1-3',
+                    title: 'Lesson 3: The Flood',
+                    date: 'January 21, 2024',
+                    description: 'Noah\'s ark and God\'s promise of redemption.',
+                    memoryVerse: 'But Noah found favor in the eyes of the LORD. - Genesis 6:8',
+                    pdfUrl: 'lessons/q1/lesson-3-flood.pdf'
                 }
             ]
         },
-        2: { // Q2 (April - June)
-            title: "Second Quarter 2026",
+        2: {
+            title: 'Second Quarter (April-June)',
+            available: true,
+            lessons: [
+                {
+                    id: 'q2-1',
+                    title: 'Lesson 1: Abraham\'s Call',
+                    date: 'April 7, 2024',
+                    description: 'God\'s call to Abraham and the promise of descendants.',
+                    memoryVerse: 'The LORD had said to Abram, "Go from your country... to the land I will show you." - Genesis 12:1',
+                    pdfUrl: 'lessons/q2/lesson-1-abraham-call.pdf'
+                },
+                {
+                    id: 'q2-2',
+                    title: 'Lesson 2: Isaac and Jacob',
+                    date: 'April 14, 2024',
+                    description: 'The continuation of God\'s promise through Isaac and Jacob.',
+                    memoryVerse: 'I am with you and will watch over you wherever you go. - Genesis 28:15',
+                    pdfUrl: 'lessons/q2/lesson-2-isaac-jacob.pdf'
+                }
+            ]
+        },
+        3: {
+            title: 'Third Quarter (July-September)',
             available: false,
             lessons: []
         },
-        3: { // Q3 (July - September)
-            title: "Third Quarter 2026",
-            available: false,
-            lessons: []
-        },
-        4: { // Q4 (October - December)
-            title: "Fourth Quarter 2026",
+        4: {
+            title: 'Fourth Quarter (October-December)',
             available: false,
             lessons: []
         }
     };
 
-    // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
+    // --- 4. HELPER FUNCTIONS ---
     function getDocumentPath(doc) {
-        // Check if the fileName already includes a folder path
-        if (doc.fileName && doc.fileName.includes('/')) {
-            return doc.fileName; // Already has the correct path (e.g., "tracks/filename.pdf" or "judah/filename.pdf")
-        } else if (doc.pdfUrl) {
-            return doc.pdfUrl; // For Bible lessons
-        } else {
-            return `pdfs/${doc.fileName}`; // Add pdfs/ prefix for Books
+        // Check if it's a lesson (has pdfUrl property)
+        if (doc.pdfUrl) {
+            return doc.pdfUrl;
         }
+        
+        // Check if it's a regular document with fileName
+        if (doc.fileName) {
+            return `documents/${doc.fileName}`;
+        }
+        
+        // Fallback for documents without fileName
+        const category = doc.category || 'uncategorized';
+        const title = doc.title.replace(/\s+/g, '-').toLowerCase();
+        return `documents/${category}/${title}.pdf`;
     }
 
-    // --- 5. YOUR REAL DOCUMENT DATA ---
+    // --- 5. DOCUMENT DATA ---
     function getDocumentData() {
         return [
-            // BOOKS - PDFs in the pdfs folder
-            { id: 1, title: "Babylon Mystery Religion", category: "Books", fileName: "Babylon-Mystery-Religion-by-Ralph-Woodrow-1981.pdf" },
-            { id: 2, title: "Complete Jewish Bible", category: "Books", fileName: "Complete-Jewish-Bible.pdf" },
-            { id: 3, title: "Dugger Porter Debate", category: "Books", fileName: "Dugger-Porter-Debate.pdf" },
-            { id: 4, title: "Fox's Book of Martyrs", category: "Books", fileName: "FOXs-BOOK-of-MARTYRS.pdf" },
-            { id: 5, title: "Forty Points of Doctrine", category: "Books", fileName: "FortyPointsOfDoctrine.pdf" },
-            { id: 6, title: "The Bible Home Instructor", category: "Books", fileName: "THE-BIBLE-HOME-INSTRUCTOR.pdf" },
-            { id: 7, title: "The Two Babylons", category: "Books", fileName: "The-Two-Babylons.pdf" },
-            { id: 8, title: "A History of the True Church", category: "Books", fileName: "A-History-of-the-True-Church-Dugger-and-Dodd.pdf" },
-
-            // TRACTS - PDFs in the tracks folder
-            { id: 9, title: "Beginning and Ending of God's Day", category: "Tracts", fileName: "tracks/Beginning_and_Ending_of_Gods_Day.pdf" },
-            { id: 10, title: "Biblical Doctrine of Predestination", category: "Tracts", fileName: "tracks/Biblical-Doctrine-of-Predestination.pdf" },
-            { id: 11, title: "Coming Home", category: "Tracts", fileName: "tracks/Coming-Home.pdf" },
-            { id: 12, title: "Crises Dates in Bible Prophecy", category: "Tracts", fileName: "tracks/Crises-Dates-in-Bible-Prophecy.pdf" },
-            { id: 13, title: "Daniel", category: "Tracts", fileName: "tracks/DANIEL.pdf" },
-            { id: 14, title: "Death in the Kitchen", category: "Tracts", fileName: "tracks/Death-in-the-Kitchen.pdf" },
-            { id: 15, title: "Deliverance from Plagues", category: "Tracts", fileName: "tracks/Deliverance-from-plaques-is-knowing-his-number.pdf" },
-            { id: 16, title: "Doctrine and History of the True Religion", category: "Tracts", fileName: "tracks/Doctrine-and-History-of-the-True-Religion.pdf" },
-            { id: 17, title: "Doctrine and History of the Primitive Church", category: "Tracts", fileName: "tracks/Doctrine-and-history-of-the-primitive-church.pdf" },
-            { id: 18, title: "Does It Make Difference", category: "Tracts", fileName: "tracks/Does-it-make-difference.pdf" },
-            { id: 19, title: "Does the Bible Contradict Itself", category: "Tracts", fileName: "tracks/Does-the-Bible-Contradict-Itself.pdf" },
-            { id: 20, title: "Easter, Christmas And Sunday Were Pagan", category: "Tracts", fileName: "tracks/Easter-Christmas-And-Sunday-Were-Pagan.pdf" },
-            { id: 21, title: "Explanation of Common Texts Against the Bible Sabbath", category: "Tracts", fileName: "tracks/Explanation-of-common-texts-used-against-the-Bible-Sabbath.pdf" },
-            { id: 22, title: "Forty Reasons Why The 7th Day Sabbath Should Be Kept", category: "Tracts", fileName: "tracks/Forty-Reasons-Why-The-7th-Day-Sabbath-Should-Be-Kept.pdf" },
-            { id: 23, title: "Hell - What and Where is it", category: "Tracts", fileName: "tracks/Hell-What-and-Where-is-it.pdf" },
-            { id: 24, title: "How Old is Your Church", category: "Tracts", fileName: "tracks/How-old-is-your-Church.pdf" },
-            { id: 25, title: "I Will Bless Them That Bless Thee", category: "Tracts", fileName: "tracks/I-will-Bless-Them-That-Bless-Thee.pdf" },
-            { id: 26, title: "Israel 3", category: "Tracts", fileName: "tracks/Israel3.pdf" },
-            { id: 27, title: "Israel's God - A Reality or a Myth", category: "Tracts", fileName: "tracks/Israels-God-a-Reality-or-a-Myth.pdf" },
-            { id: 28, title: "Judah - Failure to Stand by Her Agreed Test", category: "Tracts", fileName: "tracks/Judah-Failure-to-Stand-by-Her-Agreed-Test-of-Over-1900-Years-Ago-But-many-are-now.pdf" },
-            { id: 29, title: "Mt. Zion Reporter", category: "Tracts", fileName: "tracks/Mt-Zion-Reporter_AN-Dugger.pdf" },
-            { id: 30, title: "Mt. Sinai Speaks Once More", category: "Tracts", fileName: "tracks/Mt.-Sinai-Speaks-Once-More.pdf" },
-            { id: 31, title: "One Door for the Gentiles to Enter", category: "Tracts", fileName: "tracks/One-door-for-the-Gentiles-to-enter.pdf" },
-            { id: 32, title: "Passover and Lord's Supper", category: "Tracts", fileName: "tracks/Passover_and_Lords_Supper.pdf" },
-            { id: 33, title: "Punishment of the Wicked", category: "Tracts", fileName: "tracks/Punishment-of-the-wicked.pdf" },
-            { id: 34, title: "Reasons Why Seven Last Plagues Are in the Future", category: "Tracts", fileName: "tracks/REASONS-WHY-SEVEN-LAST-PLAQUES-ARE-IN-THE-FUTURE.pdf" },
-            { id: 35, title: "Revelation", category: "Tracts", fileName: "tracks/REVELATION.pdf" },
-            { id: 36, title: "Search the Scriptures", category: "Tracts", fileName: "tracks/Search-the-scriptures.pdf" },
-            { id: 37, title: "The Resurrection of Christ", category: "Tracts", fileName: "tracks/THE-RESURRECTION-OF-CHRIST.pdf" },
-            { id: 38, title: "The Bible Name for the Church", category: "Tracts", fileName: "tracks/The-Bible-Name-for-the-Church.pdf" },
-            { id: 39, title: "The Daughter of Jerusalem and the Daughter of Babylon", category: "Tracts", fileName: "tracks/The-Daughter-of-Jerusalem-and-the-Daughter-of-Babylon.pdf" },
-            { id: 40, title: "The Greatest Discovery of the Age - Noah's Ark Found", category: "Tracts", fileName: "tracks/The-Greatest-Discovery-of-the-Age-Noahs-Ark-Found.pdf" },
-            { id: 41, title: "The Greatest Miracle of the Age - The Re-birth of Israel", category: "Tracts", fileName: "tracks/The-Greatest-Miracle-of-the-Age-The-Re-birth-of-Israel.pdf" },
-            { id: 42, title: "The Holy Spirit", category: "Tracts", fileName: "tracks/The-Holy-Spirit.pdf" },
-            { id: 43, title: "The Law of the Spirit of Life", category: "Tracts", fileName: "tracks/The-Law-of-the-Spirit-of-Life.pdf" },
-            { id: 44, title: "The Pending World Scourge - Daniel and Revelation", category: "Tracts", fileName: "tracks/The-Pending-World-Scourage-Daniel-and-Revelation.pdf" },
-            { id: 45, title: "The Restoration of the Kingdom to Israel", category: "Tracts", fileName: "tracks/The-Restoration-of-the-Kingdom-to-Israel.pdf" },
-            { id: 46, title: "The Ten Tribes of Israel - Not Lost but Found", category: "Tracts", fileName: "tracks/The-Ten-Tribes-of-Israel-Not-lost-hut-found.pdf" },
-            { id: 47, title: "The End of the World", category: "Tracts", fileName: "tracks/The-end-of-the-world.pdf" },
-            { id: 48, title: "The Eternal Abode of the Righteous", category: "Tracts", fileName: "tracks/The-eternal-abode-of-the-righteous.pdf" },
-            { id: 49, title: "The Law of God versus Devil's Scrapbook", category: "Tracts", fileName: "tracks/The-law-of-God-versus-Devils-scrapbook.pdf" },
-            { id: 50, title: "The Living Truth", category: "Tracts", fileName: "tracks/The-living-Truth.pdf" },
-            { id: 51, title: "The Mirror of God", category: "Tracts", fileName: "tracks/The-mirror-of-God.pdf" },
-            { id: 52, title: "Why I Am Not a Seventh Day Adventist", category: "Tracts", fileName: "tracks/WHY-I-AM-NOT-A-SEVENTH-DAY-ADVENTIST.pdf" },
-            { id: 53, title: "Was Man Created", category: "Tracts", fileName: "tracks/Was-Man-Created.pdf" },
-            { id: 54, title: "Was Peter the Foundation Rock", category: "Tracts", fileName: "tracks/Was-Peter-the-Foundation-Rock.pdf" },
-            { id: 55, title: "What Is the Real Baptism Doctrine", category: "Tracts", fileName: "tracks/What-Is-the-Real-Baptism-Doctrine.pdf" },
-            { id: 56, title: "What Was Abolished By Christ", category: "Tracts", fileName: "tracks/What-Was-Abolished-By-Christ.pdf" },
-            { id: 57, title: "Which Day is The Sabbath", category: "Tracts", fileName: "tracks/Which-Day-is-The-Sabbath.pdf" },
-            { id: 58, title: "Who Are The Messianic Jews In Israel", category: "Tracts", fileName: "tracks/Who-Are-The-Messianic-Jews-In-Israel.pdf" },
-            { id: 59, title: "Why Not Talk to God About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
-            { id: 60, title: "Has Our Messiah Come", category: "Tracts", fileName: "tracks/has-our-messiah-come-better.pdf" },
-            { id: 61, title: "Why Israel is Here to Stay", category: "Tracts", fileName: "tracks/why-israel-is-here-to-stay-potrait.pdf" },
-            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year of deception.pdf" },
-
-            // JUDAH - PDFs in the judah folder
-            { id: 63, title: "Judah/72-sebat", category: "Judah", fileName: "judah/72-Sebat.pdf" },
-            { id: 64, title: "Judah/78 Tebet", category: "Judah", fileName: "judah/78-Tibet.pdf" },
-            { id: 65, title: "Judah/96 Nov", category: "Judah", fileName: "judah/96-Nov.pdf" },
-            { id: 66, title: "Judah/98 july", category: "Judah", fileName: "judah/98-July.pdf" },
-            // Removed duplicate ID 67
-            { id: 68, title: "Judah/91 Sept", category: "Judah", fileName: "judah/91-Sept.pdf" },
-            { id: 69, title: "Judah/83 Tebet", category: "Judah", fileName: "judah/83-Tibet.pdf" },
-            { id: 70, title: "Judah/94 Dec", category: "Judah", fileName: "judah/94-Dec.pdf" },
-            { id: 71, title: "Judah/80 Tebet", category: "Judah", fileName: "judah/80-Tebet.pdf" },
-            { id: 72, title: "Judah/81 Elul", category: "Judah", fileName: "judah/81-Elul.pdf" },
-            { id: 73, title: "Judah/90 Alul", category: "Judah", fileName: "judah/90-Alul.pdf" },
-            { id: 74, title: "Judah/89 Bul", category: "Judah", fileName: "judah/89-Bul.pdf" },
-            { id: 75, title: "Judah/81 Bul", category: "Judah", fileName: "judah/81-Bul.pdf" },
-            { id: 76, title: "Judah/79 Sivan", category: "Judah", fileName: "judah/79-Sivan.pdf" },
-            { id: 77, title: "Judah 71 Tebet", category: "Judah", fileName: "judah/71-Tebet.pdf" },
-            { id: 78, title: "Judah/87 Zif", category: "Judah", fileName: "judah/87-Zif.pdf" },
-            { id: 79, title: "Judah/85 July", category: "Judah", fileName: "judah/85-July.pdf" },
-            { id: 80, title: "Judah/84 Chisleu", category: "Judah", fileName: "judah/84-Chisleu.pdf" },
-            { id: 81, title: "Judah/83 July", category: "Judah", fileName: "judah/83-July.pdf" },
-            { id: 82, title: "Judah/78 Elul", category: "Judah", fileName: "judah/78-Elul.pdf" },
-            { id: 83, title: "Judah/79 Bul", category: "Judah", fileName: "judah/79-Bul.pdf" },
-            { id: 84, title: "Judah/80 Elul", category: "Judah", fileName: "judah/80-Elul.pdf" },
-            { id: 85, title: "Judah/81 sivan", category: "Judah", fileName: "judah/81-Sivan.pdf" },
-            { id: 86, title: "Judah/82 Bul-chisleu", category: "Judah", fileName: "judah/82-Bul-Chisleu.pdf" },
-            { id: 87, title: "Judah/82 Elul", category: "Judah", fileName: "judah/82-Elul.pdf" },
-            { id: 88, title: "Judah/88 Sivan", category: "Judah", fileName: "judah/88-Sivan.pdf" },
-            { id: 89, title: "Judah/82 NovDec", category: "Judah", fileName: "judah/Judah-82-NovDec.pdf" },
-            { id: 90, title: "Judah/86 Aug", category: "Judah", fileName: "judah/Judah-86Aug.pdf" },
-            { id: 91, title: "Judah/91", category: "Judah", fileName: "judah/Judah-91.pdf" },
-            { id: 92, title: "Judah/Feb 1970", category: "Judah", fileName: "judah/Feb-1970.pdf" },
-            { id: 93, title: "Judah/Jan-Feb-1977", category: "Judah", fileName: "judah/Jan-Feb-1977.pdf" },
-            { id: 94, title: "Judah/Jan 1974", category: "Judah", fileName: "judah/Jan-1974.pdf" },
-            { id: 95, title: "Judah/Jan-1971", category: "Judah", fileName: "judah/Jan-1971.pdf" },
-            { id: 96, title: "Judah/July-1970", category: "Judah", fileName: "judah/July-1970.pdf" },
-            { id: 97, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974.pdf" },
-            { id: 98, title: "Judah/June 1974", category: "Judah", fileName: "judah/Judah-June-1974.pdf" },
-            { id: 99, title: "Judah/July 1974", category: "Judah", fileName: "judah/Judah-July-1974.pdf" },
-            { id: 100, title: "Judah/Octomber 1971", category: "Judah", fileName: "judah/Judah-Oct-1971.pdf" },
-            { id: 101, title: "Judah/Sept 1974", category: "Judah", fileName: "judah/Judah-Sep-1974.pdf" },
-            { id: 102, title: "Judah/Sept 1956", category: "Judah", fileName: "judah/MZR1956Sept.pdf" },
-            { id: 103, title: "Judah/82 Nisan", category: "Judah", fileName: "judah/82-Nisan.pdf" },
-            { id: 104, title: "Judah/july 80", category: "Judah", fileName: "judah/80-July.pdf" },
+            { id: 1, title: "M.T. Zion Report 2024", category: "m.t zion report", fileName: "m.t-zion/2024-report.pdf" },
+            { id: 2, title: "SEP Report 2023", category: "Sep Reports", fileName: "sep/2023-report.pdf" },
+            { id: 3, title: "Judah Report 2023", category: "Judah Reports", fileName: "judah/2023-report.pdf" },
+            { id: 4, title: "Date Report 2023", category: "Date Reports", fileName: "date/2023-report.pdf" },
+            { id: 5, title: "Elul Report 2023", category: "Elul pdf", fileName: "elul/2023-report.pdf" },
+            { id: 6, title: "Sebat Report 2023", category: "Sebat pdf", fileName: "sebat/2023-report.pdf" },
+            { id: 7, title: "Bul Report 2023", category: "Bul pdf", fileName: "bul/2023-report.pdf" },
+            { id: 8, title: "Chisleu Report 2023", category: "Chisleu pdf", fileName: "chisleu/2023-report.pdf" },
+            { id: 9, title: "Zif Report 2023", category: "Zif pdf", fileName: "zif/2023-report.pdf" },
+            { id: 10, title: "Zif Sivan Report 2023", category: "Zif sivan pdf", fileName: "zif-sivan/2023-report.pdf" },
+            { id: 11, title: "Tibet Report 2023", category: "Tibet pdf", fileName: "tibet/2023-report.pdf" },
+            { id: 12, title: "Ethanim Report 2023", category: "Ethanim pdf", fileName: "ethanim/2023-report.pdf" },
+            { id: 13, title: "Sivan Report 2023", category: "Sivan pdf", fileName: "sivan/2023-report.pdf" },
+            { id: 14, title: "Tebet Report 2023", category: "Tebet pdf", fileName: "tebet/2023-report.pdf" },
+            { id: 15, title: "Chesleu Report 2023", category: "Chesleu pdf", fileName: "chesleu/2023-report.pdf" },
+            { id: 16, title: "Bul Chisleu Report 2023", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2023-report.pdf" },
+            { id: 17, title: "Nisan Report 2023", category: "Nisan pdf", fileName: "nisan/2023-report.pdf" },
+            { id: 18, title: "July Report 2023", category: "July pdf", fileName: "july/2023-report.pdf" },
+            { id: 19, title: "March Report 2023", category: "March pdf", fileName: "march/2023-report.pdf" },
+            { id: 20, title: "May Report 2023", category: "May pdf", fileName: "may/2023-report.pdf" },
+            { id: 21, title: "Sivan Lesson", category: "sivan", fileName: "sivan/lesson.pdf" },
+            { id: 22, title: "Sebat Lesson", category: "sebat", fileName: "sebat/lesson.pdf" },
+            { id: 23, title: "M.T. Zion Report 2022", category: "m.t zion report", fileName: "m.t-zion/2022-report.pdf" },
+            { id: 24, title: "SEP Report 2022", category: "Sep Reports", fileName: "sep/2022-report.pdf" },
+            { id: 25, title: "Judah Report 2022", category: "Judah Reports", fileName: "judah/2022-report.pdf" },
+            { id: 26, title: "Date Report 2022", category: "Date Reports", fileName: "date/2022-report.pdf" },
+            { id: 27, title: "Elul Report 2022", category: "Elul pdf", fileName: "elul/2022-report.pdf" },
+            { id: 28, title: "Sebat Report 2022", category: "Sebat pdf", fileName: "sebat/2022-report.pdf" },
+            { id: 29, title: "Bul Report 2022", category: "Bul pdf", fileName: "bul/2022-report.pdf" },
+            { id: 30, title: "Chisleu Report 2022", category: "Chisleu pdf", fileName: "chisleu/2022-report.pdf" },
+            { id: 31, title: "Zif Report 2022", category: "Zif pdf", fileName: "zif/2022-report.pdf" },
+            { id: 32, title: "Zif Sivan Report 2022", category: "Zif sivan pdf", fileName: "zif-sivan/2022-report.pdf" },
+            { id: 33, title: "Tibet Report 2022", category: "Tibet pdf", fileName: "tibet/2022-report.pdf" },
+            { id: 34, title: "Ethanim Report 2022", category: "Ethanim pdf", fileName: "ethanim/2022-report.pdf" },
+            { id: 35, title: "Sivan Report 2022", category: "Sivan pdf", fileName: "sivan/2022-report.pdf" },
+            { id: 36, title: "Tebet Report 2022", category: "Tebet pdf", fileName: "tebet/2022-report.pdf" },
+            { id: 37, title: "Chesleu Report 2022", category: "Chesleu pdf", fileName: "chesleu/2022-report.pdf" },
+            { id: 38, title: "Bul Chisleu Report 2022", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2022-report.pdf" },
+            { id: 39, title: "Nisan Report 2022", category: "Nisan pdf", fileName: "nisan/2022-report.pdf" },
+            { id: 40, title: "July Report 2022", category: "July pdf", fileName: "july/2022-report.pdf" },
+            { id: 41, title: "March Report 2022", category: "March pdf", fileName: "march/2022-report.pdf" },
+            { id: 42, title: "May Report 2022", category: "May pdf", fileName: "may/2022-report.pdf" },
+            { id: 43, title: "M.T. Zion Report 2021", category: "m.t zion report", fileName: "m.t-zion/2021-report.pdf" },
+            { id: 44, title: "SEP Report 2021", category: "Sep Reports", fileName: "sep/2021-report.pdf" },
+            { id: 45, title: "Judah Report 2021", category: "Judah Reports", fileName: "judah/2021-report.pdf" },
+            { id: 46, title: "Date Report 2021", category: "Date Reports", fileName: "date/2021-report.pdf" },
+            { id: 47, title: "Elul Report 2021", category: "Elul pdf", fileName: "elul/2021-report.pdf" },
+            { id: 48, title: "Sebat Report 2021", category: "Sebat pdf", fileName: "sebat/2021-report.pdf" },
+            { id: 49, title: "Bul Report 2021", category: "Bul pdf", fileName: "bul/2021-report.pdf" },
+            { id: 50, title: "Chisleu Report 2021", category: "Chisleu pdf", fileName: "chisleu/2021-report.pdf" },
+            { id: 51, title: "Zif Report 2021", category: "Zif pdf", fileName: "zif/2021-report.pdf" },
+            { id: 52, title: "Zif Sivan Report 2021", category: "Zif sivan pdf", fileName: "zif-sivan/2021-report.pdf" },
+            { id: 53, title: "Tibet Report 2021", category: "Tibet pdf", fileName: "tibet/2021-report.pdf" },
+            { id: 54, title: "Ethanim Report 2021", category: "Ethanim pdf", fileName: "ethanim/2021-report.pdf" },
+            { id: 55, title: "Sivan Report 2021", category: "Sivan pdf", fileName: "sivan/2021-report.pdf" },
+            { id: 56, title: "Tebet Report 2021", category: "Tebet pdf", fileName: "tebet/2021-report.pdf" },
+            { id: 57, title: "Chesleu Report 2021", category: "Chesleu pdf", fileName: "chesleu/2021-report.pdf" },
+            { id: 58, title: "Bul Chisleu Report 2021", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2021-report.pdf" },
+            { id: 59, title: "Nisan Report 2021", category: "Nisan pdf", fileName: "nisan/2021-report.pdf" },
+            { id: 60, title: "July Report 2021", category: "July pdf", fileName: "july/2021-report.pdf" },
+            { id: 61, title: "March Report 2021", category: "March pdf", fileName: "march/2021-report.pdf" },
+            { id: 62, title: "May Report 2021", category: "May pdf", fileName: "may/2021-report.pdf" },
+            { id: 63, title: "M.T. Zion Report 2020", category: "m.t zion report", fileName: "m.t-zion/2020-report.pdf" },
+            { id: 64, title: "SEP Report 2020", category: "Sep Reports", fileName: "sep/2020-report.pdf" },
+            { id: 65, title: "Judah Report 2020", category: "Judah Reports", fileName: "judah/2020-report.pdf" },
+            { id: 66, title: "Date Report 2020", category: "Date Reports", fileName: "date/2020-report.pdf" },
+            { id: 67, title: "Elul Report 2020", category: "Elul pdf", fileName: "elul/2020-report.pdf" },
+            { id: 68, title: "Sebat Report 2020", category: "Sebat pdf", fileName: "sebat/2020-report.pdf" },
+            { id: 69, title: "Bul Report 2020", category: "Bul pdf", fileName: "bul/2020-report.pdf" },
+            { id: 70, title: "Chisleu Report 2020", category: "Chisleu pdf", fileName: "chisleu/2020-report.pdf" },
+            { id: 71, title: "Zif Report 2020", category: "Zif pdf", fileName: "zif/2020-report.pdf" },
+            { id: 72, title: "Zif Sivan Report 2020", category: "Zif sivan pdf", fileName: "zif-sivan/2020-report.pdf" },
+            { id: 73, title: "Tibet Report 2020", category: "Tibet pdf", fileName: "tibet/2020-report.pdf" },
+            { id: 74, title: "Ethanim Report 2020", category: "Ethanim pdf", fileName: "ethanim/2020-report.pdf" },
+            { id: 75, title: "Sivan Report 2020", category: "Sivan pdf", fileName: "sivan/2020-report.pdf" },
+            { id: 76, title: "Tebet Report 2020", category: "Tebet pdf", fileName: "tebet/2020-report.pdf" },
+            { id: 77, title: "Chesleu Report 2020", category: "Chesleu pdf", fileName: "chesleu/2020-report.pdf" },
+            { id: 78, title: "Bul Chisleu Report 2020", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2020-report.pdf" },
+            { id: 79, title: "Nisan Report 2020", category: "Nisan pdf", fileName: "nisan/2020-report.pdf" },
+            { id: 80, title: "July Report 2020", category: "July pdf", fileName: "july/2020-report.pdf" },
+            { id: 81, title: "March Report 2020", category: "March pdf", fileName: "march/2020-report.pdf" },
+            { id: 82, title: "May Report 2020", category: "May pdf", fileName: "may/2020-report.pdf" },
+            { id: 83, title: "Judah/98-Chisleu", category: "Judah", fileName: "judah/98-Chisleu.pdf" },
+            { id: 84, title: "Judah/99-Tebet", category: "Judah", fileName: "judah/99-Tebet.pdf" },
+            { id: 85, title: "Judah/97-Sebat", category: "Judah", fileName: "judah/97-Sebat.pdf" },
+            { id: 86, title: "Judah/96-Nisan", category: "Judah", fileName: "judah/96-Nisan.pdf" },
+            { id: 87, title: "Judah/95-Iyar", category: "Judah", fileName: "judah/95-Iyar.pdf" },
+            { id: 88, title: "Judah/99-Sivan", category: "Judah", fileName: "judah/99-Sivan.pdf" },
+            { id: 89, title: "Judah/95-Tammuz", category: "Judah", fileName: "judah/95-Tammuz.pdf" },
+            { id: 90, title: "Judah/95-Ab", category: "Judah", fileName: "judah/95-Ab.pdf" },
+            { id: 91, title: "Judah/95-Elul", category: "Judah", fileName: "judah/95-Elul.pdf" },
+            { id: 92, title: "Judah/94-Tisri", category: "Judah", fileName: "judah/94-Tisri.pdf" },
+            { id: 93, title: "Judah/96-March", category: "Judah", fileName: "judah/96-March.pdf" },
+            { id: 94, title: "Judah/94-Heshvan", category: "Judah", fileName: "judah/94-Heshvan.pdf" },
+            { id: 95, title: "Judah/94-Chisleu", category: "Judah", fileName: "judah/94-Chisleu.pdf" },
+            { id: 96, title: "Judah/94-Tebet", category: "Judah", fileName: "judah/94-Tebet.pdf" },
+            { id: 97, title: "Judah/93-Sebat", category: "Judah", fileName: "judah/93-Sebat.pdf" },
+            { id: 98, title: "Judah/93-Adar", category: "Judah", fileName: "judah/93-Adar.pdf" },
+            { id: 99, title: "Judah/93-Nisan", category: "Judah", fileName: "judah/93-Nisan.pdf" },
+            { id: 100, title: "Judah/93-Iyar", category: "Judah", fileName: "judah/93-Iyar.pdf" },
+            { id: 101, title: "Judah/93-Sivan", category: "Judah", fileName: "judah/93-Sivan.pdf" },
+            { id: 102, title: "Judah/93-Tammuz", category: "Judah", fileName: "judah/93-Tammuz.pdf" },
+            { id: 103, title: "Judah/93-Ab", category: "Judah", fileName: "judah/93-Ab.pdf" },
+            { id: 104, title: "Judah/93-Elul", category: "Judah", fileName: "judah/93-Elul.pdf" },
             { id: 105, title: "Judah/83 Elul", category: "Judah", fileName: "judah/83-Elul.pdf" },
             { id: 106, title: "Judah/98 Nov", category: "Judah", fileName: "judah/98-Nov.pdf" },
-            // Removed duplicate ID 107
             { id: 108, title: "Judah/96-August", category: "Judah", fileName: "judah/96-Aug.pdf" },
             { id: 109, title: "Judah/88-Bul", category: "Judah", fileName: "judah/88-Bul.pdf" },
             { id: 110, title: "Judah/85-Chisleu", category: "Judah", fileName: "judah/85-Chesleu.pdf" },
@@ -397,13 +419,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // List of categories that should appear in the Lesson Sidebar
-    // Admin: Add or remove category names here to move them between the grid and sidebar
     const lessonCategories = [
         'Judah Reports', 'Sep Reports', 'm.t zion report',
         'Date Reports', 'Elul pdf', 'Sebat pdf', 'Bul pdf',
         'Chisleu pdf', 'Zif pdf', 'Zif sivan pdf', 'Zif sivan 1 pdf',
         'Tibet pdf', 'Ethanim pdf', 'Sivan pdf', 'Tebet pdf',
-        'Chesleu pdf', 'Bul-chisleu pdf', 'Nisan pdf', 'July pdf', 'March pdf', 'May pdf', 'sivan', 'sebat'
+        'Chesleu pdf', 'Bul-chisleu pdf', 'Nisan pdf', 'July pdf', 
+        'March pdf', 'May pdf', 'sivan', 'sebat'
     ];
 
     function handleMainFilterChange() {
@@ -411,12 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = categoryFilter.value;
 
         mainFilteredDocuments = allDocuments.filter(doc => {
-            // Rule: Lessons don't show up in the main grid unless explicitly filtered by category?
-            // Actually, let's keep the grid for EVERYTHING non-lesson by default, 
-            // but if they pick a lesson category from the filter, show it there too.
-            const isLesson = lessonCategories.includes(doc.category);
-            if (isLesson && category === 'all') return false;
-
             const titleMatch = doc.title.toLowerCase().includes(searchTerm);
             const categoryMatch = doc.category.toLowerCase().includes(searchTerm);
             const filterMatch = (category === 'all') || (doc.category === category);
@@ -646,13 +662,12 @@ document.addEventListener('DOMContentLoaded', () => {
         pagination.appendChild(nextBtn);
     }
 
-    // --- 11. MODAL FUNCTIONS (FIXED PDF VIEWING) ---
+    // --- 11. MODAL FUNCTIONS ---
     function openModal(docId) {
         // Search in all documents to be safe
         const doc = allDocuments.find(d => d.id === docId);
 
-        // Navigation should ideally be based on the list you clicked from, 
-        // but to keep it simple, we'll navigate through allDocuments for now
+        // Navigation should ideally be based on the list you clicked from
         currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
 
         if (!doc) return;
@@ -758,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalNext.innerHTML = `${t.nextBtn} <i class="fas fa-arrow-right"></i>`;
     }
 
-    // --- 12. LANGUAGE/TRANSLATION (UPDATED WITH NAVIGATION) ---
+    // --- 12. LANGUAGE/TRANSLATION ---
     function updateLanguage() {
         const t = translations[currentLanguage];
 
@@ -1073,7 +1088,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 15. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
-    // These functions can be called from an admin interface to update lessons
     window.updateBibleLesson = function (quarter, lessonId, lessonData) {
         if (!bibleLessons[quarter]) {
             console.error(`Invalid quarter: ${quarter}`);
