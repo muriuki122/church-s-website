@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Display Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .info {
+            color: #3b82f6;
+        }
+
+        h1 {
+            color: #1a2b6d;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #1a2b6d;
+            padding-bottom: 10px;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .instruction {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #1a2b6d;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>✅ Lesson Display Fix - Test Page</h1>
+
+    <div class="test-card">
+        <h2>What Was Fixed</h2>
+        <p><span class="success">✓ FIXED:</span> The Bible Lessons data structure in <code>Archive.js</code></p>
+        <ul>
+            <li><strong>Problem 1:</strong> <code>lessons</code> was defined as a single object instead of an array</li>
+            <li><strong>Problem 2:</strong> Missing <code>memoryVerse</code> field</li>
+            <li><strong>Solution:</strong> Changed to array structure with all required fields</li>
+        </ul>
+    </div>
+
+    <div class="test-card">
+        <h2>Current Lesson Status</h2>
+        <p><span class="success">✓ Q1 2026:</span> <strong>Available</strong> - "First Quarter Lesson 2026"</p>
+        <p><span class="info">○ Q2 2026:</span> Coming Soon</p>
+        <p><span class="info">○ Q3 2026:</span> Coming Soon</p>
+        <p><span class="info">○ Q4 2026:</span> Coming Soon</p>
+    </div>
+
+    <div class="test-card">
+        <h2>Testing Instructions</h2>
+        <div class="instruction">
+            <strong>📝 Follow these steps to verify the fix:</strong>
+        </div>
+        <ol class="checklist">
+            <li>Open <code>archives.html</code> in your web browser</li>
+            <li>Look at the right sidebar titled "Bible Lessons"</li>
+            <li>Verify Q1 tab is active (highlighted)</li>
+            <li>Check that you see a lesson card with:
+                <ul>
+                    <li>Title: "First Quarter Lesson 2026"</li>
+                    <li>Date: "January - March 2026"</li>
+                    <li>Description</li>
+                    <li>Memory Verse section</li>
+                    <li>"View Lesson" button</li>
+                    <li>"Download" button</li>
+                </ul>
+            </li>
+            <li>Click the "View Lesson" button - PDF should open in a modal</li>
+            <li>Click Q2, Q3, Q4 tabs - should show "Coming Soon" message</li>
+            <li>Test the search box - type "quarter" and verify lesson appears</li>
+        </ol>
+    </div>
+
+    <div class="test-card">
+        <h2>File Locations</h2>
+        <p><strong>Modified File:</strong> <code>script.js/Archive.js</code> (lines 115-145)</p>
+        <p><strong>Lesson PDF:</strong> <code>lessons/Lesson 1st quarter 2026- FINAL.pdf</code></p>
+        <p><strong>Guide Created:</strong> <code>HOW_TO_ADD_LESSONS.md</code></p>
+    </div>
+
+    <div class="test-card">
+        <h2>Next Steps for Future Quarters</h2>
+        <p>When you're ready to add Q2, Q3, or Q4 lessons:</p>
+        <ol>
+            <li>Upload your PDF to the <code>lessons</code> folder</li>
+            <li>Follow the instructions in <code>HOW_TO_ADD_LESSONS.md</code></li>
+            <li>Either:
+                <ul>
+                    <li><strong>Method A:</strong> Edit <code>Archive.js</code> directly, or</li>
+                    <li><strong>Method B:</strong> Use browser console commands (see guide)</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="test-card">
+        <h2>Troubleshooting</h2>
+        <p><strong>If lessons still don't appear:</strong></p>
+        <ol>
+            <li>Clear your browser cache (Ctrl+Shift+R or Cmd+Shift+R)</li>
+            <li>Open browser console (F12) and check for errors</li>
+            <li>Verify the PDF file exists at: <code>lessons/Lesson 1st quarter 2026- FINAL.pdf</code></li>
+            <li>Make sure you're looking at the Q1 tab (current quarter)</li>
+        </ol>
+    </div>
+
+    <div class="test-card">
+        <h2>Publishing to Live Website</h2>
+        <p>To make these changes live:</p>
+        <ol>
+            <li>Commit and push changes to GitHub:
+                <pre style="background: #f0f0f0; padding: 10px; border-radius: 5px;">git add script.js/Archive.js
+git add lessons/
+git commit -m "Fixed Bible lessons display"
+git push origin main</pre>
+            </li>
+            <li>Wait 1-2 minutes for GitHub Pages to rebuild</li>
+            <li>Visit your live site and clear cache</li>
+        </ol>
+    </div>
+
+    <div class="instruction">
+        <strong>📚 Complete Documentation:</strong> See <code>HOW_TO_ADD_LESSONS.md</code> for detailed instructions on
+        adding future quarterly lessons.
+    </div>
+
+</body>
+
+</html>

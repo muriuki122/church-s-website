@@ -170,10 +170,35 @@ langOptions.forEach(opt => {
 });
 
 // Mobile Menu
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('show');
-        hamburger.classList.toggle('active');
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+
+if (mobileMenuBtn && navLinks) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        navLinks.classList.toggle('active');
+        const isActive = navLinks.classList.contains('active');
+
+        mobileMenuBtn.innerHTML = isActive
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    });
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.main-header') && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
     });
 }
 

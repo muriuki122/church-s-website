@@ -161,32 +161,34 @@ body {
     background: linear-gradient(to bottom, #20603d 0%, #20603d 50%, #fad201 50%, #fad201 75%, #00a1de 75%, #00a1de 100%);
 }
 
-/* Mobile Toggle */
-.mobile-toggle {
+/* Mobile Toggle - Standardized */
+.mobile-menu-btn {
     display: none;
-    flex-direction: column;
-    background: transparent;
-    border: none;
-    width: 30px;
-    height: 24px;
+    /* Hidden by default on desktop */
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    /* Ensure above nav-links */
+    padding: 10px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    position: relative;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--dark);
+    font-size: 1.5rem;
 }
 
-.mobile-toggle span {
-    display: block;
-    height: 3px;
-    width: 100%;
-    background-color: var(--dark);
-    margin: 3px 0;
-    transition: var(--transition);
-    border-radius: 2px;
+.hamburger {
+    display: none !important;
 }
 
-/* Navigation */
+/* Navigation - Standardized */
 .main-nav {
     background-color: var(--primary);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
 }
 
 .nav-container {
@@ -226,6 +228,60 @@ body {
     width: 100%;
     height: 3px;
     background-color: var(--secondary);
+}
+
+/* Mobile Media Query for Nav */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 80px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        display: flex !important;
+    }
+
+    .nav-links.active {
+        right: 0;
+        visibility: visible;
+    }
+
+    .nav-links a {
+        color: var(--dark);
+        width: 100%;
+        padding: 15px 25px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background-color: var(--light-gray);
+        color: var(--primary);
+    }
+
+    .nav-links a.active::after {
+        display: none;
+        /* Remove bottom border on mobile */
+    }
+
+    .nav-links a i {
+        color: var(--primary);
+        width: 20px;
+        text-align: center;
+    }
 }
 
 /* Hero Section */

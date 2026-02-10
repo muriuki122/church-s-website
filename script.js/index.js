@@ -8,13 +8,23 @@ const translations = {
         "about": "About Us",
         "archives": "Archives",
         "contact": "Contact",
-        
+
         // Hero Section
         "welcome": "Welcome to Kaloleni Seventh Day Church",
         "hero-text": "Join us as we worship, learn, and grow together in Yashua",
         "join": "Join Our Service",
         "learn": "Learn More",
-        
+
+        // New Here Section
+        "new-here-title": "New Here?",
+        "new-here-desc": "We'd love to welcome you to our community. Here's what you can expect.",
+        "mission-title": "Our Mission",
+        "mission-desc": "To share the love of Elohim and the message of Yashua with our community through service and truth.",
+        "community-title": "Community",
+        "community-desc": "Find a place to belong. We have various ministries for all ages to grow in faith together.",
+        "visit-title": "Visit Us",
+        "visit-desc": "Join us in person at Kaloleni Estate. We have a seat saved for you every Shabbat morning.",
+
         // Upcoming Events
         "upcoming": "Upcoming Events",
         "june": "Weekly, sunset Friday to nightfall Saturday.",
@@ -29,12 +39,25 @@ const translations = {
         "event3-time": "",
         "event3-desc": "Theme: Receiving the Torah at Mount Sinai.",
         "view-all": "View All Events",
-        
+
         // Watch Online Section
         "watch-title": "Watch Our Services Online",
         "watch-text": "Can't join us in person? Watch our live streams or previous services directly on our website without leaving this page.",
         "live": "Visit Our YouTube Channel",
-        
+
+        "video-info-title": "About Our Online Services",
+        "video-info-desc": "We're pleased to offer our worship services online for those who can't join us in person. Here's what you need to know:",
+        "video-info-li1": "Live Stream Schedule: Saturday at 9:00 AM and 4:00 PM (GMT+3)",
+        "video-info-li2": "Previous Services: All services remain available on our YouTube channel",
+        "video-info-li3": "Technical Requirements: Works on all modern browsers and devices",
+        "video-info-li4": "Need Help? Email support@churchofelohimkaloleni.org",
+
+        "connect-title": "Connect With Us",
+        "connect-desc": "Follow us on social media for daily inspiration, updates, and community highlights!",
+        "follow-facebook": "Follow on Facebook",
+        "watch-tiktok": "Watch on TikTok",
+        "sub-youtube": "Subscribe on YouTube",
+
         // Footer
         "newsletter": "Subscribe to receive inspiration and updates",
         "email-placeholder": "Your email address",
@@ -42,7 +65,7 @@ const translations = {
         "contact-us": "Contact Us",
         "rights": "All Rights Reserved"
     },
-    
+
     sw: {
         // Header and Navigation
         "motto": "Kukua katika imani, kutumikia kwa upendo",
@@ -51,13 +74,23 @@ const translations = {
         "about": "Kuhusu Sisi",
         "archives": "Kumbukumbu",
         "contact": "Wasiliana",
-        
+
         // Hero Section
         "welcome": "Karibu Kanisa la Kaloleni la Siku ya Saba",
         "hero-text": "Jiunge nasi tunapoabudu, kujifunza, na kukua pamoja katika Yashua",
         "join": "Jiunge na Ibada Yetu",
         "learn": "Jifunze Zaidi",
-        
+
+        // New Here Section
+        "new-here-title": "Mgeni Hapa?",
+        "new-here-desc": "Tunapenda kukukaribisha katika jamii yetu. Hapa ni nini unaweza kutarajia.",
+        "mission-title": "Dhumuni Letu",
+        "mission-desc": "Kushiriki upendo wa Elohim na ujumbe wa Yashua na jamii yetu kupitia huduma na ukweli.",
+        "community-title": "Jamii",
+        "community-desc": "Pata mahali pa kuwa. Tuna huduma mbalimbali kwa rika zote kukua katika imani pamoja.",
+        "visit-title": "Tutembelee",
+        "visit-desc": "Jiunge nasi ana kwa ana katika Kaloleni Estate. Tumekuwekea kiti kila asubuhi ya Sabato.",
+
         // Upcoming Events
         "upcoming": "Matukio Yajayo",
         "june": "Kila wiki, jua linapozama Ijumaa hadi usiku Jumamosi.",
@@ -72,12 +105,25 @@ const translations = {
         "event3-time": "",
         "event3-desc": "Mada: Kupokea Torati kwenye Mlima Sinai.",
         "view-all": "Tazama Matukio Yote",
-        
+
         // Watch Online Section
         "watch-title": "Tazama Huduma Zetu Mtandaoni",
         "watch-text": "Hauwezi kujiunga nasi kibinafsi? Tazama matangazo yetu ya moja kwa moja au huduma zilizopita moja kwa moja kwenye wavuti yetu bila kuacha ukurasa huu.",
         "live": "Tembelea Kituo Chetu cha YouTube",
-        
+
+        "video-info-title": "Kuhusu Huduma Zetu Mtandaoni",
+        "video-info-desc": "Tunafurahi kutoa ibada zetu mtandaoni kwa wale wasioweza kufika. Hapa ni mambo muhimu:",
+        "video-info-li1": "Ratiba ya Mubashara: Jumamosi saa 3:00 Asubuhi na saa 10:00 Jioni (GMT+3)",
+        "video-info-li2": "Ibada Zilizopita: Ibada zote zinapatikana kwenye chaneli yetu ya YouTube",
+        "video-info-li3": "Mahitaji ya Kiufundi: Inafanya kazi kwenye vivinjari na vifaa vyote vya kisasa",
+        "video-info-li4": "Unahitaji Msaada? Tuma barua pepe support@churchofelohimkaloleni.org",
+
+        "connect-title": "Ungana Nasi",
+        "connect-desc": "Tufuate kwenye mitandao ya kijamii kwa msukumo wa kila siku, na taarifa za jamii!",
+        "follow-facebook": "Tufuate Facebook",
+        "watch-tiktok": "Tazama TikTok",
+        "sub-youtube": "Jiunge YouTube",
+
         // Footer
         "newsletter": "Jiandikishe kupokea msukumo na visasisho",
         "email-placeholder": "Anwani yako ya barua pepe",
@@ -85,7 +131,7 @@ const translations = {
         "contact-us": "Wasiliana Nasi",
         "rights": "Haki Zimehifadhiwa"
     },
-    
+
     rw: {
         // Header and Navigation
         "motto": "Kugwira neza mu kwizera, gukorera hamwe n'urukundo",
@@ -94,13 +140,23 @@ const translations = {
         "about": "Abo Turi",
         "archives": "Ibikomoka",
         "contact": "Twandikire",
-        
+
         // Hero Section
         "welcome": "Murakaza neza mu Kilisiya ya Kaloleni ya ku minsi irindwi",
         "hero-text": "Duhagarire mu gusenga, kwiga, no kukura hamwe muri Yashua",
         "join": "Duhagarire mu gusenga",
         "learn": "Menya Ibindi",
-        
+
+        // New Here Section
+        "new-here-title": "Mushya Hano?",
+        "new-here-desc": "Twishimiye kubakira mu muryango wacu. Dore ibyo ushobora kwitega.",
+        "mission-title": "Intego Yacu",
+        "mission-desc": "Gusangira urukundo rwa Elohim n'ubutumwa bwa Yashua n'umuryango wacu binyuze muri serivisi n'ukuri.",
+        "community-title": "Umuryango",
+        "community-desc": "Shaka aho kuba. Dufite minisiteri zitandukanye z'ingeri zose zo gukurira mu kwizera hamwe.",
+        "visit-title": "Dusura",
+        "visit-desc": "Fatanya natwe imbonankubone i Kaloleni Estate. Dufite umwanya twabateguriye buri gitondo cy'Isabato.",
+
         // Upcoming Events
         "upcoming": "Ibizaba",
         "june": "Burimunsi, kuva kuwa gatandatu nigego kugeza kuwa gatandatu nijoro.",
@@ -115,12 +171,25 @@ const translations = {
         "event3-time": "",
         "event3-desc": "Ingingo: Gukira Torati ku Musozi wa Sinai.",
         "view-all": "Reba Ibizaba Byose",
-        
+
         // Watch Online Section
         "watch-title": "Reba Serivisi Zacu ku Internet",
         "watch-text": "Ntushobora kuduhagarira mu mubiri? Reba imyidagaduro yacu ya live cyangwa serivisi zabanje moherewe kuri webure yetu utarakitura uku rubuga.",
         "live": "Sura Iki Gice Cyacu cya YouTube",
-        
+
+        "video-info-title": "Ibyerekeye Serivisi Zacu zo Kuri Interineti",
+        "video-info-desc": "Twishimiye gutanga serivisi zacu zo kuramya kuri interineti kubadashobora kwifatanya natwe. Dore ibyo ukeneye kumenya:",
+        "video-info-li1": "Gahunda ya Live: Ku wa Gatandatu saa 9:00 za mu gitondo na saa 4:00 z'umugoroba (GMT+3)",
+        "video-info-li2": "Serivisi Zabanjirije: Serivisi zose zigumaho kuri shene yacu ya YouTube",
+        "video-info-li3": "Ibisabwa bya Tekiniki: Ikora kuri mushakisha zose n'ibikoresho bigezweho",
+        "video-info-li4": "Ukeneye Ubufasha? Ohereza imeri kuri support@churchofelohimkaloleni.org",
+
+        "connect-title": "Guhuza Natwe",
+        "connect-desc": "Dukulikire ku mbuga nkoranyambaga kugira ngo ubone inyigisho za buri munsi, amakuru, n'ibikorwa by'umuryango!",
+        "follow-facebook": "Dukurikire kuri Facebook",
+        "watch-tiktok": "Reba kuri TikTok",
+        "sub-youtube": "Iyandikishe kuri YouTube",
+
         // Footer
         "newsletter": "Iyandikishe kugira ugire ingufu n'ibyagezweho",
         "email-placeholder": "Aderesi yawe ya email",
@@ -131,23 +200,23 @@ const translations = {
 };
 
 // Language switching functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const langButtons = document.querySelectorAll('.lang-btn');
     const currentLang = localStorage.getItem('selectedLang') || 'en';
-    
+
     // Set initial language
     setLanguage(currentLang);
-    
+
     // Add click event listeners to language buttons
     langButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const selectedLang = this.getAttribute('data-lang');
             setLanguage(selectedLang);
             setActiveLanguageButton(selectedLang);
             localStorage.setItem('selectedLang', selectedLang);
         });
     });
-    
+
     // Set active language button
     function setActiveLanguageButton(lang) {
         langButtons.forEach(button => {
@@ -158,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Apply language translations
     function setLanguage(lang) {
         // Update all elements with data-i18n attribute
@@ -169,17 +238,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 element.textContent = translations[lang][key];
             }
         });
-        
+
         // Update page title based on language
         updatePageTitle(lang);
-        
+
         // Update any placeholder texts
         updatePlaceholders(lang);
-        
+
         // Update any other dynamic content
         updateDynamicContent(lang);
     }
-    
+
     // Update page title based on language
     function updatePageTitle(lang) {
         const titles = {
@@ -191,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.title = titles[lang];
         }
     }
-    
+
     // Update placeholder texts
     function updatePlaceholders(lang) {
         const emailInput = document.querySelector('input[type="email"]');
@@ -199,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             emailInput.placeholder = translations[lang]['email-placeholder'];
         }
     }
-    
+
     // Update any other dynamic content that might not use data-i18n
     function updateDynamicContent(lang) {
         // Update footer text
@@ -208,81 +277,94 @@ document.addEventListener('DOMContentLoaded', function() {
             const year = new Date().getFullYear();
             footerRights.innerHTML = `&copy; ${year} Kaloleni Church of Elohim. ${translations[lang]['rights']}`;
         }
-        
+
         // Update section headings that might not use data-i18n
         const quickLinks = document.querySelector('.footer-column h3:nth-child(2)');
         if (quickLinks && translations[lang] && translations[lang]['quick-links']) {
             quickLinks.textContent = translations[lang]['quick-links'];
         }
-        
+
         const contactUs = document.querySelector('.footer-column h3:nth-child(3)');
         if (contactUs && translations[lang] && translations[lang]['contact-us']) {
             contactUs.textContent = translations[lang]['contact-us'];
         }
-        
+
         const newsletter = document.querySelector('.footer-column h3:nth-child(4)');
         if (newsletter && translations[lang] && translations[lang]['newsletter']) {
             newsletter.textContent = translations[lang]['newsletter'];
         }
-        
+
         const newsletterText = document.querySelector('.footer-column p');
         if (newsletterText && translations[lang] && translations[lang]['newsletter']) {
             newsletterText.textContent = translations[lang]['newsletter'];
         }
     }
-    
+
     // Set initial active button
     setActiveLanguageButton(currentLang);
 });
 
 // Mobile menu functionality
-document.addEventListener('DOMContentLoaded', function() {
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
-    
+
+    // Debug logging
+    console.log('Mobile menu setup:', { mobileMenuBtn, navLinks });
+
     if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', function() {
+        mobileMenuBtn.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default behavior
+            e.stopPropagation(); // Stop propagation
+
             navLinks.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
+            const isActive = navLinks.classList.contains('active');
+
+            mobileMenuBtn.innerHTML = isActive
+                ? '<i class="fas fa-times"></i>'
                 : '<i class="fas fa-bars"></i>';
+
+            console.log('Mobile menu toggled. Active:', isActive);
         });
-        
+
         // Close mobile menu when clicking on a link
         const navItems = document.querySelectorAll('.nav-links a');
         navItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 navLinks.classList.remove('active');
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             });
         });
-        
+
         // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!event.target.closest('.main-nav') && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
+    } else {
+        console.error('Mobile menu elements not found!');
     }
 });
 
 // Smooth scrolling for anchor links
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
-    
+
     anchorLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 const headerHeight = document.querySelector('.header').offsetHeight;
                 const targetPosition = targetElement.offsetTop - headerHeight - 20;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -293,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // YouTube video functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // YouTube video IDs for your channel (replace with actual video IDs)
     const sermonVideos = [
         'bMbsiKw9tV4', // Sample video 1
@@ -301,39 +383,39 @@ document.addEventListener('DOMContentLoaded', function() {
         'jNQXAC9IVRw', // Sample video 3
         '9bZkp7q19f0'  // Sample video 4
     ];
-    
+
     const player = document.getElementById('youtubePlayer');
     const placeholder = document.getElementById('videoPlaceholder');
     const switchBtn = document.getElementById('switchVideoBtn');
-    
+
     if (switchBtn) {
-        switchBtn.addEventListener('click', function(e) {
+        switchBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Get a random video from the array
             const randomIndex = Math.floor(Math.random() * sermonVideos.length);
             const videoId = sermonVideos[randomIndex];
-            
+
             // Update the iframe source
             if (player) {
                 player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
             }
         });
     }
-    
+
     // Optional: Show placeholder if video fails to load
     if (player) {
-        player.addEventListener('error', function() {
+        player.addEventListener('error', function () {
             player.style.display = 'none';
             if (placeholder) {
                 placeholder.style.display = 'flex';
             }
         });
     }
-    
+
     // Optional: Click placeholder to try loading again
     if (placeholder) {
-        placeholder.addEventListener('click', function(e) {
+        placeholder.addEventListener('click', function (e) {
             e.preventDefault();
             if (player) {
                 player.style.display = 'block';
@@ -345,20 +427,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Newsletter form handling
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const newsletterForm = document.querySelector('.newsletter-form');
-    
+
     if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
+        newsletterForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const emailInput = this.querySelector('input[type="email"]');
             const email = emailInput.value.trim();
-            
+
             if (email && isValidEmail(email)) {
                 // Here you would typically send the data to your server
                 console.log('Newsletter subscription:', email);
-                
+
                 // Show success message
                 showNotification('Thank you for subscribing!', 'success');
                 emailInput.value = '';
@@ -367,18 +449,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-    
+
     function showNotification(message, type) {
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
-        
+
         // Style the notification
         notification.style.cssText = `
             position: fixed;
@@ -392,21 +474,21 @@ document.addEventListener('DOMContentLoaded', function() {
             transition: all 0.3s ease;
             transform: translateX(100%);
         `;
-        
+
         if (type === 'success') {
             notification.style.backgroundColor = '#4CAF50';
         } else {
             notification.style.backgroundColor = '#f44336';
         }
-        
+
         // Add to page
         document.body.appendChild(notification);
-        
+
         // Animate in
         setTimeout(() => {
             notification.style.transform = 'translateX(0)';
         }, 100);
-        
+
         // Remove after 3 seconds
         setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
@@ -420,10 +502,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Sticky Header and Scroll Reveal Initialization
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const header = document.querySelector('.header');
     const revealElements = document.querySelectorAll('.reveal');
-    
+
     // Sticky Header Logic
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -443,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
 
     revealElements.forEach(el => revealObserver.observe(el));
-    
+
     // Animate Nav Links on Mobile
     const navLinksList = document.querySelectorAll('.nav-links li');
     navLinksList.forEach((link, index) => {
@@ -457,7 +539,7 @@ function updateCountdown() {
     if (!countdownContainer) return;
 
     const now = new Date();
-    
+
     // Sabbath is Saturday (day 6). Service starts at 9:00 AM.
     // Let's target the next Saturday at 9:00 AM.
     let nextService = new Date();

@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaloleni Seventh Day Church</title>
-    <link rel="stylesheet" href="style/INDEX.css">
+    <meta name="description"
+        content="Welcome to Kaloleni Seventh Day Church - Growing in faith, serving with love. Join us for worship, community, and spiritual growth.">
+    <link rel="icon" type="image/jpeg" href="images/minorah image.jpg">
+    <link rel="stylesheet" href="style/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap"
@@ -38,11 +41,7 @@
                 <li><a href="archives.html"><i class="fas fa-archive"></i> Archives</a></li>
                 <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
             </ul>
-            <div class="hamburger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
+            <!-- Hamburger removed - using mobile-menu-btn -->
             <div class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </div>
@@ -88,28 +87,31 @@
     <section class="new-here reveal">
         <div class="container">
             <div class="section-header text-center">
-                <h2>New Here?</h2>
-                <p>We'd love to welcome you to our community. Here's what you can expect.</p>
+                <h2 data-i18n="new-here-title">New Here?</h2>
+                <p data-i18n="new-here-desc">We'd love to welcome you to our community. Here's what you can expect.</p>
             </div>
             <div class="events-grid">
                 <div class="event-card">
                     <div class="event-details">
-                        <h3><i class="fas fa-heart"></i> Our Mission</h3>
-                        <p>To share the love of Elohim and the message of Yashua with our community through service and
+                        <h3 data-i18n="mission-title"><i class="fas fa-heart"></i> Our Mission</h3>
+                        <p data-i18n="mission-desc">To share the love of Elohim and the message of Yashua with our
+                            community through service and
                             truth.</p>
                     </div>
                 </div>
                 <div class="event-card">
                     <div class="event-details">
-                        <h3><i class="fas fa-users"></i> Community</h3>
-                        <p>Find a place to belong. We have various ministries for all ages to grow in faith together.
+                        <h3 data-i18n="community-title"><i class="fas fa-users"></i> Community</h3>
+                        <p data-i18n="community-desc">Find a place to belong. We have various ministries for all ages to
+                            grow in faith together.
                         </p>
                     </div>
                 </div>
                 <div class="event-card">
                     <div class="event-details">
-                        <h3><i class="fas fa-location-dot"></i> Visit Us</h3>
-                        <p>Join us in person at Kaloleni Estate. We have a seat saved for you every Shabbat morning.</p>
+                        <h3 data-i18n="visit-title"><i class="fas fa-location-dot"></i> Visit Us</h3>
+                        <p data-i18n="visit-desc">Join us in person at Kaloleni Estate. We have a seat saved for you
+                            every Shabbat morning.</p>
                     </div>
                 </div>
             </div>
@@ -192,37 +194,43 @@
                 </div>
 
                 <div class="video-info">
-                    <h3><i class="fas fa-info-circle"></i> About Our Online Services</h3>
-                    <p>We're pleased to offer our worship services online for those who can't join us in person.
+                    <h3 data-i18n="video-info-title"><i class="fas fa-info-circle"></i> About Our Online Services</h3>
+                    <p data-i18n="video-info-desc">We're pleased to offer our worship services online for those who
+                        can't join us in person.
                         Here's what you need to know:</p>
                     <ul>
-                        <li><strong>Live Stream Schedule:</strong> Saturday at 9:00 AM and 4:00 PM (GMT+3)</li>
-                        <li><strong>Previous Services:</strong> All services remain available on our youtube channel
+                        <li data-i18n="video-info-li1"><strong>Live Stream Schedule:</strong> Saturday at 9:00 AM and
+                            4:00 PM (GMT+3)</li>
+                        <li data-i18n="video-info-li2"><strong>Previous Services:</strong> All services remain available
+                            on our youtube channel
                         </li>
-                        <li><strong>Technical Requirements:</strong> Works on all modern browsers and devices</li>
-                        <li><strong>Need Help?</strong> Email support@churchofelohimkaloleni.org</li>
+                        <li data-i18n="video-info-li3"><strong>Technical Requirements:</strong> Works on all modern
+                            browsers and devices</li>
+                        <li data-i18n="video-info-li4"><strong>Need Help?</strong> Email
+                            support@churchofelohimkaloleni.org</li>
                     </ul>
                 </div>
 
                 <!-- Social Media Links -->
                 <div class="social-media-section">
-                    <h3><i class="fas fa-share-alt"></i> Connect With Us</h3>
-                    <p>Follow us on social media for daily inspiration, updates, and community highlights!</p>
+                    <h3 data-i18n="connect-title"><i class="fas fa-share-alt"></i> Connect With Us</h3>
+                    <p data-i18n="connect-desc">Follow us on social media for daily inspiration, updates, and community
+                        highlights!</p>
                     <div class="social-buttons">
-                        <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank" rel="noopener noreferrer"
-                            class="social-btn facebook">
+                        <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"
+                            rel="noopener noreferrer" class="social-btn facebook">
                             <i class="fab fa-facebook-f"></i>
-                            <span>Follow on Facebook</span>
+                            <span data-i18n="follow-facebook">Follow on Facebook</span>
                         </a>
-                        <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank" rel="noopener noreferrer"
-                            class="social-btn tiktok">
+                        <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"
+                            rel="noopener noreferrer" class="social-btn tiktok">
                             <i class="fab fa-tiktok"></i>
-                            <span>Watch on TikTok</span>
+                            <span data-i18n="watch-tiktok">Watch on TikTok</span>
                         </a>
                         <a href="https://youtube.com/@churchofelohimkaloleni?si=ATl2uoSRFC1oWnum" target="_blank"
                             rel="noopener noreferrer" class="social-btn youtube">
                             <i class="fab fa-youtube"></i>
-                            <span>Subscribe on YouTube</span>
+                            <span data-i18n="sub-youtube">Subscribe on YouTube</span>
                         </a>
                     </div>
                 </div>
@@ -242,10 +250,12 @@
                 <p class="footer-desc">A spiritual home dedicated to worshiping Elohim and serving our community with
                     love and grace.</p>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"><i
+                            class="fab fa-facebook-f"></i></a>
                     <a href="https://youtube.com/@churchofelohimkaloleni" target="_blank"><i
                             class="fab fa-youtube"></i></a>
-                    <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"><i
+                            class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -262,7 +272,8 @@
                 <h4>Contact Us</h4>
                 <ul class="footer-contact">
                     <li><i class="fas fa-map-marker-alt"></i> <span>Kaloleni, Nairobi, Kenya</span></li>
-                    <li><i class="fas fa-phone"></i> <span>+254 712 345 678</span></li>
+                    <li><i class="fas fa-phone"></i> <span>+254721218834</span></li>
+                    <li><i class="fas fa-phone"></i> <span>+254737522522</span></li>
                     <li><i class="fas fa-envelope"></i> <span>info@kalolenichurch.org</span></li>
                     <li><i class="fas fa-clock"></i> <span>Sat: 9:00 AM - 4:00 PM</span></li>
                 </ul>
@@ -319,7 +330,7 @@
             player.src = player.src; // Reload the video
         });
     </script>
-    <script src="SCRIPT.JS/INDEX.js"></script>
+    <script src="script.js/index.js"></script>
 </body>
 
 </html>

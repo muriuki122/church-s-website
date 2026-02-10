@@ -760,8 +760,30 @@ header .container {
     }
 }
 
+/* Mobile Toggle - Standardized */
+.mobile-menu-btn {
+    display: none;
+    /* Hidden by default on desktop */
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    /* Ensure above nav-links */
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.hamburger {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
-    .hamburger {
+    .mobile-menu-btn {
         display: flex;
     }
 
@@ -769,24 +791,50 @@ header .container {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
+        width: 70%;
         max-width: 300px;
         height: 100vh;
         background: white;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-start;
         padding-top: 80px;
-        transition: 0.5s;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        display: flex !important;
     }
 
     .nav-links.active {
         right: 0;
+        visibility: visible;
     }
 
     .nav-links li {
-        margin: 15px 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .nav-links a {
+        color: var(--dark);
+        width: 100%;
+        padding: 15px 25px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        justify-content: flex-start;
+        border-radius: 0;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background-color: var(--light);
+        color: var(--primary);
+    }
+
+    .nav-links a i {
+        color: var(--primary);
+        width: 20px;
+        text-align: center;
+        margin-right: 15px;
     }
 
     .hero-content h2 {
@@ -862,6 +910,23 @@ header .container {
 
     .cta-form input {
         margin-bottom: 10px;
+    }
+
+    .youtube-search-bar {
+        flex-direction: column;
+        padding: 5px;
+        border-radius: 15px;
+        gap: 5px;
+    }
+
+    .youtube-search-bar input {
+        width: 100%;
+        text-align: center;
+    }
+
+    .youtube-search-bar button {
+        width: 100%;
+        padding: 12px;
     }
 }
 

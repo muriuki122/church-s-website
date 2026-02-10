@@ -172,20 +172,86 @@ header .container {
     background: #1a2b6d;
 }
 
-/* Hamburger Menu */
-.hamburger {
+/* Mobile Toggle - Standardized */
+.mobile-menu-btn {
     display: none;
-    flex-direction: column;
-    gap: 5px;
+    /* Hidden by default on desktop */
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    /* Ensure above nav-links */
+    padding: 10px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    padding: 5px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #1a2b6d;
+    /* Primary Color */
+    font-size: 1.5rem;
 }
 
-.hamburger .line {
-    width: 25px;
-    height: 3px;
-    background: #1a2b6d;
-    transition: all 0.3s ease;
+.hamburger {
+    display: none !important;
+}
+
+/* Mobile Media Query for Nav */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 80px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        display: flex !important;
+    }
+
+    .nav-links.active {
+        right: 0;
+        visibility: visible;
+    }
+
+    .nav-links a {
+        color: #1e293b;
+        /* Text Primary */
+        width: 100%;
+        padding: 15px 25px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        justify-content: flex-start;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background-color: #f8fafc;
+        /* BG Color */
+        color: #1a2b6d;
+        /* Primary Color */
+    }
+
+    .nav-links a.active::after {
+        display: none;
+        /* Remove bottom border on mobile */
+    }
+
+    .nav-links a i {
+        color: #1a2b6d;
+        /* Primary Color */
+        width: 20px;
+        text-align: center;
+    }
 }
 
 /* ===== NAVIGATION STYLES ===== */
@@ -953,6 +1019,31 @@ main {
 
 /* ===== RESPONSIVE DESIGN ===== */
 /* Mobile Navigation for Archive */
+@media (max-width: 992px) {
+    .archive-layout-wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+        /* Put sidebar below content or use column */
+        /* Actually sidebar usually goes below on mobile, or above if important. 
+           Let's use column. Sidebar (lessons) might be important, but maybe content first.
+        */
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .lessons-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+    }
+
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
@@ -961,16 +1052,18 @@ main {
     .nav-links {
         position: fixed;
         left: -100%;
-        top: 110px;
-        /* Adjust based on header height */
+        top: 80px;
+        /* Adjusted for sticky header height */
         flex-direction: column;
         background: white;
         width: 100%;
         text-align: center;
-        transition: 0.3s;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
         padding: 20px 0;
         z-index: 999;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
     }
 
     .nav-links.active {
@@ -978,7 +1071,16 @@ main {
     }
 
     .nav-links li {
-        margin: 15px 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .nav-links a {
+        padding: 15px 20px;
+        width: 100%;
+        justify-content: center;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 1.1rem;
     }
 
     .hamburger.active .line:nth-child(1) {
@@ -992,6 +1094,24 @@ main {
     .hamburger.active .line:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
+
+    .controls-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-label {
+        display: none;
+    }
+
+    .filter-box select {
+        padding-left: 3rem;
+    }
+
+    .list-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
 }
 
 @media (max-width: 480px) {
@@ -999,20 +1119,27 @@ main {
         padding: 2rem 0;
     }
 
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+
     main {
         padding: 1.5rem;
         margin: -1rem auto 2rem;
     }
 
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
+    .document-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 }
 
-/* Dark Mode Support Removed to prevent purple overrides */
-
-/* ===== ACCESSIBILITY ===== */
+/* Dark Mode Support Removed */
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
