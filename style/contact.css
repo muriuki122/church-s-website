@@ -199,6 +199,16 @@ body {
     color: var(--light) !important;
 }
 
+@media (max-width: 768px) {
+    .contact-hero {
+        padding: 8rem 0 4rem;
+    }
+
+    .page-hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
 .page-hero h1 {
     font-family: 'Playfair Display', serif;
     font-size: 3.5rem;
@@ -219,6 +229,48 @@ body {
     grid-template-columns: 1fr 2fr;
     gap: 40px;
     padding: 60px 20px;
+}
+
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .contact-info-cards {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .info-card {
+        flex: 1 1 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-form-container {
+        padding: 30px 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-info-cards {
+        flex-direction: column;
+    }
+
+    .map-placeholder {
+        height: 300px;
+    }
+
+    .map-overlay i {
+        font-size: 3rem;
+    }
+
+    .map-overlay h3 {
+        font-size: 1.5rem;
+    }
 }
 
 /* Info Cards */

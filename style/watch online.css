@@ -302,6 +302,21 @@ header .container {
     padding: 0 20px;
 }
 
+@media (max-width: 768px) {
+    .hero {
+        height: 50vh;
+        min-height: 300px;
+    }
+
+    .hero-content h2 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+}
+
 
 /* Live Stream Section */
 .live-section {
@@ -393,6 +408,13 @@ header .container {
     display: block;
 }
 
+@media (max-width: 992px) {
+    .stream-player iframe {
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+}
+
 .stream-info {
     background: white;
     padding: 40px;
@@ -475,6 +497,31 @@ header .container {
 .stream-actions {
     display: flex;
     gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .stream-info {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .stream-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .stream-actions .btn {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .stream-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 /* CTA Section */
