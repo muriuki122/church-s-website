@@ -1,374 +1,311 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. CONFIGURATION ---
-    const ITEMS_PER_PAGE = 12;
-    let currentLanguage = 'en';
-    let currentPage = 1;
-    let currentPreviewIndex = -1;
-    let currentQuarter = '1';
+    // --- 1. STATE AND CONSTANTS ---
+    const ITEMS_PER_PAGE = 9;
     let allDocuments = [];
     let mainFilteredDocuments = [];
     let lessonFilteredDocuments = [];
+    let currentPage = 1;
+    let currentLanguage = 'en';
+    let currentPreviewIndex = 0;
+    let currentQuarter = '1';
 
-    // --- 2. TRANSLATIONS ---
+    // --- 2. TRANSLATIONS WITH NAVIGATION SUPPORT ---
     const translations = {
         en: {
-            siteTitle: 'M.T. Zion Archive',
-            navHome: 'Home',
-            navWatchOnline: 'Watch Online',
-            navAboutUs: 'About Us',
-            navArchives: 'Archives',
-            navContact: 'Contact',
-            pageTitle: 'Document Archive',
-            searchPlaceholder: 'Search documents...',
-            categoryFilter: 'All Categories',
-            docCount: 'documents found',
-            previewBtn: 'Preview',
-            downloadBtn: 'Download',
-            prevBtn: 'Previous',
-            nextBtn: 'Next',
-            noDocuments: 'No documents found',
-            noDocumentsHelp: 'Try adjusting your search or filter criteria',
-            allCategories: 'All Categories',
-            lessonsTitle: 'Bible Lessons',
-            lessonsSearch: 'Search lessons...',
-            q1: 'Q1 (Jan-Mar)',
-            q2: 'Q2 (Apr-Jun)',
-            q3: 'Q3 (Jul-Sep)',
-            q4: 'Q4 (Oct-Dec)',
-            comingSoon: 'Coming Soon',
-            lessonNotAvailable: 'This quarter\'s lessons are not available yet.',
-            memoryVerse: 'Memory Verse',
-            viewLesson: 'View Lesson',
-            loadingPdf: 'Loading PDF...',
-            pdfLoadError: 'Failed to load PDF',
-            downloadInstead: 'Download Instead'
+            siteTitle: "PDF Archive",
+            heroTitle: "Explore Our Document Collection",
+            heroSubtitle: "Browse, preview, and download from our extensive library.",
+            searchPlaceholder: "Search documents by title or category...",
+            categoriesTitle: "Categories",
+            documentsTitle: "Documents",
+            footerText: "© 2025 PDF Archive. All rights reserved.",
+            downloadBtn: "Download",
+            previewBtn: "Preview",
+            allCategories: "All Categories",
+            docCount: "documents",
+            noDocuments: "No Documents Found",
+            noDocumentsHelp: "Try adjusting your search or filter criteria.",
+            prevBtn: "Previous",
+            nextBtn: "Next",
+            page: "Page",
+            // Navigation translations
+            navHome: "Home",
+            navWatchOnline: "Watch Online",
+            navAboutUs: "About Us",
+            navArchives: "Archives",
+            navContact: "Contact",
+            // Bible lesson translations
+            bibleLessons: "Bible Lessons",
+            searchLessons: "Search lessons...",
+            noLessons: "No lessons found for this quarter.",
+            memoryVerse: "Memory Verse",
+            viewLesson: "View Lesson",
+            comingSoon: "Coming Soon",
+            lessonNotAvailable: "Lessons for this quarter will be available soon."
         },
         sw: {
-            siteTitle: 'Hifadhidata ya M.T. Zion',
-            navHome: 'Nyumbani',
-            navWatchOnline: 'Tazama Mtandaoni',
-            navAboutUs: 'Kuhusu Sisi',
-            navArchives: 'Maktaba',
-            navContact: 'Wasiliana',
-            pageTitle: 'Maktaba ya Nyaraka',
-            searchPlaceholder: 'Tafuta nyaraka...',
-            categoryFilter: 'Aina Zote',
-            docCount: 'nyaraka zimepatikana',
-            previewBtn: 'Onyesha',
-            downloadBtn: 'Pakua',
-            prevBtn: 'Iliyopita',
-            nextBtn: 'Ifuatayo',
-            noDocuments: 'Hakuna nyaraka zimepatikana',
-            noDocumentsHelp: 'Jaribu kubadilisha utafutaji wako au vigezo vya kuchuja',
-            allCategories: 'Aina Zote',
-            lessonsTitle: 'Masomo ya Biblia',
-            lessonsSearch: 'Tafuta masomo...',
-            q1: 'R1 (Jan-Machi)',
-            q2: 'R2 (Apr-Jun)',
-            q3: 'R3 (Jul-Sep)',
-            q4: 'R4 (Okt-Des)',
-            comingSoon: 'Inakuja Hivi Karibuni',
-            lessonNotAvailable: 'Masomo ya robo hii hayapatikani bado.',
-            memoryVerse: 'Suru ya Kumbukumbu',
-            viewLesson: 'Ona Masomo',
-            loadingPdf: 'Inapakia PDF...',
-            pdfLoadError: 'Imeshindwa kupakia PDF',
-            downloadInstead: 'Pakua Badala Yake'
+            siteTitle: "Kumbukumbu ya PDF",
+            heroTitle: "Gundua Mkusanyiko Wetu wa Nyaraka",
+            heroSubtitle: "Vinjari, hakiki, na pakua kutoka kwa maktaba yetu pana.",
+            searchPlaceholder: "Tafuta nyaraka kwa jina au kategoria...",
+            categoriesTitle: "Kategoria",
+            documentsTitle: "Nyaraka",
+            footerText: "© 2025 Kumbukumbu ya PDF. Haki zote zimehifadhiwa.",
+            downloadBtn: "Pakua",
+            previewBtn: "Hakiki",
+            allCategories: "Kategoria Zote",
+            docCount: "nyaraka",
+            noDocuments: "Hakuna Nyaraka Zilizopatikana",
+            noDocumentsHelp: "Jaribu kurekebisha utafutaji au kichujio chako.",
+            prevBtn: "Iliyotangulia",
+            nextBtn: "Inayofuata",
+            page: "Ukurasa",
+            // Navigation translations
+            navHome: "Nyumbani",
+            navWatchOnline: "Tazama Mtandaoni",
+            navAboutUs: "Kuhusu Sisi",
+            navArchives: "Kumbukumbu",
+            navContact: "Wasiliana",
+            // Bible lesson translations
+            bibleLessons: "Masomo ya Biblia",
+            searchLessons: "Tafuta masomo...",
+            noLessons: "Hakuna masomo yaliyopatikana kwa robo hii.",
+            memoryVerse: "Sura ya Kumbukumbu",
+            viewLesson: "Tazama Somo",
+            comingSoon: "Inakuja Hivi Karibuni",
+            lessonNotAvailable: "Masomo kwa robo hii yatapatikana hivi karibuni."
         },
         rw: {
-            siteTitle: 'Ububiko bwa M.T. Zion',
-            navHome: 'Ahabanza',
-            navWatchOnline: 'Kureba kuri Interineti',
-            navAboutUs: 'Ibyerekeye',
-            navArchives: 'Ububiko',
-            navContact: 'Twandikire',
-            pageTitle: 'Ububiko bwa Inyandiko',
-            searchPlaceholder: 'Shakisha inyandiko...',
-            categoryFilter: 'Amitwe Yose',
-            docCount: 'inyandiko zabonetse',
-            previewBtn: 'Kureba',
-            downloadBtn: 'Kureka',
-            prevBtn: 'Ibura',
-            nextBtn: 'Ikurikira',
-            noDocuments: 'Nta nyandiko zabonetse',
-            noDocumentsHelp: 'Gerageza guhindura ishakisha ryawe canke ibipimo byo gukurikiza',
-            allCategories: 'Amitwe Yose',
-            lessonsTitle: 'Amasomo ya Bibiliya',
-            lessonsSearch: 'Shakisha amasomo...',
-            q1: 'S1 (Mut-Wer)',
-            q2: 'S2 (Msh-Gic)',
-            q3: 'S3 (Kam-Nze)',
-            q4: 'S4 (Uku-Gic)',
-            comingSoon: 'Kuzagera Vuba',
-            lessonNotAvailable: 'Amasomo ya kwegi siyaboneka bityo.',
-            memoryVerse: 'Umugabane Wibuka',
-            viewLesson: 'Kureba Amasomo',
-            loadingPdf: 'Kureba PDF...',
-            pdfLoadError: 'Byanze bikomeye kureba PDF',
-            downloadInstead: 'Reka Uko'
+            siteTitle: "Ububiko bwa PDF",
+            heroTitle: "Shakisha Itsinda ry'Inyandiko Zacu",
+            heroSubtitle: "Rondora, urebe mbere, kandi ukuremo amakuru mu bubiko bwacu bwagutse.",
+            searchPlaceholder: "Shakisha inyandiko ku mutwe cyangwa icyiciro...",
+            categoriesTitle: "Ibyiciro",
+            documentsTitle: "Inyandiko",
+            footerText: "© 2025 Ububiko bwa PDF. Amahoro yose arinda.",
+            downloadBtn: "Kuramo",
+            previewBtn: "Reba mbere",
+            allCategories: "Ibyiciro Byose",
+            docCount: "inyandiko",
+            noDocuments: "Nta Nyandiko Zabonetse",
+            noDocumentsHelp: "Gerageza guhindura ushakisha cyangwa ibisanzwe.",
+            prevBtn: "Ibanjirije",
+            nextBtn: "Ikurikira",
+            page: "Urupapuro",
+            // Navigation translations
+            navHome: "Ahabanza",
+            navWatchOnline: "Reba kuri interineti",
+            navAboutUs: "Twebwe",
+            navArchives: "Ububiko",
+            navContact: "Twandikire",
+            // Bible lesson translations
+            bibleLessons: "Amasomo y'ibitabo",
+            searchLessons: "Shakisha amasomo...",
+            noLessons: "Nta masomo yabonetse muri iyi gahunda.",
+            memoryVerse: "Umugani wo kumibwa",
+            viewLesson: "Reba Somo",
+            comingSoon: "Uza Hivi Karibuni",
+            lessonNotAvailable: "Amasomo muri iyi gahunda azaba hivi karibuni."
         }
     };
 
     // --- 3. BIBLE LESSONS DATA ---
+    // This structure allows you to easily update lessons for each quarter
+    // Simply add or modify lessons in the appropriate quarter array
     const bibleLessons = {
-        1: {
-            title: 'First Quarter (January-March)',
+        1: { // Q1 (January - March)
+            title: "First Quarter 2026",
             available: true,
             lessons: [
                 {
-                    id: 'q1-1',
-                    title: 'Lesson 1: The Creation',
-                    date: 'January 7, 2024',
-                    description: 'Understanding the creation story and its significance.',
-                    memoryVerse: 'In the beginning God created the heavens and the earth. - Genesis 1:1',
-                    pdfUrl: 'lessons/q1/lesson-1-creation.pdf'
-                },
-                {
-                    id: 'q1-2',
-                    title: 'Lesson 2: The Fall',
-                    date: 'January 14, 2024',
-                    description: 'The story of Adam and Eve and the consequences of sin.',
-                    memoryVerse: 'For the wages of sin is death, but the gift of God is eternal life. - Romans 6:23',
-                    pdfUrl: 'lessons/q1/lesson-2-fall.pdf'
-                },
-                {
-                    id: 'q1-3',
-                    title: 'Lesson 3: The Flood',
-                    date: 'January 21, 2024',
-                    description: 'Noah\'s ark and God\'s promise of redemption.',
-                    memoryVerse: 'But Noah found favor in the eyes of the LORD. - Genesis 6:8',
-                    pdfUrl: 'lessons/q1/lesson-3-flood.pdf'
+                    id: "q1-1",
+                    title: "First Quarter Lesson 2026",
+                    date: "January - March 2026",
+                    description: "Quarterly Bible study lessons for spiritual growth and understanding.",
+                    memoryVerse: "Study to shew thyself approved unto God - 2 Timothy 2:15",
+                    pdfUrl: "lessons/Lesson 1st quarter 2026- FINAL.pdf"
                 }
             ]
         },
-        2: {
-            title: 'Second Quarter (April-June)',
-            available: true,
-            lessons: [
-                {
-                    id: 'q2-1',
-                    title: 'Lesson 1: Abraham\'s Call',
-                    date: 'April 7, 2024',
-                    description: 'God\'s call to Abraham and the promise of descendants.',
-                    memoryVerse: 'The LORD had said to Abram, "Go from your country... to the land I will show you." - Genesis 12:1',
-                    pdfUrl: 'lessons/q2/lesson-1-abraham-call.pdf'
-                },
-                {
-                    id: 'q2-2',
-                    title: 'Lesson 2: Isaac and Jacob',
-                    date: 'April 14, 2024',
-                    description: 'The continuation of God\'s promise through Isaac and Jacob.',
-                    memoryVerse: 'I am with you and will watch over you wherever you go. - Genesis 28:15',
-                    pdfUrl: 'lessons/q2/lesson-2-isaac-jacob.pdf'
-                }
-            ]
-        },
-        3: {
-            title: 'Third Quarter (July-September)',
+        2: { // Q2 (April - June)
+            title: "Second Quarter 2026",
             available: false,
             lessons: []
         },
-        4: {
-            title: 'Fourth Quarter (October-December)',
+        3: { // Q3 (July - September)
+            title: "Third Quarter 2026",
+            available: false,
+            lessons: []
+        },
+        4: { // Q4 (October - December)
+            title: "Fourth Quarter 2026",
             available: false,
             lessons: []
         }
     };
 
-    // --- 4. HELPER FUNCTIONS ---
+    // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
     function getDocumentPath(doc) {
-        // Check if it's a lesson (has pdfUrl property)
-        if (doc.pdfUrl) {
-            return doc.pdfUrl;
+        // Check if the fileName already includes a folder path
+        if (doc.fileName && doc.fileName.includes('/')) {
+            return doc.fileName; // Already has the correct path (e.g., "tracks/filename.pdf" or "judah/filename.pdf")
+        } else if (doc.pdfUrl) {
+            return doc.pdfUrl; // For Bible lessons
+        } else {
+            return `pdfs/${doc.fileName}`; // Add pdfs/ prefix for Books
         }
-        
-        // Check if it's a regular document with fileName
-        if (doc.fileName) {
-            // If fileName already includes path, use it as is
-            if (doc.fileName.startsWith('documents/') || doc.fileName.startsWith('lessons/')) {
-                return doc.fileName;
-            }
-            return `documents/${doc.fileName}`;
-        }
-        
-        // Fallback for documents without fileName
-        const category = doc.category || 'uncategorized';
-        const title = doc.title.replace(/\s+/g, '-').toLowerCase();
-        return `documents/${category}/${title}.pdf`;
     }
 
-    function getFileNameForDownload(doc) {
-        if (doc.fileName) {
-            // Extract just the filename from the path
-            const parts = doc.fileName.split('/');
-            return parts[parts.length - 1];
-        }
-        // For lessons, use the title as filename
-        if (doc.pdfUrl) {
-            const parts = doc.pdfUrl.split('/');
-            return parts[parts.length - 1];
-        }
-        // Fallback
-        const title = doc.title.replace(/\s+/g, '-').toLowerCase();
-        return `${title}.pdf`;
-    }
-
-    // --- 5. DOCUMENT DATA ---
+    // --- 5. YOUR REAL DOCUMENT DATA ---
     function getDocumentData() {
         return [
-            { id: 1, title: "M.T. Zion Report 2024", category: "m.t zion report", fileName: "m.t-zion/2024-report.pdf" },
-            { id: 2, title: "SEP Report 2023", category: "Sep Reports", fileName: "sep/2023-report.pdf" },
-            { id: 3, title: "Judah Report 2023", category: "Judah Reports", fileName: "judah/2023-report.pdf" },
-            { id: 4, title: "Date Report 2023", category: "Date Reports", fileName: "date/2023-report.pdf" },
-            { id: 5, title: "Elul Report 2023", category: "Elul pdf", fileName: "elul/2023-report.pdf" },
-            { id: 6, title: "Sebat Report 2023", category: "Sebat pdf", fileName: "sebat/2023-report.pdf" },
-            { id: 7, title: "Bul Report 2023", category: "Bul pdf", fileName: "bul/2023-report.pdf" },
-            { id: 8, title: "Chisleu Report 2023", category: "Chisleu pdf", fileName: "chisleu/2023-report.pdf" },
-            { id: 9, title: "Zif Report 2023", category: "Zif pdf", fileName: "zif/2023-report.pdf" },
-            { id: 10, title: "Zif Sivan Report 2023", category: "Zif sivan pdf", fileName: "zif-sivan/2023-report.pdf" },
-            { id: 11, title: "Tibet Report 2023", category: "Tibet pdf", fileName: "tibet/2023-report.pdf" },
-            { id: 12, title: "Ethanim Report 2023", category: "Ethanim pdf", fileName: "ethanim/2023-report.pdf" },
-            { id: 13, title: "Sivan Report 2023", category: "Sivan pdf", fileName: "sivan/2023-report.pdf" },
-            { id: 14, title: "Tebet Report 2023", category: "Tebet pdf", fileName: "tebet/2023-report.pdf" },
-            { id: 15, title: "Chesleu Report 2023", category: "Chesleu pdf", fileName: "chesleu/2023-report.pdf" },
-            { id: 16, title: "Bul Chisleu Report 2023", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2023-report.pdf" },
-            { id: 17, title: "Nisan Report 2023", category: "Nisan pdf", fileName: "nisan/2023-report.pdf" },
-            { id: 18, title: "July Report 2023", category: "July pdf", fileName: "july/2023-report.pdf" },
-            { id: 19, title: "March Report 2023", category: "March pdf", fileName: "march/2023-report.pdf" },
-            { id: 20, title: "May Report 2023", category: "May pdf", fileName: "may/2023-report.pdf" },
-            { id: 21, title: "Sivan Lesson", category: "sivan", fileName: "sivan/lesson.pdf" },
-            { id: 22, title: "Sebat Lesson", category: "sebat", fileName: "sebat/lesson.pdf" },
-            { id: 23, title: "M.T. Zion Report 2022", category: "m.t zion report", fileName: "m.t-zion/2022-report.pdf" },
-            { id: 24, title: "SEP Report 2022", category: "Sep Reports", fileName: "sep/2022-report.pdf" },
-            { id: 25, title: "Judah Report 2022", category: "Judah Reports", fileName: "judah/2022-report.pdf" },
-            { id: 26, title: "Date Report 2022", category: "Date Reports", fileName: "date/2022-report.pdf" },
-            { id: 27, title: "Elul Report 2022", category: "Elul pdf", fileName: "elul/2022-report.pdf" },
-            { id: 28, title: "Sebat Report 2022", category: "Sebat pdf", fileName: "sebat/2022-report.pdf" },
-            { id: 29, title: "Bul Report 2022", category: "Bul pdf", fileName: "bul/2022-report.pdf" },
-            { id: 30, title: "Chisleu Report 2022", category: "Chisleu pdf", fileName: "chisleu/2022-report.pdf" },
-            { id: 31, title: "Zif Report 2022", category: "Zif pdf", fileName: "zif/2022-report.pdf" },
-            { id: 32, title: "Zif Sivan Report 2022", category: "Zif sivan pdf", fileName: "zif-sivan/2022-report.pdf" },
-            { id: 33, title: "Tibet Report 2022", category: "Tibet pdf", fileName: "tibet/2022-report.pdf" },
-            { id: 34, title: "Ethanim Report 2022", category: "Ethanim pdf", fileName: "ethanim/2022-report.pdf" },
-            { id: 35, title: "Sivan Report 2022", category: "Sivan pdf", fileName: "sivan/2022-report.pdf" },
-            { id: 36, title: "Tebet Report 2022", category: "Tebet pdf", fileName: "tebet/2022-report.pdf" },
-            { id: 37, title: "Chesleu Report 2022", category: "Chesleu pdf", fileName: "chesleu/2022-report.pdf" },
-            { id: 38, title: "Bul Chisleu Report 2022", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2022-report.pdf" },
-            { id: 39, title: "Nisan Report 2022", category: "Nisan pdf", fileName: "nisan/2022-report.pdf" },
-            { id: 40, title: "July Report 2022", category: "July pdf", fileName: "july/2022-report.pdf" },
-            { id: 41, title: "March Report 2022", category: "March pdf", fileName: "march/2022-report.pdf" },
-            { id: 42, title: "May Report 2022", category: "May pdf", fileName: "may/2022-report.pdf" },
-            { id: 43, title: "M.T. Zion Report 2021", category: "m.t zion report", fileName: "m.t-zion/2021-report.pdf" },
-            { id: 44, title: "SEP Report 2021", category: "Sep Reports", fileName: "sep/2021-report.pdf" },
-            { id: 45, title: "Judah Report 2021", category: "Judah Reports", fileName: "judah/2021-report.pdf" },
-            { id: 46, title: "Date Report 2021", category: "Date Reports", fileName: "date/2021-report.pdf" },
-            { id: 47, title: "Elul Report 2021", category: "Elul pdf", fileName: "elul/2021-report.pdf" },
-            { id: 48, title: "Sebat Report 2021", category: "Sebat pdf", fileName: "sebat/2021-report.pdf" },
-            { id: 49, title: "Bul Report 2021", category: "Bul pdf", fileName: "bul/2021-report.pdf" },
-            { id: 50, title: "Chisleu Report 2021", category: "Chisleu pdf", fileName: "chisleu/2021-report.pdf" },
-            { id: 51, title: "Zif Report 2021", category: "Zif pdf", fileName: "zif/2021-report.pdf" },
-            { id: 52, title: "Zif Sivan Report 2021", category: "Zif sivan pdf", fileName: "zif-sivan/2021-report.pdf" },
-            { id: 53, title: "Tibet Report 2021", category: "Tibet pdf", fileName: "tibet/2021-report.pdf" },
-            { id: 54, title: "Ethanim Report 2021", category: "Ethanim pdf", fileName: "ethanim/2021-report.pdf" },
-            { id: 55, title: "Sivan Report 2021", category: "Sivan pdf", fileName: "sivan/2021-report.pdf" },
-            { id: 56, title: "Tebet Report 2021", category: "Tebet pdf", fileName: "tebet/2021-report.pdf" },
-            { id: 57, title: "Chesleu Report 2021", category: "Chesleu pdf", fileName: "chesleu/2021-report.pdf" },
-            { id: 58, title: "Bul Chisleu Report 2021", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2021-report.pdf" },
-            { id: 59, title: "Nisan Report 2021", category: "Nisan pdf", fileName: "nisan/2021-report.pdf" },
-            { id: 60, title: "July Report 2021", category: "July pdf", fileName: "july/2021-report.pdf" },
-            { id: 61, title: "March Report 2021", category: "March pdf", fileName: "march/2021-report.pdf" },
-            { id: 62, title: "May Report 2021", category: "May pdf", fileName: "may/2021-report.pdf" },
-            { id: 63, title: "M.T. Zion Report 2020", category: "m.t zion report", fileName: "m.t-zion/2020-report.pdf" },
-            { id: 64, title: "SEP Report 2020", category: "Sep Reports", fileName: "sep/2020-report.pdf" },
-            { id: 65, title: "Judah Report 2020", category: "Judah Reports", fileName: "judah/2020-report.pdf" },
-            { id: 66, title: "Date Report 2020", category: "Date Reports", fileName: "date/2020-report.pdf" },
-            { id: 67, title: "Elul Report 2020", category: "Elul pdf", fileName: "elul/2020-report.pdf" },
-            { id: 68, title: "Sebat Report 2020", category: "Sebat pdf", fileName: "sebat/2020-report.pdf" },
-            { id: 69, title: "Bul Report 2020", category: "Bul pdf", fileName: "bul/2020-report.pdf" },
-            { id: 70, title: "Chisleu Report 2020", category: "Chisleu pdf", fileName: "chisleu/2020-report.pdf" },
-            { id: 71, title: "Zif Report 2020", category: "Zif pdf", fileName: "zif/2020-report.pdf" },
-            { id: 72, title: "Zif Sivan Report 2020", category: "Zif sivan pdf", fileName: "zif-sivan/2020-report.pdf" },
-            { id: 73, title: "Tibet Report 2020", category: "Tibet pdf", fileName: "tibet/2020-report.pdf" },
-            { id: 74, title: "Ethanim Report 2020", category: "Ethanim pdf", fileName: "ethanim/2020-report.pdf" },
-            { id: 75, title: "Sivan Report 2020", category: "Sivan pdf", fileName: "sivan/2020-report.pdf" },
-            { id: 76, title: "Tebet Report 2020", category: "Tebet pdf", fileName: "tebet/2020-report.pdf" },
-            { id: 77, title: "Chesleu Report 2020", category: "Chesleu pdf", fileName: "chesleu/2020-report.pdf" },
-            { id: 78, title: "Bul Chisleu Report 2020", category: "Bul-chisleu pdf", fileName: "bul-chisleu/2020-report.pdf" },
-            { id: 79, title: "Nisan Report 2020", category: "Nisan pdf", fileName: "nisan/2020-report.pdf" },
-            { id: 80, title: "July Report 2020", category: "July pdf", fileName: "july/2020-report.pdf" },
-            { id: 81, title: "March Report 2020", category: "March pdf", fileName: "march/2020-report.pdf" },
-            { id: 82, title: "May Report 2020", category: "May pdf", fileName: "may/2020-report.pdf" },
-            { id: 83, title: "Judah/98-Chisleu", category: "Judah", fileName: "judah/98-Chisleu.pdf" },
-            { id: 84, title: "Judah/99-Tebet", category: "Judah", fileName: "judah/99-Tebet.pdf" },
-            { id: 85, title: "Judah/97-Sebat", category: "Judah", fileName: "judah/97-Sebat.pdf" },
-            { id: 86, title: "Judah/96-Nisan", category: "Judah", fileName: "judah/96-Nisan.pdf" },
-            { id: 87, title: "Judah/95-Iyar", category: "Judah", fileName: "judah/95-Iyar.pdf" },
-            { id: 88, title: "Judah/99-Sivan", category: "Judah", fileName: "judah/99-Sivan.pdf" },
-            { id: 89, title: "Judah/95-Tammuz", category: "Judah", fileName: "judah/95-Tammuz.pdf" },
-            { id: 90, title: "Judah/95-Ab", category: "Judah", fileName: "judah/95-Ab.pdf" },
-            { id: 91, title: "Judah/95-Elul", category: "Judah", fileName: "judah/95-Elul.pdf" },
-            { id: 92, title: "Judah/94-Tisri", category: "Judah", fileName: "judah/94-Tisri.pdf" },
-            { id: 93, title: "Judah/96-March", category: "Judah", fileName: "judah/96-March.pdf" },
-            { id: 94, title: "Judah/94-Heshvan", category: "Judah", fileName: "judah/94-Heshvan.pdf" },
-            { id: 95, title: "Judah/94-Chisleu", category: "Judah", fileName: "judah/94-Chisleu.pdf" },
-            { id: 96, title: "Judah/94-Tebet", category: "Judah", fileName: "judah/94-Tebet.pdf" },
-            { id: 97, title: "Judah/93-Sebat", category: "Judah", fileName: "judah/93-Sebat.pdf" },
-            { id: 98, title: "Judah/93-Adar", category: "Judah", fileName: "judah/93-Adar.pdf" },
-            { id: 99, title: "Judah/93-Nisan", category: "Judah", fileName: "judah/93-Nisan.pdf" },
-            { id: 100, title: "Judah/93-Iyar", category: "Judah", fileName: "judah/93-Iyar.pdf" },
-            { id: 101, title: "Judah/93-Sivan", category: "Judah", fileName: "judah/93-Sivan.pdf" },
-            { id: 102, title: "Judah/93-Tammuz", category: "Judah", fileName: "judah/93-Tammuz.pdf" },
-            { id: 103, title: "Judah/93-Ab", category: "Judah", fileName: "judah/93-Ab.pdf" },
-            { id: 104, title: "Judah/93-Elul", category: "Judah", fileName: "judah/93-Elul.pdf" },
+            // BOOKS - PDFs in the pdfs folder
+            { id: 1, title: "Babylon Mystery Religion", category: "Books", fileName: "Babylon-Mystery-Religion-by-Ralph-Woodrow-1981.pdf" },
+            { id: 2, title: "Complete Jewish Bible", category: "Books", fileName: "Complete-Jewish-Bible.pdf" },
+            { id: 3, title: "Dugger Porter Debate", category: "Books", fileName: "Dugger-Porter-Debate.pdf" },
+            { id: 4, title: "Fox's Book of Martyrs", category: "Books", fileName: "FOXs-BOOK-of-MARTYRS.pdf" },
+            { id: 5, title: "Forty Points of Doctrine", category: "Books", fileName: "FortyPointsOfDoctrine.pdf" },
+            { id: 6, title: "The Bible Home Instructor", category: "Books", fileName: "THE-BIBLE-HOME-INSTRUCTOR.pdf" },
+            { id: 7, title: "The Two Babylons", category: "Books", fileName: "The-Two-Babylons.pdf" },
+            { id: 8, title: "A History of the True Church", category: "Books", fileName: "A-History-of-the-True-Church-Dugger-and-Dodd.pdf" },
+
+            // TRACTS - PDFs in the tracks folder
+            { id: 9, title: "Beginning and Ending of God's Day", category: "Tracts", fileName: "tracks/Beginning_and_Ending_of_Gods_Day.pdf" },
+            { id: 10, title: "Biblical Doctrine of Predestination", category: "Tracts", fileName: "tracks/Biblical-Doctrine-of-Predestination.pdf" },
+            { id: 11, title: "Coming Home", category: "Tracts", fileName: "tracks/Coming-Home.pdf" },
+            { id: 12, title: "Crises Dates in Bible Prophecy", category: "Tracts", fileName: "tracks/Crises-Dates-in-Bible-Prophecy.pdf" },
+            { id: 13, title: "Daniel", category: "Tracts", fileName: "tracks/DANIEL.pdf" },
+            { id: 14, title: "Death in the Kitchen", category: "Tracts", fileName: "tracks/Death-in-the-Kitchen.pdf" },
+            { id: 15, title: "Deliverance from Plagues", category: "Tracts", fileName: "tracks/Deliverance-from-plaques-is-knowing-his-number.pdf" },
+            { id: 16, title: "Doctrine and History of the True Religion", category: "Tracts", fileName: "tracks/Doctrine-and-History-of-the-True-Religion.pdf" },
+            { id: 17, title: "Doctrine and History of the Primitive Church", category: "Tracts", fileName: "tracks/Doctrine-and-history-of-the-primitive-church.pdf" },
+            { id: 18, title: "Does It Make Difference", category: "Tracts", fileName: "tracks/Does-it-make-difference.pdf" },
+            { id: 19, title: "Does the Bible Contradict Itself", category: "Tracts", fileName: "tracks/Does-the-Bible-Contradict-Itself.pdf" },
+            { id: 20, title: "Easter, Christmas And Sunday Were Pagan", category: "Tracts", fileName: "tracks/Easter-Christmas-And-Sunday-Were-Pagan.pdf" },
+            { id: 21, title: "Explanation of Common Texts Against the Bible Sabbath", category: "Tracts", fileName: "tracks/Explanation-of-common-texts-used-against-the-Bible-Sabbath.pdf" },
+            { id: 22, title: "Forty Reasons Why The 7th Day Sabbath Should Be Kept", category: "Tracts", fileName: "tracks/Forty-Reasons-Why-The-7th-Day-Sabbath-Should-Be-Kept.pdf" },
+            { id: 23, title: "Hell - What and Where is it", category: "Tracts", fileName: "tracks/Hell-What-and-Where-is-it.pdf" },
+            { id: 24, title: "How Old is Your Church", category: "Tracts", fileName: "tracks/How-old-is-your-Church.pdf" },
+            { id: 25, title: "I Will Bless Them That Bless Thee", category: "Tracts", fileName: "tracks/I-will-Bless-Them-That-Bless-Thee.pdf" },
+            { id: 26, title: "Israel 3", category: "Tracts", fileName: "tracks/Israel3.pdf" },
+            { id: 27, title: "Israel's God - A Reality or a Myth", category: "Tracts", fileName: "tracks/Israels-God-a-Reality-or-a-Myth.pdf" },
+            { id: 28, title: "Judah - Failure to Stand by Her Agreed Test", category: "Tracts", fileName: "tracks/Judah-Failure-to-Stand-by-Her-Agreed-Test-of-Over-1900-Years-Ago-But-many-are-now.pdf" },
+            { id: 29, title: "Mt. Zion Reporter", category: "Tracts", fileName: "tracks/Mt-Zion-Reporter_AN-Dugger.pdf" },
+            { id: 30, title: "Mt. Sinai Speaks Once More", category: "Tracts", fileName: "tracks/Mt.-Sinai-Speaks-Once-More.pdf" },
+            { id: 31, title: "One Door for the Gentiles to Enter", category: "Tracts", fileName: "tracks/One-door-for-the-Gentiles-to-enter.pdf" },
+            { id: 32, title: "Passover and Lord's Supper", category: "Tracts", fileName: "tracks/Passover_and_Lords_Supper.pdf" },
+            { id: 33, title: "Punishment of the Wicked", category: "Tracts", fileName: "tracks/Punishment-of-the-wicked.pdf" },
+            { id: 34, title: "Reasons Why Seven Last Plagues Are in the Future", category: "Tracts", fileName: "tracks/REASONS-WHY-SEVEN-LAST-PLAQUES-ARE-IN-THE-FUTURE.pdf" },
+            { id: 35, title: "Revelation", category: "Tracts", fileName: "tracks/REVELATION.pdf" },
+            { id: 36, title: "Search the Scriptures", category: "Tracts", fileName: "tracks/Search-the-scriptures.pdf" },
+            { id: 37, title: "The Resurrection of Christ", category: "Tracts", fileName: "tracks/THE-RESURRECTION-OF-CHRIST.pdf" },
+            { id: 38, title: "The Bible Name for the Church", category: "Tracts", fileName: "tracks/The-Bible-Name-for-the-Church.pdf" },
+            { id: 39, title: "The Daughter of Jerusalem and the Daughter of Babylon", category: "Tracts", fileName: "tracks/The-Daughter-of-Jerusalem-and-the-Daughter-of-Babylon.pdf" },
+            { id: 40, title: "The Greatest Discovery of the Age - Noah's Ark Found", category: "Tracts", fileName: "tracks/The-Greatest-Discovery-of-the-Age-Noahs-Ark-Found.pdf" },
+            { id: 41, title: "The Greatest Miracle of the Age - The Re-birth of Israel", category: "Tracts", fileName: "tracks/The-Greatest-Miracle-of-the-Age-The-Re-birth-of-Israel.pdf" },
+            { id: 42, title: "The Holy Spirit", category: "Tracts", fileName: "tracks/The-Holy-Spirit.pdf" },
+            { id: 43, title: "The Law of the Spirit of Life", category: "Tracts", fileName: "tracks/The-Law-of-the-Spirit-of-Life.pdf" },
+            { id: 44, title: "The Pending World Scourge - Daniel and Revelation", category: "Tracts", fileName: "tracks/The-Pending-World-Scourage-Daniel-and-Revelation.pdf" },
+            { id: 45, title: "The Restoration of the Kingdom to Israel", category: "Tracts", fileName: "tracks/The-Restoration-of-the-Kingdom-to-Israel.pdf" },
+            { id: 46, title: "The Ten Tribes of Israel - Not Lost but Found", category: "Tracts", fileName: "tracks/The-Ten-Tribes-of-Israel-Not-lost-hut-found.pdf" },
+            { id: 47, title: "The End of the World", category: "Tracts", fileName: "tracks/The-end-of-the-world.pdf" },
+            { id: 48, title: "The Eternal Abode of the Righteous", category: "Tracts", fileName: "tracks/The-eternal-abode-of-the-righteous.pdf" },
+            { id: 49, title: "The Law of God versus Devil's Scrapbook", category: "Tracts", fileName: "tracks/The-law-of-God-versus-Devils-scrapbook.pdf" },
+            { id: 50, title: "The Living Truth", category: "Tracts", fileName: "tracks/The-living-Truth.pdf" },
+            { id: 51, title: "The Mirror of God", category: "Tracts", fileName: "tracks/The-mirror-of-God.pdf" },
+            { id: 52, title: "Why I Am Not a Seventh Day Adventist", category: "Tracts", fileName: "tracks/WHY-I-AM-NOT-A-SEVENTH-DAY-ADVENTIST.pdf" },
+            { id: 53, title: "Was Man Created", category: "Tracts", fileName: "tracks/Was-Man-Created.pdf" },
+            { id: 54, title: "Was Peter the Foundation Rock", category: "Tracts", fileName: "tracks/Was-Peter-the-Foundation-Rock.pdf" },
+            { id: 55, title: "What Is the Real Baptism Doctrine", category: "Tracts", fileName: "tracks/What-Is-the-Real-Baptism-Doctrine.pdf" },
+            { id: 56, title: "What Was Abolished By Christ", category: "Tracts", fileName: "tracks/What-Was-Abolished-By-Christ.pdf" },
+            { id: 57, title: "Which Day is The Sabbath", category: "Tracts", fileName: "tracks/Which-Day-is-The-Sabbath.pdf" },
+            { id: 58, title: "Who Are The Messianic Jews In Israel", category: "Tracts", fileName: "tracks/Who-Are-The-Messianic-Jews-In-Israel.pdf" },
+            { id: 59, title: "Why Not Talk to God About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
+            { id: 60, title: "Has Our Messiah Come", category: "Tracts", fileName: "tracks/has-our-messiah-come-better.pdf" },
+            { id: 61, title: "Why Israel is Here to Stay", category: "Tracts", fileName: "tracks/why-israel-is-here-to-stay-potrait.pdf" },
+            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year of deception.pdf" },
+
+            // JUDAH - PDFs in the judah folder
+            { id: 63, title: "Judah/72-sebat", category: "Judah", fileName: "judah/72-Sebat.pdf" },
+            { id: 64, title: "Judah/78 Tebet", category: "Judah", fileName: "judah/78-Tibet.pdf" },
+            { id: 65, title: "Judah/96 Nov", category: "Judah", fileName: "judah/96-Nov.pdf" },
+            { id: 66, title: "Judah/98 july", category: "Judah", fileName: "judah/98-July.pdf" },
+            // Removed duplicate ID 67
+            { id: 68, title: "Judah/91 Sept", category: "Judah", fileName: "judah/91-Sept.pdf" },
+            { id: 69, title: "Judah/83 Tebet", category: "Judah", fileName: "judah/83-Tibet.pdf" },
+            { id: 70, title: "Judah/94 Dec", category: "Judah", fileName: "judah/94-Dec.pdf" },
+            { id: 71, title: "Judah/80 Tebet", category: "Judah", fileName: "judah/80-Tebet.pdf" },
+            { id: 72, title: "Judah/81 Elul", category: "Judah", fileName: "judah/81-Elul.pdf" },
+            { id: 73, title: "Judah/90 Alul", category: "Judah", fileName: "judah/90-Alul.pdf" },
+            { id: 74, title: "Judah/89 Bul", category: "Judah", fileName: "judah/89-Bul.pdf" },
+            { id: 75, title: "Judah/81 Bul", category: "Judah", fileName: "judah/81-Bul.pdf" },
+            { id: 76, title: "Judah/79 Sivan", category: "Judah", fileName: "judah/79-Sivan.pdf" },
+            { id: 77, title: "Judah 71 Tebet", category: "Judah", fileName: "judah/71-Tebet.pdf" },
+            { id: 78, title: "Judah/87 Zif", category: "Judah", fileName: "judah/87-Zif.pdf" },
+            { id: 79, title: "Judah/85 July", category: "Judah", fileName: "judah/85-July.pdf" },
+            { id: 80, title: "Judah/84 Chisleu", category: "Judah", fileName: "judah/84-Chisleu.pdf" },
+            { id: 81, title: "Judah/83 July", category: "Judah", fileName: "judah/83-July.pdf" },
+            { id: 82, title: "Judah/78 Elul", category: "Judah", fileName: "judah/78-Elul.pdf" },
+            { id: 83, title: "Judah/79 Bul", category: "Judah", fileName: "judah/79-Bul.pdf" },
+            { id: 84, title: "Judah/80 Elul", category: "Judah", fileName: "judah/80-Elul.pdf" },
+            { id: 85, title: "Judah/81 sivan", category: "Judah", fileName: "judah/81-Sivan.pdf" },
+            { id: 86, title: "Judah/82 Bul-chisleu", category: "Judah", fileName: "judah/82-Bul-Chisleu.pdf" },
+            { id: 87, title: "Judah/82 Elul", category: "Judah", fileName: "judah/82-Elul.pdf" },
+            { id: 88, title: "Judah/88 Sivan", category: "Judah", fileName: "judah/88-Sivan.pdf" },
+            { id: 89, title: "Judah/82 NovDec", category: "Judah", fileName: "judah/Judah-82-NovDec.pdf" },
+            { id: 90, title: "Judah/86 Aug", category: "Judah", fileName: "judah/Judah-86Aug.pdf" },
+            { id: 91, title: "Judah/91", category: "Judah", fileName: "judah/Judah-91.pdf" },
+            { id: 92, title: "Judah/Feb 1970", category: "Judah", fileName: "judah/Feb-1970.pdf" },
+            { id: 93, title: "Judah/Jan-Feb-1977", category: "Judah", fileName: "judah/Jan-Feb-1977.pdf" },
+            { id: 94, title: "Judah/Jan 1974", category: "Judah", fileName: "judah/Jan-1974.pdf" },
+            { id: 95, title: "Judah/Jan-1971", category: "Judah", fileName: "judah/Jan-1971.pdf" },
+            { id: 96, title: "Judah/July-1970", category: "Judah", fileName: "judah/July-1970.pdf" },
+            { id: 97, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974.pdf" },
+            { id: 98, title: "Judah/June 1974", category: "Judah", fileName: "judah/Judah-June-1974.pdf" },
+            { id: 99, title: "Judah/July 1974", category: "Judah", fileName: "judah/Judah-July-1974.pdf" },
+            { id: 100, title: "Judah/Octomber 1971", category: "Judah", fileName: "judah/Judah-Oct-1971.pdf" },
+            { id: 101, title: "Judah/Sept 1974", category: "Judah", fileName: "judah/Judah-Sep-1974.pdf" },
+            { id: 102, title: "Judah/Sept 1956", category: "Judah", fileName: "judah/MZR1956Sept.pdf" },
+            { id: 103, title: "Judah/82 Nisan", category: "Judah", fileName: "judah/82-Nisan.pdf" },
+            { id: 104, title: "Judah/july 80", category: "Judah", fileName: "judah/80-July.pdf" },
             { id: 105, title: "Judah/83 Elul", category: "Judah", fileName: "judah/83-Elul.pdf" },
             { id: 106, title: "Judah/98 Nov", category: "Judah", fileName: "judah/98-Nov.pdf" },
-            { id: 107, title: "Judah/96-August", category: "Judah", fileName: "judah/96-Aug.pdf" },
-            { id: 108, title: "Judah/88-Bul", category: "Judah", fileName: "judah/88-Bul.pdf" },
-            { id: 109, title: "Judah/85-Chisleu", category: "Judah", fileName: "judah/85-Chesleu.pdf" },
-            { id: 110, title: "Judah/73-July", category: "Judah", fileName: "judah/73-July.pdf" },
-            { id: 111, title: "Judah/81-chisleu", category: "Judah", fileName: "judah/81-Chesleu.pdf" },
-            { id: 112, title: "Judah/97-March", category: "Judah", fileName: "judah/97-March.pdf" },
-            { id: 113, title: "Judah/91- May", category: "Judah", fileName: "judah/91-May.pdf" },
-            { id: 114, title: "Judah/81-July", category: "Judah", fileName: "judah/81-July.pdf" },
-            { id: 115, title: "Judah/79-Zif", category: "Judah", fileName: "judah/79-Zif.pdf" },
-            { id: 116, title: "Judah/79-Ethanim", category: "Judah", fileName: "judah/79-Ethanim.pdf" },
-            { id: 117, title: "Judah/81-August", category: "Judah", fileName: "judah/81-August.pdf" },
-            { id: 118, title: "Judah/77-August", category: "Judah", fileName: "judah/77-August.pdf" },
-            { id: 119, title: "Judah/73-Zif", category: "Judah", fileName: "judah/73-Zif.pdf" },
-            { id: 120, title: "Judah/Zif-Sivan", category: "Judah", fileName: "judah/77-Zif-Sivan.pdf" },
-            { id: 121, title: "Judah/72-July", category: "Judah", fileName: "judah/72-July.pdf" },
-            { id: 122, title: "Judah/89-August", category: "Judah", fileName: "judah/89-August.pdf" },
-            { id: 123, title: "Judah/93-May", category: "Judah", fileName: "judah/93-May.pdf" },
-            { id: 124, title: "Judah/73-bul", category: "Judah", fileName: "judah/73-Bul.pdf" },
-            { id: 125, title: "Judah/73-chisleu", category: "Judah", fileName: "judah/73-Chisleu.pdf" },
-            { id: 126, title: "Judah/72-Elul", category: "Judah", fileName: "judah/72-Elul.pdf" },
-            { id: 127, title: "Judah/82-Ethanim", category: "Judah", fileName: "judah/82-Ethanim.pdf" },
-            { id: 128, title: "Judah/MZR2008-Q2", category: "Judah", fileName: "judah/MZR2008-Q2.pdf" },
-            { id: 129, title: "Judah/95MarchApr", category: "Judah", fileName: "judah/Judah-95MarApr.pdf" },
-            { id: 130, title: "Judah/90", category: "Judah", fileName: "judah/Judah-90.pdf" },
-            { id: 131, title: "Judah/July-1987", category: "Judah", fileName: "judah/July-1987.pdf" },
-            { id: 132, title: "Judah/June-1974", category: "Judah", fileName: "judah/June-1974.pdf" },
-            { id: 133, title: "Judah/March-1974", category: "Judah", fileName: "judah/March-1974.pdf" },
-            { id: 134, title: "Judah/May-1972", category: "Judah", fileName: "judah/May-1972.pdf" },
-            { id: 135, title: "Judah/Nov-Bul-1959", category: "Judah", fileName: "judah/Nov-Bul-1959.pdf" },
-            { id: 136, title: "Judah/June-1971", category: "Judah", fileName: "judah/Judah-June-1971.pdf" },
-            { id: 137, title: "Judah/Octomber-1970", category: "Judah", fileName: "judah/Judah-Oct-1970.pdf" },
-            { id: 138, title: "Judah/Feb-1971", category: "Judah", fileName: "judah/Judah-Feb-1971.pdf" },
-            { id: 139, title: "Judah/May-1971", category: "Judah", fileName: "judah/Judah-May-1971.pdf" },
-            { id: 140, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974-2.pdf" },
-            { id: 141, title: "Judah/1960-Bul-November", category: "Judah", fileName: "judah/Judah-1960-Bul-November.pdf" },
-            { id: 142, title: "Judah/1960-Chisleu-December", category: "Judah", fileName: "judah/Judah-1960-Chisleu-December.pdf" },
-            { id: 143, title: "Judah/1961-Tebet-January", category: "Judah", fileName: "judah/Judah-1961-Tebet-January.pdf" },
-            { id: 144, title: "Judah/1961-Sebat-February", category: "Judah", fileName: "judah/Judah-1961-Sebat-February.pdf" },
-            { id: 145, title: "Judah/1961-Adar-March", category: "Judah", fileName: "judah/Judah-1961-Adar-March.pdf" },
-            { id: 146, title: "Judah/1961-Nisan-April", category: "Judah", fileName: "judah/Judah-1961-Nisan-April.pdf" },
-            { id: 147, title: "Judah/1961-Iyar-May", category: "Judah", fileName: "judah/Judah-1961-Iyar-May.pdf" },
-            { id: 148, title: "Judah/1961-Sivan-June", category: "Judah", fileName: "judah/Judah-1961-Sivan-June.pdf" },
-            { id: 149, title: "Judah/1961-Tammuz-July", category: "Judah", fileName: "judah/Judah-1961-Tammuz-July.pdf" },
-            { id: 150, title: "Judah/1961-Ab-August", category: "Judah", fileName: "judah/Judah-1961-Ab-August.pdf" },
-            { id: 151, title: "Judah/1961-Elul-September", category: "Judah", fileName: "judah/Judah-1961-Elul-September.pdf" },
-            { id: 152, title: "Judah/1961-Tisri-October", category: "Judah", fileName: "judah/Judah-1961-Tisri-October.pdf" },
-            { id: 153, title: "Judah/1961-Heshvan-November", category: "Judah", fileName: "judah/Judah-1961-Heshvan-November.pdf" }
+            // Removed duplicate ID 107
+            { id: 108, title: "Judah/96-August", category: "Judah", fileName: "judah/96-Aug.pdf" },
+            { id: 109, title: "Judah/88-Bul", category: "Judah", fileName: "judah/88-Bul.pdf" },
+            { id: 110, title: "Judah/85-Chisleu", category: "Judah", fileName: "judah/85-Chesleu.pdf" },
+            { id: 111, title: "Judah/73-July", category: "Judah", fileName: "judah/73-July.pdf" },
+            { id: 112, title: "Judah/81-chisleu", category: "Judah", fileName: "judah/81-Chesleu.pdf" },
+            { id: 113, title: "Judah/97-March", category: "Judah", fileName: "judah/97-March.pdf" },
+            { id: 114, title: "Judah/91- May", category: "Judah", fileName: "judah/91-May.pdf" },
+            { id: 115, title: "Judah/81-July", category: "Judah", fileName: "judah/81-July.pdf" },
+            { id: 116, title: "Judah/79-Zif", category: "Judah", fileName: "judah/79-Zif.pdf" },
+            { id: 117, title: "Judah/79-Ethanim", category: "Judah", fileName: "judah/79-Ethanim.pdf" },
+            { id: 118, title: "Judah/81-August", category: "Judah", fileName: "judah/81-August.pdf" },
+            { id: 119, title: "Judah/77-August", category: "Judah", fileName: "judah/77-August.pdf" },
+            { id: 120, title: "Judah/73-Zif", category: "Judah", fileName: "judah/73-Zif.pdf" },
+            { id: 121, title: "Judah/Zif-Sivan", category: "Judah", fileName: "judah/77-Zif-Sivan.pdf" },
+            { id: 122, title: "Judah/72-July", category: "Judah", fileName: "judah/72-July.pdf" },
+            { id: 123, title: "Judah/89-August", category: "Judah", fileName: "judah/89-August.pdf" },
+            { id: 124, title: "Judah/93-May", category: "Judah", fileName: "judah/93-May.pdf" },
+            { id: 125, title: "Judah/73-bul", category: "Judah", fileName: "judah/73-Bul.pdf" },
+            { id: 126, title: "Judah/73-chisleu", category: "Judah", fileName: "judah/73-Chisleu.pdf" },
+            { id: 127, title: "Judah/72-Elul", category: "Judah", fileName: "judah/72-Elul.pdf" },
+            { id: 128, title: "Judah/82-Ethanim", category: "Judah", fileName: "judah/82-Ethanim.pdf" },
+            { id: 129, title: "Judah/MZR2008-Q2", category: "Judah", fileName: "judah/MZR2008-Q2.pdf" },
+            { id: 130, title: "Judah/95MarchApr", category: "Judah", fileName: "judah/Judah-95MarApr.pdf" },
+            { id: 131, title: "Judah/90", category: "Judah", fileName: "judah/Judah-90.pdf" },
+            { id: 132, title: "Judah/July-1987", category: "Judah", fileName: "judah/July-1987.pdf" },
+            { id: 133, title: "Judah/June-1974", category: "Judah", fileName: "judah/June-1972.pdf" },
+            { id: 134, title: "Judah/March-1974", category: "Judah", fileName: "judah/March-1974.pdf" },
+            { id: 135, title: "Judah/May-1972", category: "Judah", fileName: "judah/May-1972.pdf" },
+            { id: 136, title: "Judah/Nov-Bul-1959", category: "Judah", fileName: "judah/Nov-Bul-1959.pdf" },
+            { id: 137, title: "Judah/June-1971", category: "Judah", fileName: "judah/Judah-June-1971.pdf" },
+            { id: 138, title: "Judah/Octomber-1970", category: "Judah", fileName: "judah/Judah-Oct-1970.pdf" },
+            { id: 139, title: "Judah/Feb-1971", category: "Judah", fileName: "judah/Judah-Feb-1971.pdf" },
+            { id: 140, title: "Judah/May-1971", category: "Judah", fileName: "judah/Judah-May-1971.pdf" },
+            { id: 141, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974-2.pdf" },
+            { id: 142, title: "Judah/1960-Bul-November", category: "Judah", fileName: "judah/Judah-1960-Bul-November.pdf" }
         ];
     }
 
@@ -402,24 +339,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 8. INITIALIZATION ---
     function init() {
-        // Load preferences first
-        loadPreferences();
-        loadSavedLessons();
-        
-        // Then load data
+        // Load data
         allDocuments = getDocumentData();
 
         // Setup UI
         populateCategories();
         setupEventListeners();
         setupHamburgerMenu();
-
-        // Set initial active quarter pill
-        const activePill = document.querySelector(`.quarter-pill[data-quarter="${currentQuarter}"]`);
-        if (activePill) {
-            quarterPills.forEach(p => p.classList.remove('active'));
-            activePill.classList.add('active');
-        }
 
         // Initial render
         handleMainFilterChange();
@@ -429,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 9. EVENT LISTENERS ---
     function setupEventListeners() {
-        // Language selector
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
             localStorage.setItem('preferredLanguage', currentLanguage);
@@ -439,22 +364,17 @@ document.addEventListener('DOMContentLoaded', () => {
             populateCategories();
         });
 
-        // Main search and filter
-        mainSearchInput.addEventListener('input', debounce(handleMainFilterChange, 300));
+        mainSearchInput.addEventListener('input', handleMainFilterChange);
         categoryFilter.addEventListener('change', handleMainFilterChange);
 
-        // Lessons search
-        lessonSearchInput.addEventListener('input', debounce(handleLessonFilterChange, 300));
-        
-        // Quarter pills
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.quarter-pill')) {
-                const pill = e.target.closest('.quarter-pill');
+        lessonSearchInput.addEventListener('input', handleLessonFilterChange);
+        quarterPills.forEach(pill => {
+            pill.addEventListener('click', () => {
                 quarterPills.forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
                 currentQuarter = pill.dataset.quarter;
                 handleLessonFilterChange();
-            }
+            });
         });
 
         // Modal listeners
@@ -474,39 +394,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.key === 'ArrowRight' && !modalNext.disabled) showNextDocument();
             }
         });
-
-        // Prevent PDF viewer from closing modal when clicking inside
-        pdfViewer.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
     }
 
-    // Debounce function for search inputs
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
+    // List of categories that should appear in the Lesson Sidebar
+    // Admin: Add or remove category names here to move them between the grid and sidebar
+    const lessonCategories = [
+        'Judah Reports', 'Sep Reports', 'm.t zion report',
+        'Date Reports', 'Elul pdf', 'Sebat pdf', 'Bul pdf',
+        'Chisleu pdf', 'Zif pdf', 'Zif sivan pdf', 'Zif sivan 1 pdf',
+        'Tibet pdf', 'Ethanim pdf', 'Sivan pdf', 'Tebet pdf',
+        'Chesleu pdf', 'Bul-chisleu pdf', 'Nisan pdf', 'July pdf', 'March pdf', 'May pdf', 'sivan', 'sebat'
+    ];
 
-    // --- 10. FILTER FUNCTIONS ---
     function handleMainFilterChange() {
-        const searchTerm = mainSearchInput.value.toLowerCase().trim();
+        const searchTerm = mainSearchInput.value.toLowerCase();
         const category = categoryFilter.value;
 
         mainFilteredDocuments = allDocuments.filter(doc => {
+            // Rule: Lessons don't show up in the main grid unless explicitly filtered by category?
+            // Actually, let's keep the grid for EVERYTHING non-lesson by default, 
+            // but if they pick a lesson category from the filter, show it there too.
+            const isLesson = lessonCategories.includes(doc.category);
+            if (isLesson && category === 'all') return false;
+
             const titleMatch = doc.title.toLowerCase().includes(searchTerm);
             const categoryMatch = doc.category.toLowerCase().includes(searchTerm);
-            const fileNameMatch = doc.fileName ? 
-                doc.fileName.toLowerCase().includes(searchTerm) : false;
             const filterMatch = (category === 'all') || (doc.category === category);
 
-            return (titleMatch || categoryMatch || fileNameMatch) && filterMatch;
+            return (titleMatch || categoryMatch) && filterMatch;
         });
 
         currentPage = 1;
@@ -514,13 +429,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleLessonFilterChange() {
-        const searchTerm = lessonSearchInput.value.toLowerCase().trim();
+        const searchTerm = lessonSearchInput.value.toLowerCase();
         const quarter = bibleLessons[currentQuarter];
 
         // If the quarter is not available yet, show a message
         if (!quarter || !quarter.available) {
             renderComingSoonMessage();
-            lessonFilteredDocuments = [];
             return;
         }
 
@@ -528,8 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lessonFilteredDocuments = quarter.lessons.filter(lesson => {
             const titleMatch = lesson.title.toLowerCase().includes(searchTerm);
             const descriptionMatch = lesson.description.toLowerCase().includes(searchTerm);
-            const memoryVerseMatch = lesson.memoryVerse.toLowerCase().includes(searchTerm);
-            return titleMatch || descriptionMatch || memoryVerseMatch;
+            return titleMatch || descriptionMatch;
         });
 
         renderLessonsSidebar();
@@ -546,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // --- 11. RENDERING FUNCTIONS ---
+    // --- 10. RENDERING FUNCTIONS ---
     function populateCategories() {
         const t = translations[currentLanguage];
         const categories = [...new Set(allDocuments.map(doc => doc.category))];
@@ -570,12 +483,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalDocs === 0) {
             renderNoDocuments();
             renderPagination(0, 0);
-            docCount.textContent = `0 ${translations[currentLanguage].docCount}`;
             return;
         }
 
         const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = Math.min(start + ITEMS_PER_PAGE, totalDocs);
+        const end = start + ITEMS_PER_PAGE;
         const paginatedDocs = mainFilteredDocuments.slice(start, end);
 
         paginatedDocs.forEach(doc => {
@@ -584,30 +496,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         renderPagination(totalPages, page);
-        docCount.textContent = `${totalDocs} ${translations[currentLanguage].docCount}`;
+        updateLanguage();
     }
 
     function renderLessonsSidebar() {
         lessonList.innerHTML = '';
 
-        const quarter = bibleLessons[currentQuarter];
-        
+        if (lessonFilteredDocuments.length === 0) {
+            lessonList.innerHTML = '<p class="no-results-sidebar">No lessons found.</p>';
+            return;
+        }
+
         // Add quarter title
         const quarterTitle = document.createElement('div');
         quarterTitle.className = 'quarter-title';
-        quarterTitle.textContent = quarter.title;
+        quarterTitle.textContent = bibleLessons[currentQuarter].title;
         lessonList.appendChild(quarterTitle);
-
-        if (lessonFilteredDocuments.length === 0) {
-            const noResults = document.createElement('div');
-            noResults.className = 'no-results-sidebar';
-            noResults.innerHTML = `
-                <i class="fas fa-search"></i>
-                <p>No lessons found. Try a different search.</p>
-            `;
-            lessonList.appendChild(noResults);
-            return;
-        }
 
         lessonFilteredDocuments.forEach(lesson => {
             const card = document.createElement('div');
@@ -623,10 +527,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong>${translations[currentLanguage].memoryVerse}:</strong> ${lesson.memoryVerse}
                 </div>
                 <div class="lesson-actions">
-                    <button class="btn btn-secondary btn-view-lesson" data-lesson-id="${lesson.id}">
+                    <button class="btn btn-secondary btn-view-lesson" data-lesson-id="${lesson.id}" data-pdf="${lesson.pdfUrl}">
                         <i class="fas fa-eye"></i> ${translations[currentLanguage].viewLesson}
                     </button>
-                    <a href="${lesson.pdfUrl}" download="${lesson.title}.pdf" class="btn btn-primary btn-download-lesson">
+                    <a href="${lesson.pdfUrl}" download class="btn btn-primary btn-download-lesson">
                         <i class="fas fa-download"></i> ${translations[currentLanguage].downloadBtn}
                     </a>
                 </div>
@@ -649,7 +553,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Use the helper function to get the correct path
         const docPath = getDocumentPath(doc);
-        const fileNameForDownload = getFileNameForDownload(doc);
 
         card.innerHTML = `
             <div class="doc-card-body">
@@ -667,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btn btn-secondary btn-preview" data-id="${doc.id}">
                     <i class="fas fa-eye"></i> ${t.previewBtn}
                 </button>
-                <a href="${docPath}" download="${fileNameForDownload}" class="btn btn-primary btn-download">
+                <a href="${docPath}" download="${doc.fileName || doc.title}" class="btn btn-primary btn-download">
                     <i class="fas fa-download"></i> ${t.downloadBtn}
                 </a>
             </div>
@@ -676,7 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listener for preview button
         card.querySelector('.btn-preview').addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
             openModal(doc.id);
         });
 
@@ -710,9 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.className = `pagination-btn ${currentPage === 1 ? 'disabled' : ''}`;
         prevBtn.innerHTML = `<i class="fas fa-chevron-left"></i>`;
         prevBtn.disabled = (currentPage === 1);
-        if (currentPage > 1) {
-            prevBtn.addEventListener('click', () => renderPage(currentPage - 1));
-        }
+        prevBtn.addEventListener('click', () => renderPage(currentPage - 1));
         pagination.appendChild(prevBtn);
 
         // Page numbers
@@ -742,67 +642,30 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.className = `pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`;
         nextBtn.innerHTML = `<i class="fas fa-chevron-right"></i>`;
         nextBtn.disabled = (currentPage === totalPages);
-        if (currentPage < totalPages) {
-            nextBtn.addEventListener('click', () => renderPage(currentPage + 1));
-        }
+        nextBtn.addEventListener('click', () => renderPage(currentPage + 1));
         pagination.appendChild(nextBtn);
     }
 
-    // --- 12. MODAL FUNCTIONS ---
+    // --- 11. MODAL FUNCTIONS (FIXED PDF VIEWING) ---
     function openModal(docId) {
         // Search in all documents to be safe
         const doc = allDocuments.find(d => d.id === docId);
 
-        if (!doc) {
-            showNotification('Document not found', 'error');
-            return;
-        }
+        // Navigation should ideally be based on the list you clicked from, 
+        // but to keep it simple, we'll navigate through allDocuments for now
+        currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
 
-        // Navigation should ideally be based on the list you clicked from
-        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
-        // If not found in filtered documents, search in all documents
-        if (currentPreviewIndex === -1) {
-            currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
-        }
+        if (!doc) return;
 
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(doc);
-        const fileNameForDownload = getFileNameForDownload(doc);
 
         modalTitle.textContent = doc.title;
-        
-        // Show loading state
-        pdfViewer.innerHTML = `
-            <div class="pdf-loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>${translations[currentLanguage].loadingPdf}</p>
-            </div>
-        `;
-        
-        // Set up error handling
-        const iframe = document.createElement('iframe');
-        iframe.id = 'pdf-iframe';
-        iframe.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
-        iframe.onload = () => {
-            pdfViewer.innerHTML = '';
-            pdfViewer.appendChild(iframe);
-        };
-        iframe.onerror = () => {
-            pdfViewer.innerHTML = `
-                <div class="pdf-error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>${translations[currentLanguage].pdfLoadError}</p>
-                    <a href="${pdfPath}" download="${fileNameForDownload}" class="btn btn-primary">
-                        <i class="fas fa-download"></i> ${translations[currentLanguage].downloadInstead}
-                    </a>
-                </div>
-            `;
-            showNotification('Failed to load PDF. Try downloading instead.', 'error');
-        };
+        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
         // Set download link
         modalDownload.href = pdfPath;
-        modalDownload.download = fileNameForDownload;
+        modalDownload.download = doc.fileName || doc.title;
 
         // Update navigation buttons
         updateModalNavigation();
@@ -810,81 +673,66 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state notification
+        // Show loading state
         showNotification(`Loading: ${doc.title}`, 'info');
     }
 
     function openLessonModal(lesson) {
-        // Set the current preview index to -1 to disable navigation for lessons
+        // Create a temporary document object for the lesson
+        const lessonDoc = {
+            id: lesson.id,
+            title: lesson.title,
+            pdfUrl: lesson.pdfUrl
+        };
+
+        // Set the current preview index to -1 to disable navigation
         currentPreviewIndex = -1;
 
+        // Use the helper function to get the correct path
+        const pdfPath = getDocumentPath(lessonDoc);
+
         modalTitle.textContent = lesson.title;
-        
-        // Show loading state
-        pdfViewer.innerHTML = `
-            <div class="pdf-loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>${translations[currentLanguage].loadingPdf}</p>
-            </div>
-        `;
-        
-        // Set up error handling
-        const iframe = document.createElement('iframe');
-        iframe.id = 'pdf-iframe';
-        iframe.src = lesson.pdfUrl + '#toolbar=1&navpanes=1&scrollbar=1';
-        iframe.onload = () => {
-            pdfViewer.innerHTML = '';
-            pdfViewer.appendChild(iframe);
-        };
-        iframe.onerror = () => {
-            pdfViewer.innerHTML = `
-                <div class="pdf-error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>${translations[currentLanguage].pdfLoadError}</p>
-                    <a href="${lesson.pdfUrl}" download="${lesson.title}.pdf" class="btn btn-primary">
-                        <i class="fas fa-download"></i> ${translations[currentLanguage].downloadInstead}
-                    </a>
-                </div>
-            `;
-            showNotification('Failed to load lesson PDF. Try downloading instead.', 'error');
-        };
+        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
         // Set download link
-        modalDownload.href = lesson.pdfUrl;
-        modalDownload.download = `${lesson.title}.pdf`;
+        modalDownload.href = pdfPath;
+        modalDownload.download = lesson.title;
 
         // Update navigation buttons (disable them for lessons)
-        updateModalNavigation();
+        modalPrev.disabled = true;
+        modalNext.disabled = true;
+        modalPrev.style.opacity = '0.5';
+        modalNext.style.opacity = '0.5';
 
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state notification
+        // Show loading state
         showNotification(`Loading: ${lesson.title}`, 'info');
     }
 
     function closeModal() {
         modal.classList.remove('visible');
-        pdfViewer.innerHTML = '';
+        pdfViewer.src = '';
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
+
+        // Reset navigation buttons
+        modalPrev.style.opacity = '1';
+        modalNext.style.opacity = '1';
     }
 
     function showPrevDocument() {
         if (currentPreviewIndex > 0) {
-            const prevDoc = mainFilteredDocuments[currentPreviewIndex - 1];
-            if (prevDoc) {
-                openModal(prevDoc.id);
-            }
+            const prevDoc = allDocuments[currentPreviewIndex - 1];
+            openModal(prevDoc.id);
         }
     }
 
     function showNextDocument() {
-        if (currentPreviewIndex < mainFilteredDocuments.length - 1) {
-            const nextDoc = mainFilteredDocuments[currentPreviewIndex + 1];
-            if (nextDoc) {
-                openModal(nextDoc.id);
-            }
+        if (currentPreviewIndex < allDocuments.length - 1) {
+            const nextDoc = allDocuments[currentPreviewIndex + 1];
+            openModal(nextDoc.id);
         }
     }
 
@@ -900,9 +748,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // This is a regular document
             modalPrev.disabled = currentPreviewIndex === 0;
-            modalNext.disabled = currentPreviewIndex === mainFilteredDocuments.length - 1;
-            modalPrev.style.opacity = modalPrev.disabled ? '0.5' : '1';
-            modalNext.style.opacity = modalNext.disabled ? '0.5' : '1';
+            modalNext.disabled = currentPreviewIndex === allDocuments.length - 1;
+            modalPrev.style.opacity = '1';
+            modalNext.style.opacity = '1';
         }
 
         // Update button text
@@ -910,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalNext.innerHTML = `${t.nextBtn} <i class="fas fa-arrow-right"></i>`;
     }
 
-    // --- 13. LANGUAGE/TRANSLATION ---
+    // --- 12. LANGUAGE/TRANSLATION (UPDATED WITH NAVIGATION) ---
     function updateLanguage() {
         const t = translations[currentLanguage];
 
@@ -930,13 +778,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update quarter pills
-        document.querySelectorAll('.quarter-pill').forEach((pill, index) => {
-            const quarter = index + 1;
-            if (t[`q${quarter}`]) {
-                pill.textContent = t[`q${quarter}`];
-            }
-        });
+        // Update document count
+        const count = mainFilteredDocuments.length;
+        docCount.textContent = `${count} ${t.docCount}`;
 
         // Update document title
         document.title = t.siteTitle;
@@ -944,48 +788,57 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update navigation items
         updateNavigationText();
 
-        // Update document count
-        const count = mainFilteredDocuments.length;
-        docCount.textContent = `${count} ${t.docCount}`;
+        // Update lessons sidebar if it exists
+        if (lessonList.children.length > 0) {
+            handleLessonFilterChange();
+        }
     }
 
     function updateNavigationText() {
         const t = translations[currentLanguage];
 
         // Update navigation text while preserving icons
-        const navItems = [
-            { element: navHome, text: t.navHome },
-            { element: navWatchOnline, text: t.navWatchOnline },
-            { element: navAboutUs, text: t.navAboutUs },
-            { element: navArchives, text: t.navArchives },
-            { element: navContact, text: t.navContact }
-        ];
+        if (navHome) {
+            const icon = navHome.querySelector('i').cloneNode(true);
+            navHome.innerHTML = '';
+            navHome.appendChild(icon);
+            navHome.appendChild(document.createTextNode(` ${t.navHome}`));
+        }
 
-        navItems.forEach(item => {
-            if (item.element) {
-                const icon = item.element.querySelector('i');
-                if (icon) {
-                    const iconClone = icon.cloneNode(true);
-                    item.element.innerHTML = '';
-                    item.element.appendChild(iconClone);
-                    item.element.appendChild(document.createTextNode(` ${item.text}`));
-                }
-            }
-        });
+        if (navWatchOnline) {
+            const icon = navWatchOnline.querySelector('i').cloneNode(true);
+            navWatchOnline.innerHTML = '';
+            navWatchOnline.appendChild(icon);
+            navWatchOnline.appendChild(document.createTextNode(` ${t.navWatchOnline}`));
+        }
+
+        if (navAboutUs) {
+            const icon = navAboutUs.querySelector('i').cloneNode(true);
+            navAboutUs.innerHTML = '';
+            navAboutUs.appendChild(icon);
+            navAboutUs.appendChild(document.createTextNode(` ${t.navAboutUs}`));
+        }
+
+        if (navArchives) {
+            const icon = navArchives.querySelector('i').cloneNode(true);
+            navArchives.innerHTML = '';
+            navArchives.appendChild(icon);
+            navArchives.appendChild(document.createTextNode(` ${t.navArchives}`));
+        }
+
+        if (navContact) {
+            const icon = navContact.querySelector('i').cloneNode(true);
+            navContact.innerHTML = '';
+            navContact.appendChild(icon);
+            navContact.appendChild(document.createTextNode(` ${t.navContact}`));
+        }
     }
 
-    // --- 14. NOTIFICATION SYSTEM ---
+    // --- 13. NOTIFICATION SYSTEM ---
     function showNotification(message, type = 'info') {
         // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
-        existingNotifications.forEach(notification => {
-            notification.style.animation = 'slideOutRight 0.3s ease';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        });
+        existingNotifications.forEach(notification => notification.remove());
 
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
@@ -1044,7 +897,115 @@ document.addEventListener('DOMContentLoaded', () => {
         return colors[type] || '#3b82f6';
     }
 
-    // --- 15. HAMBURGER MENU ---
+    // Add notification styles
+    const notificationStyles = document.createElement('style');
+    notificationStyles.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        .lesson-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .lesson-title {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        .lesson-date {
+            font-size: 0.8rem;
+            color: #666;
+            background: #f0f0f0;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .lesson-description {
+            margin: 0.5rem 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .lesson-memory-verse {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border-left: 3px solid #1a2b6d;
+            font-size: 0.85rem;
+            color: #444;
+        }
+        
+        .lesson-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .quarter-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #1a2b6d;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #666;
+        }
+        
+        .coming-soon i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+        
+        .coming-soon h4 {
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+    `;
+    document.head.appendChild(notificationStyles);
+
     function setupHamburgerMenu() {
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -1080,7 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 16. LOAD PREFERENCES AND START APP ---
+    // --- 14. LOAD PREFERENCES AND START APP ---
     function loadPreferences() {
         const savedLanguage = localStorage.getItem('preferredLanguage');
         if (savedLanguage && ['en', 'sw', 'rw'].includes(savedLanguage)) {
@@ -1101,9 +1062,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentQuarter = '4';
         }
+
+        // Update the quarter pills to reflect the current quarter
+        quarterPills.forEach(pill => {
+            pill.classList.remove('active');
+            if (pill.dataset.quarter === currentQuarter) {
+                pill.classList.add('active');
+            }
+        });
     }
 
-    // --- 17. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
+    // --- 15. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
+    // These functions can be called from an admin interface to update lessons
     window.updateBibleLesson = function (quarter, lessonId, lessonData) {
         if (!bibleLessons[quarter]) {
             console.error(`Invalid quarter: ${quarter}`);
@@ -1125,7 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bibleLessons[quarter].available = true;
 
         // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter.toString()) {
+        if (currentQuarter === quarter) {
             handleLessonFilterChange();
         }
 
@@ -1158,7 +1128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bibleLessons[quarter].available = true;
 
         // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter.toString()) {
+        if (currentQuarter === quarter) {
             handleLessonFilterChange();
         }
 
@@ -1181,7 +1151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bibleLessons[quarter].lessons.splice(lessonIndex, 1);
 
             // Refresh the lessons sidebar if this quarter is currently selected
-            if (currentQuarter === quarter.toString()) {
+            if (currentQuarter === quarter) {
                 handleLessonFilterChange();
             }
 
@@ -1209,219 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add CSS styles for notifications, PDF viewer, and lesson cards
-    function addCustomStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-            
-            .pdf-loading, .pdf-error {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                color: #666;
-                text-align: center;
-            }
-            
-            .pdf-loading i, .pdf-error i {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-            }
-            
-            .pdf-error {
-                color: #dc3545;
-            }
-            
-            .pdf-error .btn {
-                margin-top: 1rem;
-            }
-            
-            .fa-spinner.fa-spin {
-                animation: fa-spin 1s infinite linear;
-            }
-            
-            @keyframes fa-spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            
-            .lesson-card {
-                background: white;
-                border-radius: 8px;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-                border: 1px solid #eaeaea;
-            }
-            
-            .lesson-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
-            
-            .lesson-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 0.5rem;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            
-            .lesson-title {
-                margin: 0;
-                font-size: 1.1rem;
-                color: #333;
-                flex: 1;
-                min-width: 200px;
-            }
-            
-            .lesson-date {
-                font-size: 0.8rem;
-                color: #666;
-                background: #f0f0f0;
-                padding: 0.2rem 0.5rem;
-                border-radius: 4px;
-                white-space: nowrap;
-            }
-            
-            .lesson-description {
-                margin: 0.5rem 0;
-                color: #555;
-                font-size: 0.9rem;
-                line-height: 1.4;
-            }
-            
-            .lesson-memory-verse {
-                margin: 0.5rem 0;
-                padding: 0.5rem;
-                background: #f9f9f9;
-                border-left: 3px solid #1a2b6d;
-                font-size: 0.85rem;
-                color: #444;
-                font-style: italic;
-                line-height: 1.4;
-            }
-            
-            .lesson-actions {
-                display: flex;
-                gap: 0.5rem;
-                margin-top: 0.5rem;
-                flex-wrap: wrap;
-            }
-            
-            .quarter-title {
-                font-size: 1.2rem;
-                font-weight: bold;
-                margin-bottom: 1rem;
-                color: #1a2b6d;
-                text-align: center;
-                padding-bottom: 0.5rem;
-                border-bottom: 2px solid #1a2b6d;
-            }
-            
-            .coming-soon {
-                text-align: center;
-                padding: 2rem 1rem;
-                color: #666;
-                background: #f9f9f9;
-                border-radius: 8px;
-                margin-top: 1rem;
-            }
-            
-            .coming-soon i {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-                color: #ddd;
-            }
-            
-            .coming-soon h4 {
-                margin-bottom: 0.5rem;
-                color: #444;
-            }
-            
-            .no-results-sidebar {
-                text-align: center;
-                padding: 2rem 1rem;
-                color: #666;
-                background: #f9f9f9;
-                border-radius: 8px;
-                margin-top: 1rem;
-            }
-            
-            .no-results-sidebar i {
-                font-size: 2rem;
-                margin-bottom: 1rem;
-                color: #ccc;
-            }
-            
-            .pagination-btn.disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-            
-            .pagination-btn.active {
-                background-color: #1a2b6d;
-                color: white;
-            }
-            
-            .document-card {
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
-            
-            .document-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
-            
-            @media (max-width: 768px) {
-                .lesson-header {
-                    flex-direction: column;
-                    align-items: flex-start;
-                }
-                
-                .lesson-date {
-                    align-self: flex-start;
-                }
-                
-                .lesson-actions {
-                    flex-direction: column;
-                }
-                
-                .lesson-actions .btn {
-                    width: 100%;
-                    justify-content: center;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
     // Start the application
-    addCustomStyles();
     loadPreferences();
     loadSavedLessons();
     init();
