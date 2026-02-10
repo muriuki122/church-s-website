@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             comingSoon: 'Coming Soon',
             lessonNotAvailable: 'This quarter\'s lessons are not available yet.',
             memoryVerse: 'Memory Verse',
-            viewLesson: 'View Lesson'
+            viewLesson: 'View Lesson',
+            loadingPdf: 'Loading PDF...',
+            pdfLoadError: 'Failed to load PDF',
+            downloadInstead: 'Download Instead'
         },
         sw: {
             siteTitle: 'Hifadhidata ya M.T. Zion',
@@ -67,7 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
             comingSoon: 'Inakuja Hivi Karibuni',
             lessonNotAvailable: 'Masomo ya robo hii hayapatikani bado.',
             memoryVerse: 'Suru ya Kumbukumbu',
-            viewLesson: 'Ona Masomo'
+            viewLesson: 'Ona Masomo',
+            loadingPdf: 'Inapakia PDF...',
+            pdfLoadError: 'Imeshindwa kupakia PDF',
+            downloadInstead: 'Pakua Badala Yake'
         },
         rw: {
             siteTitle: 'Ububiko bwa M.T. Zion',
@@ -90,13 +96,16 @@ document.addEventListener('DOMContentLoaded', () => {
             lessonsTitle: 'Amasomo ya Bibiliya',
             lessonsSearch: 'Shakisha amasomo...',
             q1: 'S1 (Mut-Wer)',
-            q2: 'S2 (Msh-Gic',
-            q3: 'S3 (Kam-Nze',
-            q4: 'S4 (Uku-Gic',
+            q2: 'S2 (Msh-Gic)',
+            q3: 'S3 (Kam-Nze)',
+            q4: 'S4 (Uku-Gic)',
             comingSoon: 'Kuzagera Vuba',
             lessonNotAvailable: 'Amasomo ya kwegi siyaboneka bityo.',
             memoryVerse: 'Umugabane Wibuka',
-            viewLesson: 'Kureba Amasomo'
+            viewLesson: 'Kureba Amasomo',
+            loadingPdf: 'Kureba PDF...',
+            pdfLoadError: 'Byanze bikomeye kureba PDF',
+            downloadInstead: 'Reka Uko'
         }
     };
 
@@ -175,6 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Check if it's a regular document with fileName
         if (doc.fileName) {
+            // If fileName already includes path, use it as is
+            if (doc.fileName.startsWith('documents/') || doc.fileName.startsWith('lessons/')) {
+                return doc.fileName;
+            }
             return `documents/${doc.fileName}`;
         }
         
@@ -182,6 +195,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = doc.category || 'uncategorized';
         const title = doc.title.replace(/\s+/g, '-').toLowerCase();
         return `documents/${category}/${title}.pdf`;
+    }
+
+    function getFileNameForDownload(doc) {
+        if (doc.fileName) {
+            // Extract just the filename from the path
+            const parts = doc.fileName.split('/');
+            return parts[parts.length - 1];
+        }
+        // For lessons, use the title as filename
+        if (doc.pdfUrl) {
+            const parts = doc.pdfUrl.split('/');
+            return parts[parts.length - 1];
+        }
+        // Fallback
+        const title = doc.title.replace(/\s+/g, '-').toLowerCase();
+        return `${title}.pdf`;
     }
 
     // --- 5. DOCUMENT DATA ---
@@ -293,41 +322,53 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 104, title: "Judah/93-Elul", category: "Judah", fileName: "judah/93-Elul.pdf" },
             { id: 105, title: "Judah/83 Elul", category: "Judah", fileName: "judah/83-Elul.pdf" },
             { id: 106, title: "Judah/98 Nov", category: "Judah", fileName: "judah/98-Nov.pdf" },
-            { id: 108, title: "Judah/96-August", category: "Judah", fileName: "judah/96-Aug.pdf" },
-            { id: 109, title: "Judah/88-Bul", category: "Judah", fileName: "judah/88-Bul.pdf" },
-            { id: 110, title: "Judah/85-Chisleu", category: "Judah", fileName: "judah/85-Chesleu.pdf" },
-            { id: 111, title: "Judah/73-July", category: "Judah", fileName: "judah/73-July.pdf" },
-            { id: 112, title: "Judah/81-chisleu", category: "Judah", fileName: "judah/81-Chesleu.pdf" },
-            { id: 113, title: "Judah/97-March", category: "Judah", fileName: "judah/97-March.pdf" },
-            { id: 114, title: "Judah/91- May", category: "Judah", fileName: "judah/91-May.pdf" },
-            { id: 115, title: "Judah/81-July", category: "Judah", fileName: "judah/81-July.pdf" },
-            { id: 116, title: "Judah/79-Zif", category: "Judah", fileName: "judah/79-Zif.pdf" },
-            { id: 117, title: "Judah/79-Ethanim", category: "Judah", fileName: "judah/79-Ethanim.pdf" },
-            { id: 118, title: "Judah/81-August", category: "Judah", fileName: "judah/81-August.pdf" },
-            { id: 119, title: "Judah/77-August", category: "Judah", fileName: "judah/77-August.pdf" },
-            { id: 120, title: "Judah/73-Zif", category: "Judah", fileName: "judah/73-Zif.pdf" },
-            { id: 121, title: "Judah/Zif-Sivan", category: "Judah", fileName: "judah/77-Zif-Sivan.pdf" },
-            { id: 122, title: "Judah/72-July", category: "Judah", fileName: "judah/72-July.pdf" },
-            { id: 123, title: "Judah/89-August", category: "Judah", fileName: "judah/89-August.pdf" },
-            { id: 124, title: "Judah/93-May", category: "Judah", fileName: "judah/93-May.pdf" },
-            { id: 125, title: "Judah/73-bul", category: "Judah", fileName: "judah/73-Bul.pdf" },
-            { id: 126, title: "Judah/73-chisleu", category: "Judah", fileName: "judah/73-Chisleu.pdf" },
-            { id: 127, title: "Judah/72-Elul", category: "Judah", fileName: "judah/72-Elul.pdf" },
-            { id: 128, title: "Judah/82-Ethanim", category: "Judah", fileName: "judah/82-Ethanim.pdf" },
-            { id: 129, title: "Judah/MZR2008-Q2", category: "Judah", fileName: "judah/MZR2008-Q2.pdf" },
-            { id: 130, title: "Judah/95MarchApr", category: "Judah", fileName: "judah/Judah-95MarApr.pdf" },
-            { id: 131, title: "Judah/90", category: "Judah", fileName: "judah/Judah-90.pdf" },
-            { id: 132, title: "Judah/July-1987", category: "Judah", fileName: "judah/July-1987.pdf" },
-            { id: 133, title: "Judah/June-1974", category: "Judah", fileName: "judah/June-1972.pdf" },
-            { id: 134, title: "Judah/March-1974", category: "Judah", fileName: "judah/March-1974.pdf" },
-            { id: 135, title: "Judah/May-1972", category: "Judah", fileName: "judah/May-1972.pdf" },
-            { id: 136, title: "Judah/Nov-Bul-1959", category: "Judah", fileName: "judah/Nov-Bul-1959.pdf" },
-            { id: 137, title: "Judah/June-1971", category: "Judah", fileName: "judah/Judah-June-1971.pdf" },
-            { id: 138, title: "Judah/Octomber-1970", category: "Judah", fileName: "judah/Judah-Oct-1970.pdf" },
-            { id: 139, title: "Judah/Feb-1971", category: "Judah", fileName: "judah/Judah-Feb-1971.pdf" },
-            { id: 140, title: "Judah/May-1971", category: "Judah", fileName: "judah/Judah-May-1971.pdf" },
-            { id: 141, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974-2.pdf" },
-            { id: 142, title: "Judah/1960-Bul-November", category: "Judah", fileName: "judah/Judah-1960-Bul-November.pdf" }
+            { id: 107, title: "Judah/96-August", category: "Judah", fileName: "judah/96-Aug.pdf" },
+            { id: 108, title: "Judah/88-Bul", category: "Judah", fileName: "judah/88-Bul.pdf" },
+            { id: 109, title: "Judah/85-Chisleu", category: "Judah", fileName: "judah/85-Chesleu.pdf" },
+            { id: 110, title: "Judah/73-July", category: "Judah", fileName: "judah/73-July.pdf" },
+            { id: 111, title: "Judah/81-chisleu", category: "Judah", fileName: "judah/81-Chesleu.pdf" },
+            { id: 112, title: "Judah/97-March", category: "Judah", fileName: "judah/97-March.pdf" },
+            { id: 113, title: "Judah/91- May", category: "Judah", fileName: "judah/91-May.pdf" },
+            { id: 114, title: "Judah/81-July", category: "Judah", fileName: "judah/81-July.pdf" },
+            { id: 115, title: "Judah/79-Zif", category: "Judah", fileName: "judah/79-Zif.pdf" },
+            { id: 116, title: "Judah/79-Ethanim", category: "Judah", fileName: "judah/79-Ethanim.pdf" },
+            { id: 117, title: "Judah/81-August", category: "Judah", fileName: "judah/81-August.pdf" },
+            { id: 118, title: "Judah/77-August", category: "Judah", fileName: "judah/77-August.pdf" },
+            { id: 119, title: "Judah/73-Zif", category: "Judah", fileName: "judah/73-Zif.pdf" },
+            { id: 120, title: "Judah/Zif-Sivan", category: "Judah", fileName: "judah/77-Zif-Sivan.pdf" },
+            { id: 121, title: "Judah/72-July", category: "Judah", fileName: "judah/72-July.pdf" },
+            { id: 122, title: "Judah/89-August", category: "Judah", fileName: "judah/89-August.pdf" },
+            { id: 123, title: "Judah/93-May", category: "Judah", fileName: "judah/93-May.pdf" },
+            { id: 124, title: "Judah/73-bul", category: "Judah", fileName: "judah/73-Bul.pdf" },
+            { id: 125, title: "Judah/73-chisleu", category: "Judah", fileName: "judah/73-Chisleu.pdf" },
+            { id: 126, title: "Judah/72-Elul", category: "Judah", fileName: "judah/72-Elul.pdf" },
+            { id: 127, title: "Judah/82-Ethanim", category: "Judah", fileName: "judah/82-Ethanim.pdf" },
+            { id: 128, title: "Judah/MZR2008-Q2", category: "Judah", fileName: "judah/MZR2008-Q2.pdf" },
+            { id: 129, title: "Judah/95MarchApr", category: "Judah", fileName: "judah/Judah-95MarApr.pdf" },
+            { id: 130, title: "Judah/90", category: "Judah", fileName: "judah/Judah-90.pdf" },
+            { id: 131, title: "Judah/July-1987", category: "Judah", fileName: "judah/July-1987.pdf" },
+            { id: 132, title: "Judah/June-1974", category: "Judah", fileName: "judah/June-1974.pdf" },
+            { id: 133, title: "Judah/March-1974", category: "Judah", fileName: "judah/March-1974.pdf" },
+            { id: 134, title: "Judah/May-1972", category: "Judah", fileName: "judah/May-1972.pdf" },
+            { id: 135, title: "Judah/Nov-Bul-1959", category: "Judah", fileName: "judah/Nov-Bul-1959.pdf" },
+            { id: 136, title: "Judah/June-1971", category: "Judah", fileName: "judah/Judah-June-1971.pdf" },
+            { id: 137, title: "Judah/Octomber-1970", category: "Judah", fileName: "judah/Judah-Oct-1970.pdf" },
+            { id: 138, title: "Judah/Feb-1971", category: "Judah", fileName: "judah/Judah-Feb-1971.pdf" },
+            { id: 139, title: "Judah/May-1971", category: "Judah", fileName: "judah/Judah-May-1971.pdf" },
+            { id: 140, title: "Judah/Dec-1974", category: "Judah", fileName: "judah/Judah-Dec-1974-2.pdf" },
+            { id: 141, title: "Judah/1960-Bul-November", category: "Judah", fileName: "judah/Judah-1960-Bul-November.pdf" },
+            { id: 142, title: "Judah/1960-Chisleu-December", category: "Judah", fileName: "judah/Judah-1960-Chisleu-December.pdf" },
+            { id: 143, title: "Judah/1961-Tebet-January", category: "Judah", fileName: "judah/Judah-1961-Tebet-January.pdf" },
+            { id: 144, title: "Judah/1961-Sebat-February", category: "Judah", fileName: "judah/Judah-1961-Sebat-February.pdf" },
+            { id: 145, title: "Judah/1961-Adar-March", category: "Judah", fileName: "judah/Judah-1961-Adar-March.pdf" },
+            { id: 146, title: "Judah/1961-Nisan-April", category: "Judah", fileName: "judah/Judah-1961-Nisan-April.pdf" },
+            { id: 147, title: "Judah/1961-Iyar-May", category: "Judah", fileName: "judah/Judah-1961-Iyar-May.pdf" },
+            { id: 148, title: "Judah/1961-Sivan-June", category: "Judah", fileName: "judah/Judah-1961-Sivan-June.pdf" },
+            { id: 149, title: "Judah/1961-Tammuz-July", category: "Judah", fileName: "judah/Judah-1961-Tammuz-July.pdf" },
+            { id: 150, title: "Judah/1961-Ab-August", category: "Judah", fileName: "judah/Judah-1961-Ab-August.pdf" },
+            { id: 151, title: "Judah/1961-Elul-September", category: "Judah", fileName: "judah/Judah-1961-Elul-September.pdf" },
+            { id: 152, title: "Judah/1961-Tisri-October", category: "Judah", fileName: "judah/Judah-1961-Tisri-October.pdf" },
+            { id: 153, title: "Judah/1961-Heshvan-November", category: "Judah", fileName: "judah/Judah-1961-Heshvan-November.pdf" }
         ];
     }
 
@@ -361,13 +402,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 8. INITIALIZATION ---
     function init() {
-        // Load data
+        // Load preferences first
+        loadPreferences();
+        loadSavedLessons();
+        
+        // Then load data
         allDocuments = getDocumentData();
 
         // Setup UI
         populateCategories();
         setupEventListeners();
         setupHamburgerMenu();
+
+        // Set initial active quarter pill
+        const activePill = document.querySelector(`.quarter-pill[data-quarter="${currentQuarter}"]`);
+        if (activePill) {
+            quarterPills.forEach(p => p.classList.remove('active'));
+            activePill.classList.add('active');
+        }
 
         // Initial render
         handleMainFilterChange();
@@ -377,6 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 9. EVENT LISTENERS ---
     function setupEventListeners() {
+        // Language selector
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
             localStorage.setItem('preferredLanguage', currentLanguage);
@@ -386,17 +439,22 @@ document.addEventListener('DOMContentLoaded', () => {
             populateCategories();
         });
 
-        mainSearchInput.addEventListener('input', handleMainFilterChange);
+        // Main search and filter
+        mainSearchInput.addEventListener('input', debounce(handleMainFilterChange, 300));
         categoryFilter.addEventListener('change', handleMainFilterChange);
 
-        lessonSearchInput.addEventListener('input', handleLessonFilterChange);
-        quarterPills.forEach(pill => {
-            pill.addEventListener('click', () => {
+        // Lessons search
+        lessonSearchInput.addEventListener('input', debounce(handleLessonFilterChange, 300));
+        
+        // Quarter pills
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.quarter-pill')) {
+                const pill = e.target.closest('.quarter-pill');
                 quarterPills.forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
                 currentQuarter = pill.dataset.quarter;
                 handleLessonFilterChange();
-            });
+            }
         });
 
         // Modal listeners
@@ -416,28 +474,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.key === 'ArrowRight' && !modalNext.disabled) showNextDocument();
             }
         });
+
+        // Prevent PDF viewer from closing modal when clicking inside
+        pdfViewer.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
     }
 
-    // List of categories that should appear in the Lesson Sidebar
-    const lessonCategories = [
-        'Judah Reports', 'Sep Reports', 'm.t zion report',
-        'Date Reports', 'Elul pdf', 'Sebat pdf', 'Bul pdf',
-        'Chisleu pdf', 'Zif pdf', 'Zif sivan pdf', 'Zif sivan 1 pdf',
-        'Tibet pdf', 'Ethanim pdf', 'Sivan pdf', 'Tebet pdf',
-        'Chesleu pdf', 'Bul-chisleu pdf', 'Nisan pdf', 'July pdf', 
-        'March pdf', 'May pdf', 'sivan', 'sebat'
-    ];
+    // Debounce function for search inputs
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
+    // --- 10. FILTER FUNCTIONS ---
     function handleMainFilterChange() {
-        const searchTerm = mainSearchInput.value.toLowerCase();
+        const searchTerm = mainSearchInput.value.toLowerCase().trim();
         const category = categoryFilter.value;
 
         mainFilteredDocuments = allDocuments.filter(doc => {
             const titleMatch = doc.title.toLowerCase().includes(searchTerm);
             const categoryMatch = doc.category.toLowerCase().includes(searchTerm);
+            const fileNameMatch = doc.fileName ? 
+                doc.fileName.toLowerCase().includes(searchTerm) : false;
             const filterMatch = (category === 'all') || (doc.category === category);
 
-            return (titleMatch || categoryMatch) && filterMatch;
+            return (titleMatch || categoryMatch || fileNameMatch) && filterMatch;
         });
 
         currentPage = 1;
@@ -445,12 +514,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleLessonFilterChange() {
-        const searchTerm = lessonSearchInput.value.toLowerCase();
+        const searchTerm = lessonSearchInput.value.toLowerCase().trim();
         const quarter = bibleLessons[currentQuarter];
 
         // If the quarter is not available yet, show a message
         if (!quarter || !quarter.available) {
             renderComingSoonMessage();
+            lessonFilteredDocuments = [];
             return;
         }
 
@@ -458,7 +528,8 @@ document.addEventListener('DOMContentLoaded', () => {
         lessonFilteredDocuments = quarter.lessons.filter(lesson => {
             const titleMatch = lesson.title.toLowerCase().includes(searchTerm);
             const descriptionMatch = lesson.description.toLowerCase().includes(searchTerm);
-            return titleMatch || descriptionMatch;
+            const memoryVerseMatch = lesson.memoryVerse.toLowerCase().includes(searchTerm);
+            return titleMatch || descriptionMatch || memoryVerseMatch;
         });
 
         renderLessonsSidebar();
@@ -475,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // --- 10. RENDERING FUNCTIONS ---
+    // --- 11. RENDERING FUNCTIONS ---
     function populateCategories() {
         const t = translations[currentLanguage];
         const categories = [...new Set(allDocuments.map(doc => doc.category))];
@@ -499,11 +570,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalDocs === 0) {
             renderNoDocuments();
             renderPagination(0, 0);
+            docCount.textContent = `0 ${translations[currentLanguage].docCount}`;
             return;
         }
 
         const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
+        const end = Math.min(start + ITEMS_PER_PAGE, totalDocs);
         const paginatedDocs = mainFilteredDocuments.slice(start, end);
 
         paginatedDocs.forEach(doc => {
@@ -512,22 +584,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         renderPagination(totalPages, page);
-        updateLanguage();
+        docCount.textContent = `${totalDocs} ${translations[currentLanguage].docCount}`;
     }
 
     function renderLessonsSidebar() {
         lessonList.innerHTML = '';
 
-        if (lessonFilteredDocuments.length === 0) {
-            lessonList.innerHTML = '<p class="no-results-sidebar">No lessons found.</p>';
-            return;
-        }
-
+        const quarter = bibleLessons[currentQuarter];
+        
         // Add quarter title
         const quarterTitle = document.createElement('div');
         quarterTitle.className = 'quarter-title';
-        quarterTitle.textContent = bibleLessons[currentQuarter].title;
+        quarterTitle.textContent = quarter.title;
         lessonList.appendChild(quarterTitle);
+
+        if (lessonFilteredDocuments.length === 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results-sidebar';
+            noResults.innerHTML = `
+                <i class="fas fa-search"></i>
+                <p>No lessons found. Try a different search.</p>
+            `;
+            lessonList.appendChild(noResults);
+            return;
+        }
 
         lessonFilteredDocuments.forEach(lesson => {
             const card = document.createElement('div');
@@ -543,10 +623,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong>${translations[currentLanguage].memoryVerse}:</strong> ${lesson.memoryVerse}
                 </div>
                 <div class="lesson-actions">
-                    <button class="btn btn-secondary btn-view-lesson" data-lesson-id="${lesson.id}" data-pdf="${lesson.pdfUrl}">
+                    <button class="btn btn-secondary btn-view-lesson" data-lesson-id="${lesson.id}">
                         <i class="fas fa-eye"></i> ${translations[currentLanguage].viewLesson}
                     </button>
-                    <a href="${lesson.pdfUrl}" download class="btn btn-primary btn-download-lesson">
+                    <a href="${lesson.pdfUrl}" download="${lesson.title}.pdf" class="btn btn-primary btn-download-lesson">
                         <i class="fas fa-download"></i> ${translations[currentLanguage].downloadBtn}
                     </a>
                 </div>
@@ -569,6 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Use the helper function to get the correct path
         const docPath = getDocumentPath(doc);
+        const fileNameForDownload = getFileNameForDownload(doc);
 
         card.innerHTML = `
             <div class="doc-card-body">
@@ -586,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btn btn-secondary btn-preview" data-id="${doc.id}">
                     <i class="fas fa-eye"></i> ${t.previewBtn}
                 </button>
-                <a href="${docPath}" download="${doc.fileName || doc.title}" class="btn btn-primary btn-download">
+                <a href="${docPath}" download="${fileNameForDownload}" class="btn btn-primary btn-download">
                     <i class="fas fa-download"></i> ${t.downloadBtn}
                 </a>
             </div>
@@ -595,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listener for preview button
         card.querySelector('.btn-preview').addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             openModal(doc.id);
         });
 
@@ -628,7 +710,9 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.className = `pagination-btn ${currentPage === 1 ? 'disabled' : ''}`;
         prevBtn.innerHTML = `<i class="fas fa-chevron-left"></i>`;
         prevBtn.disabled = (currentPage === 1);
-        prevBtn.addEventListener('click', () => renderPage(currentPage - 1));
+        if (currentPage > 1) {
+            prevBtn.addEventListener('click', () => renderPage(currentPage - 1));
+        }
         pagination.appendChild(prevBtn);
 
         // Page numbers
@@ -658,29 +742,67 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.className = `pagination-btn ${currentPage === totalPages ? 'disabled' : ''}`;
         nextBtn.innerHTML = `<i class="fas fa-chevron-right"></i>`;
         nextBtn.disabled = (currentPage === totalPages);
-        nextBtn.addEventListener('click', () => renderPage(currentPage + 1));
+        if (currentPage < totalPages) {
+            nextBtn.addEventListener('click', () => renderPage(currentPage + 1));
+        }
         pagination.appendChild(nextBtn);
     }
 
-    // --- 11. MODAL FUNCTIONS ---
+    // --- 12. MODAL FUNCTIONS ---
     function openModal(docId) {
         // Search in all documents to be safe
         const doc = allDocuments.find(d => d.id === docId);
 
-        // Navigation should ideally be based on the list you clicked from
-        currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
+        if (!doc) {
+            showNotification('Document not found', 'error');
+            return;
+        }
 
-        if (!doc) return;
+        // Navigation should ideally be based on the list you clicked from
+        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
+        // If not found in filtered documents, search in all documents
+        if (currentPreviewIndex === -1) {
+            currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
+        }
 
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(doc);
+        const fileNameForDownload = getFileNameForDownload(doc);
 
         modalTitle.textContent = doc.title;
-        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
+        
+        // Show loading state
+        pdfViewer.innerHTML = `
+            <div class="pdf-loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>${translations[currentLanguage].loadingPdf}</p>
+            </div>
+        `;
+        
+        // Set up error handling
+        const iframe = document.createElement('iframe');
+        iframe.id = 'pdf-iframe';
+        iframe.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
+        iframe.onload = () => {
+            pdfViewer.innerHTML = '';
+            pdfViewer.appendChild(iframe);
+        };
+        iframe.onerror = () => {
+            pdfViewer.innerHTML = `
+                <div class="pdf-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${translations[currentLanguage].pdfLoadError}</p>
+                    <a href="${pdfPath}" download="${fileNameForDownload}" class="btn btn-primary">
+                        <i class="fas fa-download"></i> ${translations[currentLanguage].downloadInstead}
+                    </a>
+                </div>
+            `;
+            showNotification('Failed to load PDF. Try downloading instead.', 'error');
+        };
 
         // Set download link
         modalDownload.href = pdfPath;
-        modalDownload.download = doc.fileName || doc.title;
+        modalDownload.download = fileNameForDownload;
 
         // Update navigation buttons
         updateModalNavigation();
@@ -688,66 +810,81 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state
+        // Show loading state notification
         showNotification(`Loading: ${doc.title}`, 'info');
     }
 
     function openLessonModal(lesson) {
-        // Create a temporary document object for the lesson
-        const lessonDoc = {
-            id: lesson.id,
-            title: lesson.title,
-            pdfUrl: lesson.pdfUrl
-        };
-
-        // Set the current preview index to -1 to disable navigation
+        // Set the current preview index to -1 to disable navigation for lessons
         currentPreviewIndex = -1;
 
-        // Use the helper function to get the correct path
-        const pdfPath = getDocumentPath(lessonDoc);
-
         modalTitle.textContent = lesson.title;
-        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
+        
+        // Show loading state
+        pdfViewer.innerHTML = `
+            <div class="pdf-loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>${translations[currentLanguage].loadingPdf}</p>
+            </div>
+        `;
+        
+        // Set up error handling
+        const iframe = document.createElement('iframe');
+        iframe.id = 'pdf-iframe';
+        iframe.src = lesson.pdfUrl + '#toolbar=1&navpanes=1&scrollbar=1';
+        iframe.onload = () => {
+            pdfViewer.innerHTML = '';
+            pdfViewer.appendChild(iframe);
+        };
+        iframe.onerror = () => {
+            pdfViewer.innerHTML = `
+                <div class="pdf-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${translations[currentLanguage].pdfLoadError}</p>
+                    <a href="${lesson.pdfUrl}" download="${lesson.title}.pdf" class="btn btn-primary">
+                        <i class="fas fa-download"></i> ${translations[currentLanguage].downloadInstead}
+                    </a>
+                </div>
+            `;
+            showNotification('Failed to load lesson PDF. Try downloading instead.', 'error');
+        };
 
         // Set download link
-        modalDownload.href = pdfPath;
-        modalDownload.download = lesson.title;
+        modalDownload.href = lesson.pdfUrl;
+        modalDownload.download = `${lesson.title}.pdf`;
 
         // Update navigation buttons (disable them for lessons)
-        modalPrev.disabled = true;
-        modalNext.disabled = true;
-        modalPrev.style.opacity = '0.5';
-        modalNext.style.opacity = '0.5';
+        updateModalNavigation();
 
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state
+        // Show loading state notification
         showNotification(`Loading: ${lesson.title}`, 'info');
     }
 
     function closeModal() {
         modal.classList.remove('visible');
-        pdfViewer.src = '';
+        pdfViewer.innerHTML = '';
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
-
-        // Reset navigation buttons
-        modalPrev.style.opacity = '1';
-        modalNext.style.opacity = '1';
     }
 
     function showPrevDocument() {
         if (currentPreviewIndex > 0) {
-            const prevDoc = allDocuments[currentPreviewIndex - 1];
-            openModal(prevDoc.id);
+            const prevDoc = mainFilteredDocuments[currentPreviewIndex - 1];
+            if (prevDoc) {
+                openModal(prevDoc.id);
+            }
         }
     }
 
     function showNextDocument() {
-        if (currentPreviewIndex < allDocuments.length - 1) {
-            const nextDoc = allDocuments[currentPreviewIndex + 1];
-            openModal(nextDoc.id);
+        if (currentPreviewIndex < mainFilteredDocuments.length - 1) {
+            const nextDoc = mainFilteredDocuments[currentPreviewIndex + 1];
+            if (nextDoc) {
+                openModal(nextDoc.id);
+            }
         }
     }
 
@@ -763,9 +900,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // This is a regular document
             modalPrev.disabled = currentPreviewIndex === 0;
-            modalNext.disabled = currentPreviewIndex === allDocuments.length - 1;
-            modalPrev.style.opacity = '1';
-            modalNext.style.opacity = '1';
+            modalNext.disabled = currentPreviewIndex === mainFilteredDocuments.length - 1;
+            modalPrev.style.opacity = modalPrev.disabled ? '0.5' : '1';
+            modalNext.style.opacity = modalNext.disabled ? '0.5' : '1';
         }
 
         // Update button text
@@ -773,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalNext.innerHTML = `${t.nextBtn} <i class="fas fa-arrow-right"></i>`;
     }
 
-    // --- 12. LANGUAGE/TRANSLATION ---
+    // --- 13. LANGUAGE/TRANSLATION ---
     function updateLanguage() {
         const t = translations[currentLanguage];
 
@@ -793,9 +930,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update document count
-        const count = mainFilteredDocuments.length;
-        docCount.textContent = `${count} ${t.docCount}`;
+        // Update quarter pills
+        document.querySelectorAll('.quarter-pill').forEach((pill, index) => {
+            const quarter = index + 1;
+            if (t[`q${quarter}`]) {
+                pill.textContent = t[`q${quarter}`];
+            }
+        });
 
         // Update document title
         document.title = t.siteTitle;
@@ -803,57 +944,48 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update navigation items
         updateNavigationText();
 
-        // Update lessons sidebar if it exists
-        if (lessonList.children.length > 0) {
-            handleLessonFilterChange();
-        }
+        // Update document count
+        const count = mainFilteredDocuments.length;
+        docCount.textContent = `${count} ${t.docCount}`;
     }
 
     function updateNavigationText() {
         const t = translations[currentLanguage];
 
         // Update navigation text while preserving icons
-        if (navHome) {
-            const icon = navHome.querySelector('i').cloneNode(true);
-            navHome.innerHTML = '';
-            navHome.appendChild(icon);
-            navHome.appendChild(document.createTextNode(` ${t.navHome}`));
-        }
+        const navItems = [
+            { element: navHome, text: t.navHome },
+            { element: navWatchOnline, text: t.navWatchOnline },
+            { element: navAboutUs, text: t.navAboutUs },
+            { element: navArchives, text: t.navArchives },
+            { element: navContact, text: t.navContact }
+        ];
 
-        if (navWatchOnline) {
-            const icon = navWatchOnline.querySelector('i').cloneNode(true);
-            navWatchOnline.innerHTML = '';
-            navWatchOnline.appendChild(icon);
-            navWatchOnline.appendChild(document.createTextNode(` ${t.navWatchOnline}`));
-        }
-
-        if (navAboutUs) {
-            const icon = navAboutUs.querySelector('i').cloneNode(true);
-            navAboutUs.innerHTML = '';
-            navAboutUs.appendChild(icon);
-            navAboutUs.appendChild(document.createTextNode(` ${t.navAboutUs}`));
-        }
-
-        if (navArchives) {
-            const icon = navArchives.querySelector('i').cloneNode(true);
-            navArchives.innerHTML = '';
-            navArchives.appendChild(icon);
-            navArchives.appendChild(document.createTextNode(` ${t.navArchives}`));
-        }
-
-        if (navContact) {
-            const icon = navContact.querySelector('i').cloneNode(true);
-            navContact.innerHTML = '';
-            navContact.appendChild(icon);
-            navContact.appendChild(document.createTextNode(` ${t.navContact}`));
-        }
+        navItems.forEach(item => {
+            if (item.element) {
+                const icon = item.element.querySelector('i');
+                if (icon) {
+                    const iconClone = icon.cloneNode(true);
+                    item.element.innerHTML = '';
+                    item.element.appendChild(iconClone);
+                    item.element.appendChild(document.createTextNode(` ${item.text}`));
+                }
+            }
+        });
     }
 
-    // --- 13. NOTIFICATION SYSTEM ---
+    // --- 14. NOTIFICATION SYSTEM ---
     function showNotification(message, type = 'info') {
         // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
-        existingNotifications.forEach(notification => notification.remove());
+        existingNotifications.forEach(notification => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        });
 
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
@@ -912,115 +1044,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return colors[type] || '#3b82f6';
     }
 
-    // Add notification styles
-    const notificationStyles = document.createElement('style');
-    notificationStyles.textContent = `
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-        
-        .lesson-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-        
-        .lesson-card:hover {
-            transform: translateY(-2px);
-        }
-        
-        .lesson-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .lesson-title {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #333;
-        }
-        
-        .lesson-date {
-            font-size: 0.8rem;
-            color: #666;
-            background: #f0f0f0;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-        }
-        
-        .lesson-description {
-            margin: 0.5rem 0;
-            color: #555;
-            font-size: 0.9rem;
-        }
-        
-        .lesson-memory-verse {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
-            background: #f9f9f9;
-            border-left: 3px solid #1a2b6d;
-            font-size: 0.85rem;
-            color: #444;
-        }
-        
-        .lesson-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-        
-        .quarter-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #1a2b6d;
-            text-align: center;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .coming-soon {
-            text-align: center;
-            padding: 2rem 1rem;
-            color: #666;
-        }
-        
-        .coming-soon i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #ddd;
-        }
-        
-        .coming-soon h4 {
-            margin-bottom: 0.5rem;
-            color: #444;
-        }
-    `;
-    document.head.appendChild(notificationStyles);
-
+    // --- 15. HAMBURGER MENU ---
     function setupHamburgerMenu() {
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -1056,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 14. LOAD PREFERENCES AND START APP ---
+    // --- 16. LOAD PREFERENCES AND START APP ---
     function loadPreferences() {
         const savedLanguage = localStorage.getItem('preferredLanguage');
         if (savedLanguage && ['en', 'sw', 'rw'].includes(savedLanguage)) {
@@ -1077,17 +1101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentQuarter = '4';
         }
-
-        // Update the quarter pills to reflect the current quarter
-        quarterPills.forEach(pill => {
-            pill.classList.remove('active');
-            if (pill.dataset.quarter === currentQuarter) {
-                pill.classList.add('active');
-            }
-        });
     }
 
-    // --- 15. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
+    // --- 17. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
     window.updateBibleLesson = function (quarter, lessonId, lessonData) {
         if (!bibleLessons[quarter]) {
             console.error(`Invalid quarter: ${quarter}`);
@@ -1109,7 +1125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bibleLessons[quarter].available = true;
 
         // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter) {
+        if (currentQuarter === quarter.toString()) {
             handleLessonFilterChange();
         }
 
@@ -1142,7 +1158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bibleLessons[quarter].available = true;
 
         // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter) {
+        if (currentQuarter === quarter.toString()) {
             handleLessonFilterChange();
         }
 
@@ -1165,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bibleLessons[quarter].lessons.splice(lessonIndex, 1);
 
             // Refresh the lessons sidebar if this quarter is currently selected
-            if (currentQuarter === quarter) {
+            if (currentQuarter === quarter.toString()) {
                 handleLessonFilterChange();
             }
 
@@ -1193,7 +1209,219 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Add CSS styles for notifications, PDF viewer, and lesson cards
+    function addCustomStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .pdf-loading, .pdf-error {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                color: #666;
+                text-align: center;
+            }
+            
+            .pdf-loading i, .pdf-error i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .pdf-error {
+                color: #dc3545;
+            }
+            
+            .pdf-error .btn {
+                margin-top: 1rem;
+            }
+            
+            .fa-spinner.fa-spin {
+                animation: fa-spin 1s infinite linear;
+            }
+            
+            @keyframes fa-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .lesson-card {
+                background: white;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border: 1px solid #eaeaea;
+            }
+            
+            .lesson-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            
+            .lesson-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 0.5rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .lesson-title {
+                margin: 0;
+                font-size: 1.1rem;
+                color: #333;
+                flex: 1;
+                min-width: 200px;
+            }
+            
+            .lesson-date {
+                font-size: 0.8rem;
+                color: #666;
+                background: #f0f0f0;
+                padding: 0.2rem 0.5rem;
+                border-radius: 4px;
+                white-space: nowrap;
+            }
+            
+            .lesson-description {
+                margin: 0.5rem 0;
+                color: #555;
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            .lesson-memory-verse {
+                margin: 0.5rem 0;
+                padding: 0.5rem;
+                background: #f9f9f9;
+                border-left: 3px solid #1a2b6d;
+                font-size: 0.85rem;
+                color: #444;
+                font-style: italic;
+                line-height: 1.4;
+            }
+            
+            .lesson-actions {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .quarter-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+                color: #1a2b6d;
+                text-align: center;
+                padding-bottom: 0.5rem;
+                border-bottom: 2px solid #1a2b6d;
+            }
+            
+            .coming-soon {
+                text-align: center;
+                padding: 2rem 1rem;
+                color: #666;
+                background: #f9f9f9;
+                border-radius: 8px;
+                margin-top: 1rem;
+            }
+            
+            .coming-soon i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                color: #ddd;
+            }
+            
+            .coming-soon h4 {
+                margin-bottom: 0.5rem;
+                color: #444;
+            }
+            
+            .no-results-sidebar {
+                text-align: center;
+                padding: 2rem 1rem;
+                color: #666;
+                background: #f9f9f9;
+                border-radius: 8px;
+                margin-top: 1rem;
+            }
+            
+            .no-results-sidebar i {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                color: #ccc;
+            }
+            
+            .pagination-btn.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+            
+            .pagination-btn.active {
+                background-color: #1a2b6d;
+                color: white;
+            }
+            
+            .document-card {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            .document-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            
+            @media (max-width: 768px) {
+                .lesson-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                
+                .lesson-date {
+                    align-self: flex-start;
+                }
+                
+                .lesson-actions {
+                    flex-direction: column;
+                }
+                
+                .lesson-actions .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     // Start the application
+    addCustomStyles();
     loadPreferences();
     loadSavedLessons();
     init();
