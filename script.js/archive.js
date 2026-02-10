@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navHome = document.querySelector('a[href="index.html"]');
     const navWatchOnline = document.querySelector('a[href="watch online.html"]');
     const navAboutUs = document.querySelector('a[href="about us.html"]');
-    const navArchives = document.querySelector('a[href="Archive.html"]');
+    const navArchives = document.querySelector('a[href="archives.html"]');
     const navContact = document.querySelector('a[href="contact.html"]');
 
     // --- 8. INITIALIZATION ---
