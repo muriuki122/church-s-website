@@ -28,12 +28,19 @@
 
 body {
     background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+        url('images/divine-bird-bg.png') center/cover no-repeat;
+    background-attachment: fixed;
     color: var(--text-dark);
     min-height: 100vh;
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
 }
 
 body::before {
@@ -208,6 +215,7 @@ body>* {
 
 @media (max-width: 768px) {
     .hero {
+        background-attachment: scroll;
         height: auto;
         min-height: 60vh;
         padding: 100px 20px 60px;

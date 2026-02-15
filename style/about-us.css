@@ -1250,7 +1250,11 @@ section {
 }
 
 @media (max-width: 768px) {
-    .mobile-toggle {
+    body {
+        background-attachment: scroll;
+    }
+
+    .mobile-menu-btn {
         display: flex;
     }
 
@@ -1268,7 +1272,7 @@ section {
         padding-top: 80px;
         transition: 0.5s;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-        z-index: 999;
+        z-index: 2000;
     }
 
     .nav-links.active {
@@ -1301,6 +1305,13 @@ section {
 
     .schedule-tabs {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .schedule-tab {
+        width: 100%;
+        padding: 15px;
+        border-radius: 4px;
     }
 
     .timeline::before {
@@ -1331,8 +1342,21 @@ section {
 }
 
 @media (max-width: 576px) {
+    .logo-container {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
     .logo-text h1 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+    }
+
+    .logo-text p {
+        font-size: 0.7rem;
     }
 
     .hero-content h1 {
@@ -1368,48 +1392,25 @@ section {
     .leaders-grid {
         grid-template-columns: 1fr;
     }
+
+    .language-toggle {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Enhanced Mobile Styles */
 @media (max-width: 768px) {
 
-    /* Mobile menu animation */
-    .mobile-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .mobile-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .mobile-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
+    /* Mobile menu button interaction states */
+    .mobile-menu-btn i.fa-times {
+        color: var(--primary);
     }
 
     /* Ensure mobile menu stays on top */
     .nav-links.active {
         display: flex !important;
         right: 0 !important;
-    }
-
-    /* Language dropdown mobile fix */
-    .language-dropdown.show {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80%;
-        max-width: 300px;
-        z-index: 10000;
-    }
-
-    /* Schedule tabs mobile */
-    .schedule-tabs {
-        flex-direction: column;
-    }
-
-    .schedule-tab {
-        width: 100%;
     }
 }
 

@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
             noDocumentsHelp: "Try adjusting your search or filter criteria.",
             prevBtn: "Previous",
             nextBtn: "Next",
+            viewFullBtn: "View Full PDF",
+            closeBtn: "Close",
             page: "Page",
             // Navigation translations
             navHome: "Home",
@@ -59,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
             noDocumentsHelp: "Jaribu kurekebisha utafutaji au kichujio chako.",
             prevBtn: "Iliyotangulia",
             nextBtn: "Inayofuata",
+            viewFullBtn: "Tazama PDF Kamili",
+            closeBtn: "Funga",
             page: "Ukurasa",
             // Navigation translations
             navHome: "Nyumbani",
@@ -91,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
             noDocumentsHelp: "Gerageza guhindura ushakisha cyangwa ibisanzwe.",
             prevBtn: "Ibanjirije",
             nextBtn: "Ikurikira",
+            viewFullBtn: "Reba PDF Yuzuye",
+            closeBtn: "Funga",
             page: "Urupapuro",
             // Navigation translations
             navHome: "Ahabanza",
@@ -223,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 59, title: "Why Not Talk to God About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
             { id: 60, title: "Has Our Messiah Come", category: "Tracts", fileName: "tracks/has-our-messiah-come-better.pdf" },
             { id: 61, title: "Why Israel is Here to Stay", category: "Tracts", fileName: "tracks/why-israel-is-here-to-stay-potrait.pdf" },
-            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year of deception.pdf" },
+            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year%20of%20deception.pdf" },
 
             // JUDAH - PDFs in the judah folder
             { id: 63, title: "Judah/72-sebat", category: "Judah", fileName: "judah/72-Sebat.pdf" },
@@ -326,6 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const modalClose = document.getElementById('modal-close');
     const pdfViewer = document.getElementById('pdf-viewer');
+    const modalExternal = document.getElementById('modal-external');
     const modalPrev = document.getElementById('modal-prev');
     const modalNext = document.getElementById('modal-next');
     const modalDownload = document.getElementById('modal-download');
@@ -338,14 +345,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const navContact = document.querySelector('a[href="contact.html"]');
 
     // --- 8. INITIALIZATION ---
-    function init() {
-        // Load data
+    async function init() {
+        // Load static data
         allDocuments = getDocumentData();
+
+        // Sync with Firestore (Admin Management System)
+        await syncFirestoreDocs();
+        await syncFirestoreLessons();
 
         // Setup UI
         populateCategories();
         setupEventListeners();
         setupHamburgerMenu();
+
+        // Activate Admin Panel Logic
+        setupAdminLogic();
 
         // Initial render
         handleMainFilterChange();
@@ -448,6 +462,244 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLessonsSidebar();
     }
 
+    // --- ADMINISTRATIVE & FIREBASE SYSTEM ---
+    async function syncFirestoreDocs() {
+        if (typeof db === 'undefined') return;
+        try {
+            const snapshot = await db.collection('archive_documents').get();
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (!allDocuments.find(d => d.id === data.id)) {
+                    allDocuments.push(data);
+                }
+            });
+        } catch (err) {
+            console.error('Firestore Document Sync Error:', err);
+        }
+    }
+
+    async function syncFirestoreLessons() {
+        if (typeof db === 'undefined') return;
+        try {
+            const snapshot = await db.collection('bible_lessons').get();
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const q = data.quarter;
+                if (bibleLessons[q]) {
+                    bibleLessons[q].available = true;
+                    const idx = bibleLessons[q].lessons.findIndex(l => l.id === data.id);
+                    if (idx !== -1) bibleLessons[q].lessons[idx] = data;
+                    else bibleLessons[q].lessons.push(data);
+                }
+            });
+        } catch (err) {
+            console.error('Firestore Lesson Sync Error:', err);
+        }
+    }
+
+    function setupAdminLogic() {
+        const adminPanel = document.getElementById('adminFormContainer');
+        const closeAdminBtn = document.getElementById('closeAdminForm');
+        const addDocForm = document.getElementById('addDocForm');
+        const addLessonForm = document.getElementById('addLessonForm');
+        const tabDocBtn = document.getElementById('tabDocBtn');
+        const tabLessonBtn = document.getElementById('tabLessonBtn');
+
+        // Toggle between Document and Lesson forms
+        if (tabDocBtn && tabLessonBtn) {
+            tabDocBtn.addEventListener('click', () => {
+                addDocForm.style.display = 'grid';
+                addLessonForm.style.display = 'none';
+                tabDocBtn.classList.add('active');
+                tabLessonBtn.classList.remove('active');
+            });
+            tabLessonBtn.addEventListener('click', () => {
+                addDocForm.style.display = 'none';
+                addLessonForm.style.display = 'grid';
+                tabLessonBtn.classList.add('active');
+                tabDocBtn.classList.remove('active');
+            });
+        }
+
+        if (closeAdminBtn) {
+            closeAdminBtn.addEventListener('click', () => {
+                adminPanel.style.display = 'none';
+            });
+        }
+
+        // Handle Adding Library Documents
+        if (addDocForm) {
+            addDocForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const docData = {
+                    id: Date.now(),
+                    title: document.getElementById('docTitle').value,
+                    category: document.getElementById('docCategory').value,
+                    fileName: document.getElementById('docPath').value,
+                    isDynamic: true
+                };
+
+                try {
+                    await db.collection('archive_documents').add(docData);
+                    alert('Document added to library successfully!');
+                    addDocForm.reset();
+                    adminPanel.style.display = 'none';
+                    allDocuments.push(docData);
+                    handleMainFilterChange();
+                    populateCategories();
+                } catch (err) {
+                    alert('Error adding document: ' + err.message);
+                }
+            });
+        }
+
+        // Handle Saving Bible Lessons
+        if (addLessonForm) {
+            addLessonForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const quarter = parseInt(document.getElementById('lessonQuarter').value);
+                const lessonData = {
+                    id: document.getElementById('lessonId').value,
+                    title: document.getElementById('lessonTitle').value,
+                    date: document.getElementById('lessonDate').value,
+                    memoryVerse: document.getElementById('lessonMemory').value,
+                    pdfUrl: document.getElementById('lessonPdf').value,
+                    quarter: quarter
+                };
+
+                try {
+                    await db.collection('bible_lessons').doc(lessonData.id).set(lessonData);
+                    alert('Bible lesson saved successfully!');
+                    addLessonForm.reset();
+                    adminPanel.style.display = 'none';
+
+                    if (bibleLessons[quarter]) {
+                        bibleLessons[quarter].available = true;
+                        const idx = bibleLessons[quarter].lessons.findIndex(l => l.id === lessonData.id);
+                        if (idx !== -1) bibleLessons[quarter].lessons[idx] = lessonData;
+                        else bibleLessons[quarter].lessons.push(lessonData);
+                    }
+                    handleLessonFilterChange();
+                } catch (err) {
+                    alert('Error saving lesson: ' + err.message);
+                }
+            });
+        }
+
+        // --- AUTH-SPECIFIC UI UPDATES ---
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                const sidebarHeader = document.querySelector('.sidebar-header');
+                let insertBtn = document.getElementById('adminInsertTrigger');
+                const AUTHORIZED_ADMINS = ['muriukic522@gmail.com', 'admin@kalolenichurch.org'];
+
+                if (user && AUTHORIZED_ADMINS.includes(user.email)) {
+                    // Show "Management" entry point in the sidebar
+                    if (!insertBtn && sidebarHeader) {
+                        insertBtn = document.createElement('button');
+                        insertBtn.id = 'adminInsertTrigger';
+                        insertBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Content';
+                        insertBtn.className = 'btn btn-secondary btn-sm';
+                        insertBtn.style.cssText = 'margin-left:auto; font-size:0.75rem; padding:4px 10px; border: 1px solid var(--secondary);';
+                        insertBtn.onclick = () => {
+                            adminPanel.style.display = 'flex';
+                            updateAdminLists(); // Load lists when opening
+                        };
+                        sidebarHeader.appendChild(insertBtn);
+                    }
+                } else {
+                    if (insertBtn) insertBtn.remove();
+                    if (adminPanel) adminPanel.style.display = 'none';
+                }
+            });
+        }
+
+        // --- MANAGE LISTS LOGIC ---
+        function updateAdminLists() {
+            // Render existing documents in the modal for deletion
+            const listContainer = document.createElement('div');
+            listContainer.id = 'adminItemsList';
+            listContainer.style.marginTop = '20px';
+            listContainer.style.borderTop = '1px solid #eee';
+            listContainer.style.paddingTop = '15px';
+
+            const renderList = () => {
+                const isLessonTab = tabLessonBtn.classList.contains('active');
+                let html = `<h4 style="margin-bottom:10px; font-size:0.9rem;">Existing ${isLessonTab ? 'Lessons' : 'Documents'}</h4>`;
+
+                if (isLessonTab) {
+                    const quarter = parseInt(document.getElementById('lessonQuarter').value) || 1;
+                    const lessons = bibleLessons[quarter]?.lessons || [];
+                    if (lessons.length === 0) html += '<p style="font-size:0.8rem; color:#888;">No lessons in this quarter.</p>';
+                    lessons.forEach(l => {
+                        html += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:#f9f9f9; border-radius:4px; margin-bottom:5px; font-size:0.8rem;">
+                                <span><strong>[${l.id}]</strong> ${l.title}</span>
+                                <button onclick="deleteAdminLesson('${l.id}', ${quarter})" style="border:none; background:none; color:red; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    const docs = allDocuments.filter(d => d.isDynamic);
+                    if (docs.length === 0) html += '<p style="font-size:0.8rem; color:#888;">No dynamically added documents.</p>';
+                    docs.forEach(d => {
+                        html += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:#f9f9f9; border-radius:4px; margin-bottom:5px; font-size:0.8rem;">
+                                <span>${d.title} (${d.category})</span>
+                                <button onclick="deleteAdminDoc('${d.id}')" style="border:none; background:none; color:red; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                    });
+                }
+
+                const existingList = adminPanel.querySelector('#adminItemsList');
+                if (existingList) existingList.innerHTML = html;
+                else {
+                    listContainer.innerHTML = html;
+                    adminPanel.querySelector('.modal-body').appendChild(listContainer);
+                }
+            };
+
+            renderList();
+
+            // Re-render when switching tabs or changing quarter
+            tabDocBtn.addEventListener('click', renderList);
+            tabLessonBtn.addEventListener('click', renderList);
+            document.getElementById('lessonQuarter').addEventListener('change', renderList);
+        }
+
+        window.deleteAdminLesson = async (id, quarter) => {
+            if (!confirm('Are you sure you want to delete this lesson?')) return;
+            try {
+                await db.collection('bible_lessons').doc(id).delete();
+                const idx = bibleLessons[quarter].lessons.findIndex(l => l.id === id);
+                if (idx !== -1) bibleLessons[quarter].lessons.splice(idx, 1);
+                handleLessonFilterChange();
+                updateAdminLists();
+                alert('Lesson deleted.');
+            } catch (err) {
+                alert('Error deleting: ' + err.message);
+            }
+        };
+
+        window.deleteAdminDoc = async (id) => {
+            if (!confirm('Are you sure you want to delete this document?')) return;
+            try {
+                // Find in Firestore by id field
+                const qSnapshot = await db.collection('archive_documents').where('id', '==', parseInt(id)).get();
+                qSnapshot.forEach(async (doc) => await doc.ref.delete());
+
+                const idx = allDocuments.findIndex(d => d.id == id);
+                if (idx !== -1) allDocuments.splice(idx, 1);
+                handleMainFilterChange();
+                updateAdminLists();
+                alert('Document deleted.');
+            } catch (err) {
+                alert('Error deleting: ' + err.message);
+            }
+        };
+    }
+
     function renderComingSoonMessage() {
         const t = translations[currentLanguage];
         lessonList.innerHTML = `
@@ -536,9 +788,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Add event listener for view button
-            card.querySelector('.btn-view-lesson').addEventListener('click', (e) => {
-                e.stopPropagation();
+            // Add event listener for entire card
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-download-lesson')) return;
                 openLessonModal(lesson);
             });
 
@@ -576,9 +828,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Add event listener for preview button
-        card.querySelector('.btn-preview').addEventListener('click', (e) => {
-            e.preventDefault();
+        // Add event listener for the entire card
+        card.addEventListener('click', (e) => {
+            // Don't trigger if they clicked the download button specifically
+            if (e.target.closest('.btn-download')) return;
             openModal(doc.id);
         });
 
@@ -651,9 +904,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Search in all documents to be safe
         const doc = allDocuments.find(d => d.id === docId);
 
-        // Navigation should ideally be based on the list you clicked from, 
-        // but to keep it simple, we'll navigate through allDocuments for now
-        currentPreviewIndex = allDocuments.findIndex(d => d.id === docId);
+        // Navigation should be based on the currently filtered list
+        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
 
         if (!doc) return;
 
@@ -663,9 +915,10 @@ document.addEventListener('DOMContentLoaded', () => {
         modalTitle.textContent = doc.title;
         pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
-        // Set download link
+        // Set download and external links
         modalDownload.href = pdfPath;
         modalDownload.download = doc.fileName || doc.title;
+        modalExternal.href = pdfPath;
 
         // Update navigation buttons
         updateModalNavigation();
@@ -694,9 +947,10 @@ document.addEventListener('DOMContentLoaded', () => {
         modalTitle.textContent = lesson.title;
         pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
-        // Set download link
+        // Set download and external links
         modalDownload.href = pdfPath;
         modalDownload.download = lesson.title;
+        modalExternal.href = pdfPath;
 
         // Update navigation buttons (disable them for lessons)
         modalPrev.disabled = true;
@@ -724,14 +978,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showPrevDocument() {
         if (currentPreviewIndex > 0) {
-            const prevDoc = allDocuments[currentPreviewIndex - 1];
+            const prevDoc = mainFilteredDocuments[currentPreviewIndex - 1];
             openModal(prevDoc.id);
         }
     }
 
     function showNextDocument() {
-        if (currentPreviewIndex < allDocuments.length - 1) {
-            const nextDoc = allDocuments[currentPreviewIndex + 1];
+        if (currentPreviewIndex < mainFilteredDocuments.length - 1) {
+            const nextDoc = mainFilteredDocuments[currentPreviewIndex + 1];
             openModal(nextDoc.id);
         }
     }
@@ -748,7 +1002,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // This is a regular document
             modalPrev.disabled = currentPreviewIndex === 0;
-            modalNext.disabled = currentPreviewIndex === allDocuments.length - 1;
+            modalNext.disabled = currentPreviewIndex === mainFilteredDocuments.length - 1;
             modalPrev.style.opacity = '1';
             modalNext.style.opacity = '1';
         }

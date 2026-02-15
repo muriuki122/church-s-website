@@ -36,7 +36,7 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="images/minorah image.jpg" alt="Church Logo" class="logo-img">
+                <img src="images/minorah%20image.jpg" alt="Church Logo" class="logo-img">
                 <div class="logo-text">
                     <h1 data-key="siteTitle">Kaloleni Church</h1>
                 </div>
@@ -44,12 +44,20 @@
 
             <nav class="main-nav">
                 <ul class="nav-links">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="watch online.html"><i class="fas fa-video"></i> Watch online</a></li>
-                    <li><a href="about us.html"><i class="fas fa-book-bible"></i> about us</a></li>
-                    <li><a href="archives.html" class="active"><i class="fas fa-archive"></i> Archives</a></li>
-                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li><a href="index.html" id="nav-home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="watch online.html" id="nav-watch"><i class="fas fa-video"></i> Watch online</a></li>
+                    <li><a href="about us.html" id="nav-about"><i class="fas fa-book-bible"></i> about us</a></li>
+                    <li><a href="blog.html" id="nav-blog"><i class="fas fa-blog"></i> Blog</a></li>
+                    <li><a href="archives.html" class="active" id="nav-archive"><i class="fas fa-archive"></i>
+                            Archives</a></li>
+                    <li><a href="contact.html" id="nav-contact"><i class="fas fa-envelope"></i> Contact</a></li>
                 </ul>
+                <div class="header-actions" style="margin-left: 20px;">
+                    <button id="adminLoginBtn" class="btn-admin-login"
+                        style="padding: 8px 15px; background: var(--primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-user-shield"></i> <span id="authStatusText">Admin Login</span>
+                    </button>
+                </div>
                 <div class="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -68,58 +76,57 @@
 
         <div class="archive-layout-wrapper">
             <!-- Main Content Area (Original Structure) -->
-            <div class="main-archive-content">
-                <!-- Controls: Search and Filter -->
-                <div class="controls-wrapper">
-                    <div class="search-box">
-                        <input type="text" id="search-input" data-key-placeholder="searchPlaceholder">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="filter-box">
-                        <i class="fas fa-filter"></i>
-                        <span class="filter-label">Category:</span>
-                        <select id="category-filter">
-                            <!-- Categories will be populated by JavaScript -->
-                        </select>
-                    </div>
+            <!-- Controls: Search and Filter -->
+            <div class="controls-wrapper">
+                <div class="search-box">
+                    <input type="text" id="search-input" data-key-placeholder="searchPlaceholder">
+                    <i class="fas fa-search"></i>
                 </div>
-
-                <!-- Document List Header -->
-                <div class="list-header">
-                    <h3 data-key="documentsTitle">Documents</h3>
-                    <span id="doc-count" data-key="docCount"></span>
+                <div class="filter-box">
+                    <i class="fas fa-filter"></i>
+                    <span class="filter-label">Category:</span>
+                    <select id="category-filter">
+                        <!-- Categories will be populated by JavaScript -->
+                    </select>
                 </div>
-
-                <!-- Document Grid -->
-                <div id="document-list" class="document-grid">
-                    <!-- Documents will be populated by JavaScript -->
-                </div>
-
-                <!-- Pagination -->
-                <nav id="pagination" class="pagination-nav"></nav>
             </div>
 
-            <!-- Side Lesson Column (New Addition) -->
-            <aside class="lessons-sidebar">
-                <div class="sidebar-header">
-                    <h3><i class="fas fa-scroll"></i> Bible Lessons</h3>
-                    <div class="sidebar-search">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="lessons-search" placeholder="Search lessons...">
-                    </div>
-                </div>
+            <!-- Document List Header -->
+            <div class="list-header">
+                <h3 data-key="documentsTitle">Documents</h3>
+                <span id="doc-count" data-key="docCount"></span>
+            </div>
 
-                <div class="quarter-pills">
-                    <button class="quarter-pill active" data-quarter="1">Q1</button>
-                    <button class="quarter-pill" data-quarter="2">Q2</button>
-                    <button class="quarter-pill" data-quarter="3">Q3</button>
-                    <button class="quarter-pill" data-quarter="4">Q4</button>
-                </div>
+            <!-- Document Grid -->
+            <div id="document-list" class="document-grid">
+                <!-- Documents will be populated by JavaScript -->
+            </div>
 
-                <div id="lessons-list" class="sidebar-list">
-                    <!-- Lessons will be populated here -->
+            <!-- Pagination -->
+            <nav id="pagination" class="pagination-nav"></nav>
+        </div>
+
+        <!-- Side Lesson Column (New Addition) -->
+        <aside class="lessons-sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-scroll"></i> Bible Lessons</h3>
+                <div class="sidebar-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="lessons-search" placeholder="Search lessons...">
                 </div>
-            </aside>
+            </div>
+
+            <div class="quarter-pills">
+                <button class="quarter-pill active" data-quarter="1">Q1</button>
+                <button class="quarter-pill" data-quarter="2">Q2</button>
+                <button class="quarter-pill" data-quarter="3">Q3</button>
+                <button class="quarter-pill" data-quarter="4">Q4</button>
+            </div>
+
+            <div id="lessons-list" class="sidebar-list">
+                <!-- Lessons will be populated here -->
+            </div>
+        </aside>
         </div>
     </main>
 
@@ -128,7 +135,7 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <div class="footer-logo">
-                    <img src="images/minorah image.jpg" alt="Logo">
+                    <img src="images/minorah%20image.jpg" alt="Logo">
                     <h3>Kaloleni Church</h3>
                 </div>
                 <p class="footer-desc">A spiritual home dedicated to worshiping Elohim and serving our community with
@@ -151,6 +158,10 @@
                     <li><a href="contact.html">Contact Us</a></li>
                     <li><a href="archives.html">Archives</a></li>
                 </ul>
+                <div style="margin-top:20px; text-align:center;">
+                    <a href="javascript:void(0)" onclick="document.getElementById('loginModal').style.display='flex'"
+                        style="font-size:0.7rem; color:#888; text-decoration:none; opacity:0.5;">Admin Panel Access</a>
+                </div>
             </div>
             <div class="footer-col">
                 <h4>Contact Us</h4>
@@ -176,12 +187,21 @@
 
             <div class="modal-header">
                 <h4 id="modal-title">Document Title</h4>
-                <button id="modal-close" class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <div class="modal-header-actions">
+                    <a id="modal-external" href="#" target="_blank" class="btn btn-secondary btn-icon"
+                        title="View Full PDF">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span class="sr-only" data-key="viewFullBtn">View Full PDF</span>
+                    </a>
+                    <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="modal-body">
                 <!-- PDF.js viewer iframe -->
-                <iframe id="pdf-viewer" src="72-Sebat.pdf" frameborder="0" width="100%" height="100%"></iframe>
+                <iframe id="pdf-viewer" src="judah/72-Sebat.pdf" frameborder="0" width="100%" height="100%"></iframe>
 
                 <!-- Fallback for simple embed -->
                 <!-- <embed id="pdf-embed" src="78-tibet.pdf" type="application/pdf" width="100%" height="100%"> -->
@@ -206,12 +226,150 @@
         </div>
     </div>
 
-    <!-- Viewer.js (for PDF.js) - this points to a web-based viewer -->
-    <!-- This is a simple way to get a nice PDF viewer interface -->
+    <!-- Invisible Login Trigger Modal -->
+    <div id="loginModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content admin-login-modal"
+            style="background:#fff; padding:30px; border-radius:12px; position:relative; max-width:400px; width:90%; color:#333; box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 4000;">
+            <div class="modal-header" style="border-bottom:1px solid #eee; margin-bottom:20px; padding-bottom:15px;">
+                <h3 style="margin:0; color:var(--primary);">Admin Access</h3>
+                <button class="modal-close"
+                    style="position:absolute; top:15px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer; color:#999;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminLoginForm">
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600;">Email</label>
+                        <input type="email" id="adminEmail" required placeholder="admin@example.com"
+                            style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block; margin-bottom:5px; font-weight:600;">Password</label>
+                        <input type="password" id="adminPassword" required placeholder="••••••••"
+                            style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width:100%; padding:14px; border:none; border-radius:6px; background:var(--primary); color:#fff; cursor:pointer; font-weight:600;">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Management Modal -->
+    <div id="adminFormContainer" class="modal-overlay" style="display: none;">
+        <div class="modal-content"
+            style="background:#fff; padding:30px; border-radius:12px; position:relative; max-width:500px; width:95%; color:#333; box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 4000;">
+            <div class="modal-header" style="border-bottom:1px solid #eee; margin-bottom:20px; padding-bottom:15px;">
+                <h3 style="margin:0; color:var(--primary);"><i class="fas fa-plus-circle"></i> Management Panel</h3>
+                <button id="closeAdminForm"
+                    style="position:absolute; top:15px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer; color:#999;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-secondary btn-sm active" id="tabDocBtn" style="padding: 5px 15px;">Library
+                        Document</button>
+                    <button class="btn btn-secondary btn-sm" id="tabLessonBtn" style="padding: 5px 15px;">Bible
+                        Lesson</button>
+                </div>
+
+                <!-- Add Document Form -->
+                <form id="addDocForm" style="display: grid; gap: 15px;">
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Document
+                            Title</label>
+                        <input type="text" id="docTitle" required placeholder="e.g. Hidden Prophecies"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Category</label>
+                        <select id="docCategory"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                            <option value="Books">Books</option>
+                            <option value="Tracts">Tracts</option>
+                            <option value="Judah">Judah</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">File Path
+                            (e.g., pdfs/book.pdf)</label>
+                        <input type="text" id="docPath" required placeholder="pdfs/file.pdf"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="padding:12px; border:none; border-radius:6px; background:var(--primary); color:#fff; cursor:pointer; font-weight:600;">Add
+                        to Library</button>
+                </form>
+
+                <!-- Add Lesson Form -->
+                <form id="addLessonForm" style="display: none; gap: 15px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Quarter
+                                (1-4)</label>
+                            <input type="number" id="lessonQuarter" min="1" max="4" required value="1"
+                                style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                        </div>
+                        <div>
+                            <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Lesson
+                                ID (e.g., q1-1)</label>
+                            <input type="text" id="lessonId" required placeholder="q1-1"
+                                style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Lesson
+                            Title</label>
+                        <input type="text" id="lessonTitle" required placeholder="Enter Lesson Title"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Date Range
+                            (e.g., Jan 1-7)</label>
+                        <input type="text" id="lessonDate" required placeholder="Jan 1-7"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Memory
+                            Verse</label>
+                        <textarea id="lessonMemory" required rows="2"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;"></textarea>
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">PDF File
+                            Path</label>
+                        <input type="text" id="lessonPdf" required placeholder="lessons/file.pdf"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="padding:12px; border:none; border-radius:6px; background:var(--primary); color:#fff; cursor:pointer; font-weight:600;">Save
+                        Lesson</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-measurement-compat.js"></script>
+    <script src="script.js/firebase-config.js"></script>
+    <script src="script.js/auth.js"></script>
+
+    <!-- Viewer.js (for PDF.js) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
 
     <!-- Your Custom JavaScript -->
     <script src="script.js/archive.js"></script>
+    <script>
+        // Backup Admin Shortcut (Ctrl + Alt + L)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.altKey && (e.key === 'l' || e.key === 'L')) {
+                const modal = document.getElementById('loginModal');
+                if (modal) modal.style.display = 'flex';
+            }
+        });
+    </script>
 </body>
 
 </html>

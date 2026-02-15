@@ -776,35 +776,68 @@ main {
 
 @media (max-width: 768px) {
     .modal-content {
-        width: 100%;
-        height: 100%;
-        border-radius: 0;
-        max-width: none;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important;
+        max-width: none !important;
     }
-    
+
     .modal-overlay {
-        padding: 0;
+        padding: 0 !important;
     }
-    
+
     .modal-header {
-        padding: 1rem;
+        padding: 0.75rem 1rem !important;
+        background: #fff;
+        z-index: 10;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
     }
-    
+
+    .modal-body {
+        flex: 1;
+        -webkit-overflow-scrolling: touch;
+        overflow-y: scroll;
+        position: relative;
+    }
+
+    iframe#pdf-viewer {
+        height: 100% !important;
+        width: 100% !important;
+        display: block;
+        border: none;
+    }
+
     .modal-footer {
-        padding: 1rem;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .modal-nav {
-        width: 100%;
+        padding: 0.75rem 1rem !important;
+        flex-direction: row !important;
         justify-content: space-between;
+        align-items: center;
+        background: #fff;
+        z-index: 10;
+        box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
     }
-    
+
+    .modal-nav {
+        flex: 1;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .modal-nav button {
+        flex: 1;
+        padding: 0.5rem !important;
+        font-size: 0.8rem;
+    }
+
+    .modal-nav button span {
+        display: none;
+        /* Hide text, show icons to save space */
+    }
+
     #modal-download {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
+        margin-left: 0.5rem;
+        padding: 0.5rem 1rem !important;
+        width: auto !important;
     }
 }
 
@@ -1176,6 +1209,37 @@ main {
 }
 
 /* Dark Mode Support Removed */
+/* Modal Header Actions */
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#modal-external {
+    font-size: 1rem !important;
+    padding: 8px 12px !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+@media (max-width: 768px) {
+    .modal-header-actions .sr-only {
+        /* On mobile, don't show the text in the tiny button */
+        display: none;
+    }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     * {
