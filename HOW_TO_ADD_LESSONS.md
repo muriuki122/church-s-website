@@ -235,7 +235,7 @@ Here's a complete example for Q3 2026:
             title: "Third Quarter Lesson 2026",
             date: "July - September 2026",
             description: "Exploring the prophetic books and their relevance today.",
-            memoryVerse: "Surely the Lord GOD will do nothing, but he revealeth his secret unto his servants the prophets - Amos 3:7",
+            memoryVerse: "Surely the Lord ELOHIM will do nothing, but he revealeth his secret unto his servants the prophets - Amos 3:7",
             pdfUrl: "lessons/Lesson 3rd quarter 2026.pdf"
         }
     ]

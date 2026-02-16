@@ -209,26 +209,36 @@ body>* {
 @media (max-width: 768px) {
     .hero {
         height: auto;
-        min-height: 60vh;
-        padding: 100px 20px 60px;
+        min-height: 80vh;
+        /* Better for content spacing */
+        padding: 120px 20px 80px;
+        background-attachment: scroll;
+        /* Fix for mobile browser background issues */
+        background-position: center top;
+        /* Ensure subject remains visible */
     }
 
     .hero-content h2 {
-        font-size: 2.2rem;
+        font-size: 2rem;
+        margin-bottom: 15px;
     }
 
     .hero-content p {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 30px;
     }
 
     .hero-btns {
         flex-direction: column;
         align-items: center;
+        gap: 15px;
     }
 
     .btn {
         width: 100%;
-        max-width: 300px;
+        max-width: 280px;
+        padding: 10px 20px;
+        font-size: 0.95rem;
     }
 }
 

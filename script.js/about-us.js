@@ -4,7 +4,7 @@ let currentLanguage = 'en';
 const translations = {
     en: {
         // Site Title
-        siteTitle: "Kaloleni Church",
+        siteTitle: "Kaloleni Seventh day Church of Elohim",
         ofElohim: "Of Elohim",
 
         // Navigation
@@ -15,7 +15,7 @@ const translations = {
         navContact: "Contact",
 
         // Hero Section
-        heroTitle: "About Kaloleni Church",
+        heroTitle: "About Kaloleni Seventh day Church of Elohim",
         heroSubtitle: "Learn about our community, worship schedule, and traditions",
         scrollDown: "Scroll Down",
 

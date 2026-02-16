@@ -17,6 +17,7 @@
     --font-main: 'Poppins', sans-serif;
     --font-heading: 'Playfair Display', serif;
     --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --section-padding: 100px 0;
     --transition: all 0.3s ease;
 }
 
@@ -28,7 +29,7 @@ body {
     font-family: var(--font-main);
     line-height: 1.6;
     color: var(--dark);
-    background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+    background: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)),
         url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
     overflow-x: hidden;
 }
@@ -282,6 +283,34 @@ body {
         width: 20px;
         text-align: center;
     }
+}
+
+/* Global Section Layout */
+.schedule-section,
+.music-section,
+.ceremonies-section,
+.history-section,
+.leadership-section {
+    padding: var(--section-padding);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.section-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--secondary);
+    margin: 0 auto 20px;
 }
 
 /* Hero Section */
@@ -635,23 +664,28 @@ section {
 
 @media (max-width: 768px) {
     .timeline::before {
-        left: 20px;
+        left: 15px;
     }
 
     .timeline-item {
         flex-direction: column;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        padding-left: 40px;
+        /* Space for the line and dots */
     }
 
     .timeline-time {
         text-align: left;
-        margin-left: 45px;
-        margin-bottom: 5px;
+        margin-left: 0;
+        margin-bottom: 8px;
         flex: 0 0 auto;
+        font-size: 0.9rem;
     }
 
     .timeline-item::after {
-        left: 16px;
+        left: 10px;
+        top: 5px;
+        /* Adjust to align with time text */
     }
 
     .timeline-content::before {
@@ -757,7 +791,7 @@ section {
 
 .music-groups {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
 }
 
@@ -1304,14 +1338,19 @@ section {
     }
 
     .schedule-tabs {
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 10px;
+        padding: 10px;
     }
 
     .schedule-tab {
         width: 100%;
-        padding: 15px;
-        border-radius: 4px;
+        padding: 12px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
     }
 
     .timeline::before {
@@ -1352,7 +1391,8 @@ section {
     }
 
     .logo-text h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        white-space: nowrap;
     }
 
     .logo-text p {
@@ -1391,6 +1431,7 @@ section {
     .ceremonies-grid,
     .leaders-grid {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
 
     .language-toggle {

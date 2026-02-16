@@ -226,9 +226,9 @@ if (contactForm) {
             });
 
             if (response.ok) {
-                showNotification(currentLang === 'sw' ? 'Ujumbe umetumwa! Mungu akubariki.' :
-                    currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Imana iguhe umugisha.' :
-                        'Message sent! God bless you.');
+                showNotification(currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
+                    currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :
+                        'Message sent! Elohim bless you.');
                 contactForm.reset();
             } else {
                 throw new Error('Submission failed');

@@ -10,8 +10,8 @@ const translations = {
         "contact": "Contact",
 
         // Hero Section
-        "welcome": "Welcome to Kaloleni Seventh Day Church",
-        "hero-text": "Join us as we worship, learn, and grow together in Yashua",
+        "welcome": "Welcome to Kaloleni Seventh day Church of Elohim",
+        "hero-text": "Join us as we worship, learn, and grow together in Yahshuah",
         "join": "Join Our Service",
         "learn": "Learn More",
 
@@ -19,7 +19,7 @@ const translations = {
         "new-here-title": "New Here?",
         "new-here-desc": "We'd love to welcome you to our community. Here's what you can expect.",
         "mission-title": "Our Mission",
-        "mission-desc": "To share the love of Elohim and the message of Yashua with our community through service and truth.",
+        "mission-desc": "To share the love of Elohim and the message of Yahshuah with our community through service and truth.",
         "community-title": "Community",
         "community-desc": "Find a place to belong. We have various ministries for all ages to grow in faith together.",
         "visit-title": "Visit Us",
@@ -76,8 +76,8 @@ const translations = {
         "contact": "Wasiliana",
 
         // Hero Section
-        "welcome": "Karibu Kanisa la Kaloleni la Siku ya Saba",
-        "hero-text": "Jiunge nasi tunapoabudu, kujifunza, na kukua pamoja katika Yashua",
+        "welcome": "Karibu Kanisa la Kaloleni la Siku ya Saba la Elohim",
+        "hero-text": "Jiunge nasi tunapoabudu, kujifunza, na kukua pamoja katika Yahshuah",
         "join": "Jiunge na Ibada Yetu",
         "learn": "Jifunze Zaidi",
 
@@ -85,7 +85,7 @@ const translations = {
         "new-here-title": "Mgeni Hapa?",
         "new-here-desc": "Tunapenda kukukaribisha katika jamii yetu. Hapa ni nini unaweza kutarajia.",
         "mission-title": "Dhumuni Letu",
-        "mission-desc": "Kushiriki upendo wa Elohim na ujumbe wa Yashua na jamii yetu kupitia huduma na ukweli.",
+        "mission-desc": "Kushiriki upendo wa Elohim na ujumbe wa Yahshuah na jamii yetu kupitia huduma na ukweli.",
         "community-title": "Jamii",
         "community-desc": "Pata mahali pa kuwa. Tuna huduma mbalimbali kwa rika zote kukua katika imani pamoja.",
         "visit-title": "Tutembelee",
@@ -142,8 +142,8 @@ const translations = {
         "contact": "Twandikire",
 
         // Hero Section
-        "welcome": "Murakaza neza mu Kilisiya ya Kaloleni ya ku minsi irindwi",
-        "hero-text": "Duhagarire mu gusenga, kwiga, no kukura hamwe muri Yashua",
+        "welcome": "Murakaza neza mu Kilisiya ya Kaloleni ya ku minsi irindwi ya Elohim",
+        "hero-text": "Duhagarire mu gusenga, kwiga, no kukura hamwe muri Yahshuah",
         "join": "Duhagarire mu gusenga",
         "learn": "Menya Ibindi",
 
@@ -151,7 +151,7 @@ const translations = {
         "new-here-title": "Mushya Hano?",
         "new-here-desc": "Twishimiye kubakira mu muryango wacu. Dore ibyo ushobora kwitega.",
         "mission-title": "Intego Yacu",
-        "mission-desc": "Gusangira urukundo rwa Elohim n'ubutumwa bwa Yashua n'umuryango wacu binyuze muri serivisi n'ukuri.",
+        "mission-desc": "Gusangira urukundo rwa Elohim n'ubutumwa bwa Yahshuah n'umuryango wacu binyuze muri serivisi n'ukuri.",
         "community-title": "Umuryango",
         "community-desc": "Shaka aho kuba. Dufite minisiteri zitandukanye z'ingeri zose zo gukurira mu kwizera hamwe.",
         "visit-title": "Dusura",
