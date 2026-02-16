@@ -445,7 +445,10 @@ function initializeApp() {
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.main-nav') && navLinks.classList.contains('active')) {
+            const isClickInsideMenu = navLinks.contains(e.target);
+            const isClickOnButton = mobileMenuBtn.contains(e.target);
+
+            if (!isClickInsideMenu && !isClickOnButton && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
                 mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             }
