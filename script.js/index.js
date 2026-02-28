@@ -28,14 +28,14 @@ const translations = {
         // Upcoming Events
         "upcoming": "Upcoming Events",
         "june": "Weekly, sunset Friday to nightfall Saturday.",
-        "july": "15–21 Nissan (Spring).",
-        "event1-title": "Rest, spiritual renewal, and remembrance of Creation/Exodus.",
+        "july": "",
+        "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Saturday, 9:00 AM - 4:00 PM",
-        "event1-desc": "Synagogue services (Kabbalat Shabbat, Shacharit, Torah reading).",
+        "event1-desc": "the bible the whole bible and nothing but the whole bible",
         "event2-title": "Eating only unleavened bread (matzah)",
         "event2-time": "7 days.",
         "event2-desc": "This event takes 7 days",
-        "event3-title": "All-night Torah study (Tikkun Leil Shavuot).",
+        "event3-title": "All-night Torah study feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Theme: Receiving the Torah at Mount Sinai.",
         "view-all": "View All Events",
@@ -94,14 +94,14 @@ const translations = {
         // Upcoming Events
         "upcoming": "Matukio Yajayo",
         "june": "Kila wiki, jua linapozama Ijumaa hadi usiku Jumamosi.",
-        "july": "15-21 Nissan (Masika).",
-        "event1-title": "Kupumzika, ufufuo wa kiroho, na kukumbuka Uumbaji/Kutoroka.",
+        "july": "",
+        "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Jumamosi, saa 3:00 asubuhi - saa 10:00 jioni",
-        "event1-desc": "Huduma za sinagogi (Kabbalat Shabbat, Shacharit, usomaji wa Torati).",
+        "event1-desc": "the bible the whole bible and nothing but the whole bible",
         "event2-title": "Kula mkate usio na chachu (matzah) pekee",
         "event2-time": "Siku 7.",
         "event2-desc": "Tukio hili huchukua siku 7",
-        "event3-title": "Masomo ya Torati usiku kucha (Tikkun Leil Shavuot).",
+        "event3-title": "Masomo ya Torati usiku kucha feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Mada: Kupokea Torati kwenye Mlima Sinai.",
         "view-all": "Tazama Matukio Yote",
@@ -160,14 +160,14 @@ const translations = {
         // Upcoming Events
         "upcoming": "Ibizaba",
         "june": "Burimunsi, kuva kuwa gatandatu nigego kugeza kuwa gatandatu nijoro.",
-        "july": "15–21 Nissan (Itumba).",
-        "event1-title": "Guhumeka, gusubira mu mutima, no kwibuka Irema/Ivuka.",
+        "july": "",
+        "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Kuwa gatandatu, saa 3:00 z'umutaga - saa 10:00 z'umugoroba",
-        "event1-desc": "Imisengeri y'i sinagogi (Kabbalat Shabbat, Shacharit, gusoma Torati).",
+        "event1-desc": "the bible the whole bible and nothing but the whole bible",
         "event2-title": "Kurya umugati udafite imvutsa (matzah) wenyine",
         "event2-time": "Iminsi irindwi.",
         "event2-desc": "Iki gikorwa gihari iminsi irindwi",
-        "event3-title": "Kwiga Torati ijoro ryose (Tikkun Leil Shavuot).",
+        "event3-title": "Kwiga Torati ijoro ryose feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Ingingo: Gukira Torati ku Musozi wa Sinai.",
         "view-all": "Reba Ibizaba Byose",
@@ -378,10 +378,13 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     // YouTube video IDs for your channel (replace with actual video IDs)
     const sermonVideos = [
-        'bMbsiKw9tV4', // Sample video 1
-        'dQw4w9WgXcQ', // Sample video 2
-        'jNQXAC9IVRw', // Sample video 3
-        '9bZkp7q19f0'  // Sample video 4
+        'B8xugkspS8c',
+        'aoZOhkw_Llw',
+        'EILQY1d-U_Y',
+        'DW_-fiPY9XQ',
+        'I3Wg_UExSnM',
+        'jXNqIL1AbeU',
+        '5jII0ez5vZk'
     ];
 
     const player = document.getElementById('youtubePlayer');
