@@ -382,18 +382,40 @@ function showToast(message, duration = 3000) {
 }
 
 // ===== BUTTON FUNCTIONALITY =====
-// Notify Me Button
-const notifyBtn = document.getElementById('btn-notify-me');
-if (notifyBtn) {
-    notifyBtn.addEventListener('click', () => {
+// ===== NOTIFY ME INLINE FORM =====
+const notifyToggleBtn = document.getElementById('btn-notify-toggle');
+const notifyFormInline = document.getElementById('notify-form-inline');
+const notifySubmitBtn = document.getElementById('btn-submit-notify');
+const notifyContactInput = document.getElementById('notify-contact');
+
+if (notifyToggleBtn && notifyFormInline) {
+    notifyToggleBtn.addEventListener('click', () => {
+        notifyToggleBtn.style.display = 'none';
+        notifyFormInline.style.display = 'flex';
+        notifyContactInput.focus();
+    });
+}
+
+if (notifySubmitBtn) {
+    notifySubmitBtn.addEventListener('click', () => {
+        const contactLine = notifyContactInput.value.trim();
+        const duration = document.getElementById('notify-duration').value;
         const t = translations[currentLanguage];
-        notifyBtn.innerHTML = '<i class="fas fa-check"></i> ' + t.notifyMeBtn;
-        notifyBtn.style.backgroundColor = '#d4af37';
-        notifyBtn.style.color = '#1a2b6d';
-        showToast(t.toastNotified);
-        notifyBtn.disabled = true;
-        notifyBtn.style.cursor = 'default';
-        notifyBtn.style.opacity = '0.8';
+
+        if (contactLine) {
+            // No redirection, just show success locally
+            showToast("Success! You are now subscribed for: " + duration);
+
+            // Reset to button state
+            notifyFormInline.style.display = 'none';
+            notifyToggleBtn.style.display = 'inline-block';
+            notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Subscribed';
+            notifyToggleBtn.style.backgroundColor = '#10b981';
+            notifyToggleBtn.style.color = '#ffffff';
+            notifyToggleBtn.disabled = true;
+        } else {
+            showToast("Please enter an email or WhatsApp number");
+        }
     });
 }
 
@@ -405,6 +427,13 @@ if (checkLiveBtn) {
         const originalContent = checkLiveBtn.innerHTML;
         checkLiveBtn.innerHTML = '<i class="fas fa-sync fa-spin"></i> ' + t.checkLiveBtn;
 
+        // Immediately update stream player to the channel's live URL format
+        const videoPlayerFrame = document.querySelector('.stream-player iframe');
+        if (videoPlayerFrame) {
+            videoPlayerFrame.src = `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
+        }
+
+        // Also run the general update stream status function to check day/time
         updateStreamStatus();
 
         setTimeout(() => {

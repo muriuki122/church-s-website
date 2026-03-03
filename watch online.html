@@ -112,10 +112,7 @@
                         <i class="fas fa-clock"></i>
                         <span data-key="serviceTimes">Fri 6:30 PM | Sat 9:00 AM - 4:00 PM </span>
                     </div>
-                    <div class="meta-item">
-                        <i class="fas fa-user-tie"></i>
-                        <span data-key="speaker">Elder or Member</span>
-                    </div>
+
                 </div>
 
                 <div class="stream-actions">
@@ -125,9 +122,22 @@
                     <button class="btn btn-notify" id="btn-check-live">
                         <i class="fas fa-sync"></i> <span data-key="checkLiveBtn">Check Live</span>
                     </button>
-                    <button class="btn btn-notify" id="btn-notify-me">
-                        <i class="fas fa-bell"></i> <span data-key="notifyMeBtn">Notify Me</span>
-                    </button>
+                    <div class="notify-container" id="notify-container">
+                        <button class="btn btn-notify" id="btn-notify-toggle">
+                            <i class="fas fa-bell"></i> <span data-key="notifyMeBtn">Notify Me</span>
+                        </button>
+                        <div class="notify-form-inline" id="notify-form-inline" style="display: none;">
+                            <input type="text" id="notify-contact" placeholder="Email or WhatsApp" class="notify-input">
+                            <select id="notify-duration" class="notify-select">
+                                <option value="once">Next Live Only</option>
+                                <option value="month">For 1 Month</option>
+                                <option value="always">Always Notify Me</option>
+                            </select>
+                            <button class="btn btn-submit-inline" id="btn-submit-notify">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -179,12 +189,10 @@
                         <span class="month" data-key="pesachTime">15–21 Nissan (Spring).</span>
                     </div>
                     <div class="event-details">
-                        <h3 data-key="pesachDesc">Eating only unleavened bread (matzah)</h3>
-                        <p class="event-time"><i class="fas fa-clock"></i> <span data-key="pesachDuration">7
-                                days.</span></p>
-                        <p class="event-location"><i class="fas fa-map-marker-alt"></i><span
-                                data-key="pesachLocation">Takes 7 days</span></p>
-                        <a href="archives.html" class="event-link" data-key="moreDetails">More Details</a>
+                        <h3 data-key="pesachDesc">feast of the first fruit</h3>
+                        <p class="event-time"><i class="fas fa-clock"></i> <span data-key="pesachDuration"></span></p>
+                        <p class="event-location"><i class="fas fa-map-marker-alt"></i><span <a href="archives.html"
+                                class="event-link" data-key="moreDetails">More Details</a>
                     </div>
                 </div>
 

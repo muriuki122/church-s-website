@@ -9,6 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPreviewIndex = 0;
     let currentQuarter = '1';
 
+    // --- DEBOUNCE UTILITY ---
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func.apply(this, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
     // --- 2. TRANSLATIONS WITH NAVIGATION SUPPORT ---
     const translations = {
         en: {
@@ -128,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: "First Quarter Lesson 2026",
                     date: "January - March 2026",
                     description: "Quarterly Bible study lessons for spiritual growth and understanding.",
-                    memoryVerse: "Study to shew thyself approved unto God - 2 Timothy 2:15",
+                    memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
                     pdfUrl: "lessons/Lesson 1st quarter 2026- FINAL.pdf"
                 }
             ]
@@ -176,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 8, title: "A History of the True Church", category: "Books", fileName: "A-History-of-the-True-Church-Dugger-and-Dodd.pdf" },
 
             // TRACTS - PDFs in the tracks folder
-            { id: 9, title: "Beginning and Ending of God's Day", category: "Tracts", fileName: "tracks/Beginning_and_Ending_of_Gods_Day.pdf" },
+            { id: 9, title: "Beginning and Ending of Elohim's Day", category: "Tracts", fileName: "tracks/Beginning_and_Ending_of_Gods_Day.pdf" },
             { id: 10, title: "Biblical Doctrine of Predestination", category: "Tracts", fileName: "tracks/Biblical-Doctrine-of-Predestination.pdf" },
             { id: 11, title: "Coming Home", category: "Tracts", fileName: "tracks/Coming-Home.pdf" },
             { id: 12, title: "Crises Dates in Bible Prophecy", category: "Tracts", fileName: "tracks/Crises-Dates-in-Bible-Prophecy.pdf" },
@@ -194,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 24, title: "How Old is Your Church", category: "Tracts", fileName: "tracks/How-old-is-your-Church.pdf" },
             { id: 25, title: "I Will Bless Them That Bless Thee", category: "Tracts", fileName: "tracks/I-will-Bless-Them-That-Bless-Thee.pdf" },
             { id: 26, title: "Israel 3", category: "Tracts", fileName: "tracks/Israel3.pdf" },
-            { id: 27, title: "Israel's God - A Reality or a Myth", category: "Tracts", fileName: "tracks/Israels-God-a-Reality-or-a-Myth.pdf" },
+            { id: 27, title: "Israel's Elohim - A Reality or a Myth", category: "Tracts", fileName: "tracks/Israels-God-a-Reality-or-a-Myth.pdf" },
             { id: 28, title: "Judah - Failure to Stand by Her Agreed Test", category: "Tracts", fileName: "tracks/Judah-Failure-to-Stand-by-Her-Agreed-Test-of-Over-1900-Years-Ago-But-many-are-now.pdf" },
             { id: 29, title: "Mt. Zion Reporter", category: "Tracts", fileName: "tracks/Mt-Zion-Reporter_AN-Dugger.pdf" },
             { id: 30, title: "Mt. Sinai Speaks Once More", category: "Tracts", fileName: "tracks/Mt.-Sinai-Speaks-Once-More.pdf" },
@@ -216,9 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 46, title: "The Ten Tribes of Israel - Not Lost but Found", category: "Tracts", fileName: "tracks/The-Ten-Tribes-of-Israel-Not-lost-hut-found.pdf" },
             { id: 47, title: "The End of the World", category: "Tracts", fileName: "tracks/The-end-of-the-world.pdf" },
             { id: 48, title: "The Eternal Abode of the Righteous", category: "Tracts", fileName: "tracks/The-eternal-abode-of-the-righteous.pdf" },
-            { id: 49, title: "The Law of God versus Devil's Scrapbook", category: "Tracts", fileName: "tracks/The-law-of-God-versus-Devils-scrapbook.pdf" },
+            { id: 49, title: "The Law of Elohim versus Devil's Scrapbook", category: "Tracts", fileName: "tracks/The-law-of-God-versus-Devils-scrapbook.pdf" },
             { id: 50, title: "The Living Truth", category: "Tracts", fileName: "tracks/The-living-Truth.pdf" },
-            { id: 51, title: "The Mirror of God", category: "Tracts", fileName: "tracks/The-mirror-of-God.pdf" },
+            { id: 51, title: "The Mirror of Elohim", category: "Tracts", fileName: "tracks/The-mirror-of-God.pdf" },
             { id: 52, title: "Why I Am Not a Seventh Day Adventist", category: "Tracts", fileName: "tracks/WHY-I-AM-NOT-A-SEVENTH-DAY-ADVENTIST.pdf" },
             { id: 53, title: "Was Man Created", category: "Tracts", fileName: "tracks/Was-Man-Created.pdf" },
             { id: 54, title: "Was Peter the Foundation Rock", category: "Tracts", fileName: "tracks/Was-Peter-the-Foundation-Rock.pdf" },
@@ -226,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 56, title: "What Was Abolished By Christ", category: "Tracts", fileName: "tracks/What-Was-Abolished-By-Christ.pdf" },
             { id: 57, title: "Which Day is The Sabbath", category: "Tracts", fileName: "tracks/Which-Day-is-The-Sabbath.pdf" },
             { id: 58, title: "Who Are The Messianic Jews In Israel", category: "Tracts", fileName: "tracks/Who-Are-The-Messianic-Jews-In-Israel.pdf" },
-            { id: 59, title: "Why Not Talk to God About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
+            { id: 59, title: "Why Not Talk to Elohim About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
             { id: 60, title: "Has Our Messiah Come", category: "Tracts", fileName: "tracks/has-our-messiah-come-better.pdf" },
             { id: 61, title: "Why Israel is Here to Stay", category: "Tracts", fileName: "tracks/why-israel-is-here-to-stay-potrait.pdf" },
             { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year%20of%20deception.pdf" },
@@ -378,8 +391,17 @@ document.addEventListener('DOMContentLoaded', () => {
             populateCategories();
         });
 
-        mainSearchInput.addEventListener('input', handleMainFilterChange);
+        mainSearchInput.addEventListener('input', debounce(handleMainFilterChange, 300));
         categoryFilter.addEventListener('change', handleMainFilterChange);
+
+        // Admin login button listener
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        if (adminLoginBtn) {
+            adminLoginBtn.addEventListener('click', () => {
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) loginModal.style.display = 'flex';
+            });
+        }
 
         lessonSearchInput.addEventListener('input', handleLessonFilterChange);
         quarterPills.forEach(pill => {
@@ -912,6 +934,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(doc);
 
+        // Show loader and hide viewer initially
+        const loader = document.getElementById('pdf-loader');
+        if (loader) loader.style.display = 'flex';
+        pdfViewer.style.opacity = '0';
+
+        // Set up the load event listener to hide the spinner
+        pdfViewer.onload = function () {
+            if (loader) loader.style.display = 'none';
+            pdfViewer.style.opacity = '1';
+        };
+
         modalTitle.textContent = doc.title;
         pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
@@ -944,6 +977,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(lessonDoc);
 
+        // Show loader and hide viewer initially
+        const loader = document.getElementById('pdf-loader');
+        if (loader) loader.style.display = 'flex';
+        pdfViewer.style.opacity = '0';
+
+        // Set up the load event listener to hide the spinner
+        pdfViewer.onload = function () {
+            if (loader) loader.style.display = 'none';
+            pdfViewer.style.opacity = '1';
+        };
+
         modalTitle.textContent = lesson.title;
         pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
@@ -967,7 +1011,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         modal.classList.remove('visible');
+
+        // Clear src to stop video/audio/pdf playback and free memory
         pdfViewer.src = '';
+        pdfViewer.style.opacity = '0';
+
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
 

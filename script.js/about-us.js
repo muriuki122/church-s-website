@@ -22,9 +22,9 @@ const translations = {
         // History Section
         ourStory: "Our Story",
         theBeginning: "The Beginning",
-        beginningText: "Kaloleni Church was established with a vision to create a vibrant community of believers dedicated to serving God and spreading His message of love and salvation.",
+        beginningText: "Kaloleni Church was established with a vision to create a vibrant community of believers dedicated to serving Elohim and spreading His message of love and salvation.",
         growthExpansion: "Growth & Expansion",
-        growthText: "Over the years, we have grown into a diverse congregation that welcomes people from all walks of life, united in our faith and commitment to Christian values.",
+        growthText: "Over the years, we have grown into a diverse congregation that welcomes people from all walks of life, united in our faith and commitment to messianic values.",
         digitalMinistry: "Digital Ministry",
         digitalText: "Our church is built on the foundation of prayer, worship, and service, following the example set by Jesus Christ. We expanded our reach through online services.",
 
@@ -42,7 +42,7 @@ const translations = {
 
         // Saturday Schedule
         prayerOpening: "Prayer & Opening",
-        prayerOpeningDesc: "We begin our service with communal prayer and worship songs to prepare our hearts for God's message.",
+        prayerOpeningDesc: "We begin our service with communal prayer and worship songs to prepare our hearts for Elohim's message.",
         morningSermon: "Morning Sermon",
         morningSermonDesc: "A brief but powerful sermon to inspire and guide us through the week ahead.",
         bibleStudy: "Bible Study",
@@ -60,7 +60,7 @@ const translations = {
         eveningWorship: "Evening Worship",
         eveningWorshipDesc: "We gather for an evening of prayer, worship, and reflection to end the week.",
         bibleStudyFriday: "Bible Study",
-        bibleStudyFridayDesc: "An interactive Bible study session focusing on practical Christian living.",
+        bibleStudyFridayDesc: "An interactive Bible study session focusing on practical messianic living.",
         fellowship: "Fellowship",
         fellowshipDesc: "Time for sharing testimonies and building relationships within the church community.",
 
@@ -81,11 +81,14 @@ const translations = {
         choir: "Choir",
         choirDesc: "Our choir meets every Thursday to practice hymns and worship songs that uplift our congregation during services.",
         choirMeetingTime: "Every Thursday at 6:00 PM",
+        youths: "Youths",
+        youthsDesc: "Our vibrant youth group gathers during lunch time for an uplifting session of messianic music, fellowship, and spiritual growth.",
+        youthsMeetingTime: "Lunch Time",
         listenToSongs: "Listen to Our Songs",
         groupB: "Group B",
         groupBDesc: "This group specializes in traditional hymns and contemporary worship songs that resonate with our diverse congregation.",
         highschoolers: "Highschoolers",
-        highschoolersDesc: "Our youth group brings energy and contemporary Christian music that speaks to the younger generation.",
+        highschoolersDesc: "Our youth group brings energy and contemporary messianic music that speaks to the younger generation.",
 
         // Ceremonies
         ceremoniesTitle: "Israelite Ceremonies We Observe",
@@ -100,7 +103,7 @@ const translations = {
         feastOfTrumpetsDesc: "A day of blowing trumpets and spiritual preparation, looking forward to the return of Christ.",
         feastOfTrumpetsTime: "Autumn observance",
         feastOfTabernacles: "Feast of Tabernacles",
-        feastOfTabernaclesDesc: "We remember Israel's wilderness journey and look forward to the Kingdom of God when He will dwell with us.",
+        feastOfTabernaclesDesc: "We remember Israel's wilderness journey and look forward to the Kingdom of Elohim when He will dwell with us.",
         feastOfTabernaclesTime: "Autumn observance",
 
         // YouTube Section
@@ -200,6 +203,9 @@ const translations = {
         choir: "Kwaya",
         choirDesc: "Kwaya yetu inakutana kila Alhamisi kufanya mazoezi ya nyimbo za ibada na nyimbo za ibada ambazo zinainua mkusanyiko wetu wakati wa huduma.",
         choirMeetingTime: "Kila Alhamisi saa 6:00 PM",
+        youths: "Vijana",
+        youthsDesc: "Kikundi chetu cha vijana kinakutana wakati wa chakula cha mchana kwa kipindi cha kuinua cha muziki wa kimesiya, ushirika, na ukuaji wa kiroho.",
+        youthsMeetingTime: "Wakati wa Chakula cha Mchana",
         listenToSongs: "Sikiliza Nyimbo Zetu",
         groupB: "Kikundi B",
         groupBDesc: "Kikundi hiki kinajulikana kwa nyimbo za jadi na nyimbo za kisasa za ibada ambazo zinaendana na mkusanyiko wetu wa watu mbalimbali.",
@@ -319,6 +325,9 @@ const translations = {
         choir: "Amatorero",
         choirDesc: "Amatorero yacu ahura buri wa Kane kugira ngo yitoze indirimbo z'isengesho n'indirimbo z'isengesho zizamura itorero ryacu mu gihe cy'isengesho.",
         choirMeetingTime: "Buri wa Kane saa 6:00 PM",
+        youths: "Urubyiruko",
+        youthsDesc: "Urubyiruko rwacu ruteranira mu gihe cy'ifunguro rya sasita mu masaha yo kugarura ubuzima kw'umuziki wa kimesiya, ubumwe, n'iterambere ryumwuka.",
+        youthsMeetingTime: "Umuhango wa Sasita",
         listenToSongs: "Umva Indirimbo Zacu",
         groupB: "Itsinda B",
         groupBDesc: "Iri tsinda ryihariye mu ndirimbo gakondo n'indirimbo z'isengesho zigezweho zihuza n'itorero ryacu ry'abantu batandukanye.",

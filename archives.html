@@ -36,7 +36,7 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="images/minorah%20image.jpg" alt="Church Logo" class="logo-img">
+                <img src="images/minorah%20image.jpg" alt="Church Logo" class="logo-img" loading="lazy">
                 <div class="logo-text">
                     <h1 data-key="siteTitle">Kaloleni Church</h1>
                 </div>
@@ -199,12 +199,20 @@
                 </div>
             </div>
 
-            <div class="modal-body">
-                <!-- PDF.js viewer iframe -->
-                <iframe id="pdf-viewer" src="judah/72-Sebat.pdf" frameborder="0" width="100%" height="100%"></iframe>
+            <div class="modal-body" style="position: relative;">
+                <!-- Loading overlay -->
+                <div id="pdf-loader"
+                    style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.95); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <i class="fas fa-spinner fa-spin"
+                        style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+                    <span style="color: var(--text-dark); font-weight: 600; font-size: 1.2rem;">Loading
+                        Document...</span>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">This may take a moment</p>
+                </div>
 
-                <!-- Fallback for simple embed -->
-                <!-- <embed id="pdf-embed" src="78-tibet.pdf" type="application/pdf" width="100%" height="100%"> -->
+                <!-- PDF.js viewer iframe (src removed to prevent background downloading) -->
+                <iframe id="pdf-viewer" frameborder="0" width="100%" height="100%"
+                    style="opacity: 0; transition: opacity 0.3s ease; position: relative; z-index: 5;"></iframe>
             </div>
 
             <div class="modal-footer">
@@ -368,7 +376,7 @@
                 const modal = document.getElementById('loginModal');
                 if (modal) modal.style.display = 'flex';
             }
-        });
+    });
     </script>
 </body>
 
