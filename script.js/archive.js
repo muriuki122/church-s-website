@@ -2,12 +2,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. STATE AND CONSTANTS ---
     const ITEMS_PER_PAGE = 9;
     let allDocuments = [];
+    async function initializeDocuments() {
+        // 1. Try to load from cache first for instant UI
+        const cachedDocs = localStorage.getItem('church_docs_cache');
+        if (cachedDocs) {
+            try {
+                allDocuments = JSON.parse(cachedDocs);
+                mainFilteredDocuments = [...allDocuments];
+                renderPage(1);
+                console.log('Loaded from cache (instant)');
+            } catch (e) {
+                console.error('Cache parse error:', e);
+            }
+        }
+
+        // 2. If no cache, use local defaults temporarily
+        if (allDocuments.length === 0) {
+            allDocuments = getDocumentData();
+            mainFilteredDocuments = [...allDocuments];
+            renderPage(1);
+        }
+
+        // 3. Fetch fresh data in the background
+        try {
+            const response = await fetch(`${API_BASE_URL}/documents?limit=1000`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.documents && data.documents.length > 0) {
+                    allDocuments = data.documents;
+                    isUsingBackend = true;
+                    // Update cache for next time
+                    localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
+
+                    // Only re-render if data has changed or we were using defaults
+                    mainFilteredDocuments = [...allDocuments];
+                    renderPage(1);
+                    console.log('Backend data synced');
+                }
+            }
+        } catch (error) {
+            console.warn('Backend connection failed:', error);
+        }
+    }
     let mainFilteredDocuments = [];
     let lessonFilteredDocuments = [];
     let currentPage = 1;
     let currentLanguage = 'en';
     let currentPreviewIndex = 0;
     let currentQuarter = '1';
+    let pdfViewerInstance = null;
+    let API_BASE_URL = 'http://localhost:3000/api';
+    let isUsingBackend = false;
 
     // --- DEBOUNCE UTILITY ---
     function debounce(func, wait) {
@@ -165,14 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
     function getDocumentPath(doc) {
-        // Check if the fileName already includes a folder path
-        if (doc.fileName && doc.fileName.includes('/')) {
-            return doc.fileName; // Already has the correct path (e.g., "tracks/filename.pdf" or "judah/filename.pdf")
-        } else if (doc.pdfUrl) {
-            return doc.pdfUrl; // For Bible lessons
-        } else {
-            return `pdfs/${doc.fileName}`; // Add pdfs/ prefix for Books
+        // If it's a lesson with pdfUrl
+        if (doc.pdfUrl) {
+            // Already includes folder path in most cases
+            return doc.pdfUrl;
         }
+
+        if (doc.fileName) {
+            // Check if the fileName already includes a folder path (tracks/ or judah/)
+            if (doc.fileName.includes('/')) {
+                return doc.fileName;
+            }
+            // Fallback to pdfs/ for books
+            return `pdfs/${doc.fileName}`;
+        }
+
+        // Fallback or full path
+        return doc.path || `pdfs/${doc.title}.pdf`;
     }
 
     // --- 5. YOUR REAL DOCUMENT DATA ---
@@ -360,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 8. INITIALIZATION ---
     async function init() {
         // Load static data
-        allDocuments = getDocumentData();
+        await initializeDocuments();
 
         // Sync with Firestore (Admin Management System)
         await syncFirestoreDocs();
@@ -375,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAdminLogic();
 
         // Initial render
-        handleMainFilterChange();
+        // handleMainFilterChange(); // Called by initializeDocuments
         handleLessonFilterChange();
         updateLanguage();
     }
@@ -391,8 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
             populateCategories();
         });
 
-        mainSearchInput.addEventListener('input', debounce(handleMainFilterChange, 300));
-        categoryFilter.addEventListener('change', handleMainFilterChange);
+        mainSearchInput.addEventListener('input', debounce(filterDocuments, 300));
+        categoryFilter.addEventListener('change', filterDocuments);
 
         // Admin login button listener
         const adminLoginBtn = document.getElementById('adminLoginBtn');
@@ -442,26 +496,51 @@ document.addEventListener('DOMContentLoaded', () => {
         'Chesleu pdf', 'Bul-chisleu pdf', 'Nisan pdf', 'July pdf', 'March pdf', 'May pdf', 'sivan', 'sebat'
     ];
 
-    function handleMainFilterChange() {
-        const searchTerm = mainSearchInput.value.toLowerCase();
+    async function filterDocuments() {
+        if (!mainSearchInput || !categoryFilter) return;
+
+        const query = (mainSearchInput.value || '').toLowerCase().trim();
         const category = categoryFilter.value;
 
+        // Perform fast local filtering first
         mainFilteredDocuments = allDocuments.filter(doc => {
-            // Rule: Lessons don't show up in the main grid unless explicitly filtered by category?
-            // Actually, let's keep the grid for EVERYTHING non-lesson by default, 
-            // but if they pick a lesson category from the filter, show it there too.
-            const isLesson = lessonCategories.includes(doc.category);
-            if (isLesson && category === 'all') return false;
+            if (!doc) return false;
 
-            const titleMatch = doc.title.toLowerCase().includes(searchTerm);
-            const categoryMatch = doc.category.toLowerCase().includes(searchTerm);
-            const filterMatch = (category === 'all') || (doc.category === category);
+            const docTitle = doc.title || '';
+            const docCategory = doc.category || 'Uncategorized';
+
+            const titleMatch = docTitle.toLowerCase().includes(query);
+            const categoryMatch = docCategory.toLowerCase().includes(query);
+            const filterMatch = (category === 'all') || (docCategory === category);
 
             return (titleMatch || categoryMatch) && filterMatch;
         });
 
-        currentPage = 1;
-        renderPage(currentPage);
+        renderPage(1);
+
+        // Update document count display
+        if (docCount) {
+            const t = translations[currentLanguage];
+            docCount.textContent = `${mainFilteredDocuments.length} ${t.docCount}`;
+        }
+
+        // Background API sync if query is present and using backend
+        if (isUsingBackend && query.length > 2) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/documents?query=${query}&type=${category}&limit=50`);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Backend search results synced');
+                }
+            } catch (e) {
+                console.warn('Backend search sync failed');
+            }
+        }
+    }
+
+    // Alias for compatibility with other parts of the script
+    function handleMainFilterChange() {
+        filterDocuments();
     }
 
     function handleLessonFilterChange() {
@@ -747,12 +826,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderPage(page) {
+    function renderPage(page, append = false) {
         currentPage = page;
-        documentList.innerHTML = '';
+        const LIMIT = 12;
+
+        if (!append) {
+            documentList.innerHTML = '';
+        }
 
         const totalDocs = mainFilteredDocuments.length;
-        const totalPages = Math.ceil(totalDocs / ITEMS_PER_PAGE);
+        const totalPages = Math.ceil(totalDocs / LIMIT);
 
         if (totalDocs === 0) {
             renderNoDocuments();
@@ -760,8 +843,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
+        const start = (page - 1) * LIMIT;
+        const end = start + LIMIT;
         const paginatedDocs = mainFilteredDocuments.slice(start, end);
 
         paginatedDocs.forEach(doc => {
@@ -769,8 +852,31 @@ document.addEventListener('DOMContentLoaded', () => {
             documentList.appendChild(card);
         });
 
+        // Handle Load More Button
+        const existingLoadMore = document.querySelector('.load-more-btn');
+        if (existingLoadMore) existingLoadMore.remove();
+
+        if (page < totalPages) {
+            const loadMoreBtn = document.createElement('button');
+            loadMoreBtn.className = 'load-more-btn';
+            loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Load More Documents';
+            loadMoreBtn.addEventListener('click', () => {
+                renderPage(page + 1, true);
+            });
+            documentList.appendChild(loadMoreBtn);
+        }
+
         renderPagination(totalPages, page);
         updateLanguage();
+    }
+
+    function renderSkeletons(count) {
+        for (let i = 0; i < count; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'skeleton-loader-wrapper';
+            wrapper.innerHTML = `<div class="skeleton-loader document-card" style="height: 200px; margin-bottom: 20px;"></div>`;
+            documentList.appendChild(wrapper);
+        }
     }
 
     function renderLessonsSidebar() {
@@ -923,44 +1029,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 11. MODAL FUNCTIONS (FIXED PDF VIEWING) ---
     function openModal(docId) {
-        // Search in all documents to be safe
         const doc = allDocuments.find(d => d.id === docId);
-
-        // Navigation should be based on the currently filtered list
-        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
-
         if (!doc) return;
 
-        // Use the helper function to get the correct path
+        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
         const pdfPath = getDocumentPath(doc);
 
-        // Show loader and hide viewer initially
-        const loader = document.getElementById('pdf-loader');
-        if (loader) loader.style.display = 'flex';
-        pdfViewer.style.opacity = '0';
-
-        // Set up the load event listener to hide the spinner
-        pdfViewer.onload = function () {
-            if (loader) loader.style.display = 'none';
-            pdfViewer.style.opacity = '1';
-        };
+        // Initialize PDF viewer if not already done
+        if (!pdfViewerInstance) {
+            pdfViewerInstance = new PDFViewer('pdf-viewer-container');
+        }
 
         modalTitle.textContent = doc.title;
-        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
-        // Set download and external links
+        // Load the PDF using the new viewer
+        pdfViewerInstance.loadPDF(pdfPath);
+
+        // Set download links
         modalDownload.href = pdfPath;
         modalDownload.download = doc.fileName || doc.title;
-        modalExternal.href = pdfPath;
 
-        // Update navigation buttons
         updateModalNavigation();
 
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state
-        showNotification(`Loading: ${doc.title}`, 'info');
+        showNotification(`Opening: ${doc.title}`, 'info');
     }
 
     function openLessonModal(lesson) {
@@ -977,44 +1071,37 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(lessonDoc);
 
-        // Show loader and hide viewer initially
-        const loader = document.getElementById('pdf-loader');
-        if (loader) loader.style.display = 'flex';
-        pdfViewer.style.opacity = '0';
-
-        // Set up the load event listener to hide the spinner
-        pdfViewer.onload = function () {
-            if (loader) loader.style.display = 'none';
-            pdfViewer.style.opacity = '1';
-        };
+        // Initialize PDF viewer if not already done
+        if (!pdfViewerInstance) {
+            pdfViewerInstance = new PDFViewer('pdf-viewer-container');
+        }
 
         modalTitle.textContent = lesson.title;
-        pdfViewer.src = pdfPath + '#toolbar=1&navpanes=1&scrollbar=1';
 
-        // Set download and external links
+        // Load the PDF using the new viewer
+        pdfViewerInstance.loadPDF(pdfPath);
+
+        // Set download links
         modalDownload.href = pdfPath;
         modalDownload.download = lesson.title;
-        modalExternal.href = pdfPath;
 
         // Update navigation buttons (disable them for lessons)
-        modalPrev.disabled = true;
-        modalNext.disabled = true;
-        modalPrev.style.opacity = '0.5';
-        modalNext.style.opacity = '0.5';
+        updateModalNavigation();
 
         modal.classList.add('visible');
         document.body.style.overflow = 'hidden';
 
-        // Show loading state
-        showNotification(`Loading: ${lesson.title}`, 'info');
+        showNotification(`Opening: ${lesson.title}`, 'info');
     }
 
     function closeModal() {
         modal.classList.remove('visible');
 
-        // Clear src to stop video/audio/pdf playback and free memory
-        pdfViewer.src = '';
-        pdfViewer.style.opacity = '0';
+        // Clean up PDF viewer to free memory
+        if (pdfViewerInstance) {
+            pdfViewerInstance.destroy();
+            pdfViewerInstance = null;
+        }
 
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
@@ -1194,9 +1281,9 @@ document.addEventListener('DOMContentLoaded', () => {
             success: '#10b981',
             error: '#ef4444',
             warning: '#f59e0b',
-            info: '#3b82f6'
+            info: '#1a2b6d' // Deep Navy instead of Royal Blue
         };
-        return colors[type] || '#3b82f6';
+        return colors[type] || '#1a2b6d';
     }
 
     // Add notification styles
@@ -1485,4 +1572,25 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPreferences();
     loadSavedLessons();
     init();
+});
+
+// Back to Top functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });

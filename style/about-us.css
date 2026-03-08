@@ -7,18 +7,23 @@
 
 :root {
     --primary: #1a2b6d;
+    /* Grounded Navy */
     --primary-dark: #0f1b3d;
+    --accent-blue: #2563eb;
+    /* Use for small accents only */
     --secondary: #d4af37;
     --accent: #ff9800;
     --light: #f8f9fa;
     --dark: #343a40;
     --gray: #6c757d;
-    --light-gray: #e9ecef;
+    --light-gray: #e2e8f0;
     --font-main: 'Poppins', sans-serif;
     --font-heading: 'Playfair Display', serif;
-    --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    --section-padding: 100px 0;
-    --transition: all 0.3s ease;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(26, 43, 109, 0.1);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --section-padding: 80px 0;
 }
 
 html {
@@ -631,7 +636,8 @@ section {
     }
 
     .timeline-item::after {
-        left: 10px;
+        left: 8px;
+        /* Center with line at 15px (15 - 14/2 = 8) */
         top: 5px;
         /* Adjust to align with time text */
     }
@@ -673,11 +679,44 @@ section {
     position: absolute;
     top: 15px;
     left: 26px;
-    width: 12px;
-    height: 12px;
-    background: var(--secondary);
+    width: 14px;
+    height: 14px;
+    background: white;
+    border: 3px solid var(--secondary);
     border-radius: 50%;
-    z-index: 1;
+    z-index: 2;
+    transition: var(--transition);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.timeline-item.active::after {
+    animation: pulse-marker 2s infinite;
+}
+
+@keyframes pulse-marker {
+    0% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    }
+}
+
+.timeline-item:hover::after {
+    background: var(--secondary);
+    transform: scale(1.3);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.timeline-item:hover .timeline-content {
+    transform: translateX(10px);
+    border-color: rgba(212, 175, 55, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
 
 /* Weekly Activities */
@@ -685,6 +724,55 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+}
+
+.origin-book-container {
+    background: var(--glass-bg);
+    padding: 40px;
+    border-radius: 20px;
+    border-left: 5px solid var(--secondary);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.origin-book-container::after {
+    content: '\f518';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 8rem;
+    color: var(--primary);
+    opacity: 0.03;
+    pointer-events: none;
+}
+
+.origin-book-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(26, 43, 109, 0.12);
+}
+
+.origin-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--primary);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(26, 43, 109, 0.2);
+}
+
+.origin-pdf-btn:hover {
+    background: var(--accent-blue);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
 }
 
 .activity-card {
@@ -1370,6 +1458,49 @@ section {
         flex-direction: column;
         gap: 15px;
     }
+}
+
+.reveal-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.reveal-item.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+    background: var(--primary-dark);
 }
 
 /* Ensure all interactive elements have proper cursor */

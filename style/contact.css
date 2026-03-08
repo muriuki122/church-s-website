@@ -157,7 +157,8 @@ body {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 25px;
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -166,7 +167,8 @@ body {
     font-weight: 600;
     font-size: 0.95rem;
     transition: var(--transition);
-    padding: 5px 0;
+    padding: 8px 16px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -174,8 +176,13 @@ body {
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--primary);
-    border-bottom: 2px solid var(--secondary);
+    background: var(--primary);
+    color: var(--white);
+}
+
+.nav-links a:hover i,
+.nav-links a.active i {
+    color: var(--secondary);
 }
 
 /* Page Hero */
@@ -229,6 +236,18 @@ body {
     grid-template-columns: 1fr 2fr;
     gap: 40px;
     padding: 60px 20px;
+}
+
+/* Tablet Navigation Refinement */
+@media (max-width: 1024px) {
+    .nav-links {
+        gap: 0.75rem;
+    }
+
+    .nav-links a {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
 }
 
 @media (max-width: 992px) {

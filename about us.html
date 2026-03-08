@@ -11,6 +11,80 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style/admin.css">
+    <style>
+        /* PDF Modal Styles for About Us */
+        .pdf-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 27, 61, 0.95);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .pdf-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-modal-container {
+            width: 95%;
+            height: 90%;
+            background: white;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .pdf-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #1a2b6d;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2010;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-close:hover {
+            background: #ffd700;
+            color: #1a2b6d;
+            transform: scale(1.1);
+        }
+
+        #pdf-canvas-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            background: #525659;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .pdf-page-canvas {
+            max-width: 100%;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            background: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -19,7 +93,7 @@
         <div class="header-container">
             <div class="logo-container">
                 <div class="logo">
-                    <img src="images/minorah%20image.jpg" alt="Kaloleni Church Logo">
+                    <img src="images/minorah%20image.jpg" alt="Kaloleni Church Logo" loading="lazy">
                 </div>
                 <div class="logo-text">
                     <h1 data-key="siteTitle">Kaloleni Seventh day Church of Elohim</h1>
@@ -51,7 +125,7 @@
                 <li><a href="index.html"><i class="fas fa-home"></i> <span data-key="navHome">Home</span></a></li>
                 <li><a href="watch online.html"><i class="fas fa-video"></i> <span data-key="navWatchOnline">Watch
                             online</span></a></li>
-                <li><a href="about us.html" class="active"><i class="fas fa-book-bible"></i> <span
+                <li><a href="about us.html" class="active"><i class="fas fa-info-circle"></i> <span
                             data-key="navAboutUs">about us</span></a></li>
                 <li><a href="blog.html"><i class="fas fa-blog"></i> <span data-key="navBlog">Blog</span></a></li>
                 <li><a href="archives.html"><i class="fas fa-archive"></i> <span
@@ -90,15 +164,12 @@
                 <div class="history-content">
                     <div class="history-text">
                         <div class="origin-book-container">
-                            <h3 data-key="theBeginning"
-                                style="margin-bottom: 15px; font-size: 1.8rem; color: var(--primary);">The Origin of Our
-                                Church</h3>
-                            <p data-key="beginningText"
-                                style="margin-bottom: 25px; font-size: 1.1rem; color: var(--text-dark);">Discover the
-                                vision and journey that led to the foundation of the Kaloleni Seventh day Church of
-                                Elohim in our beautifully crafted history book.</p>
-                           <a href="pdfs/A-History-of-the-True-Church-Dugger-and-Dodd.pdf" class="btn origin-pdf-btn" target="_blank">
-                                <i class="fas fa-file-pdf" style="font-size: 1.6rem;"></i>
+                            <h3 data-key="theBeginning">The Origin of Our Church</h3>
+                            <p data-key="beginningText">Discover the vision and journey that led to the foundation of
+                                the Kaloleni Seventh day Church of Elohim in our beautifully crafted history book.</p>
+                            <a href="pdfs/A-History-of-the-True-Church-Dugger-and-Dodd.pdf"
+                                class="origin-pdf-btn pdf-link" id="originBookBtn">
+                                <i class="fas fa-file-pdf"></i>
                                 <span data-key="downloadOriginBook">Read Our Story (PDF Book)</span>
                             </a>
                         </div>
@@ -491,6 +562,16 @@
         </footer>
     </main>
 
+    <div id="pdfModal" class="pdf-modal">
+        <div class="pdf-modal-container">
+            <button class="pdf-close" id="closePdf"><i class="fas fa-times"></i></button>
+            <div id="pdf-canvas-container"></div>
+        </div>
+    </div>
+
+    <!-- PDF.js via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="script.js/pdf-viewer.js"></script>
     <script src="script.js/about-us.js"></script>
 </body>
 

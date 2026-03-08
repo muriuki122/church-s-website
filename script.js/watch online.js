@@ -538,31 +538,49 @@ document.addEventListener('DOMContentLoaded', updateStreamStatus);
 // Update stream status every minute
 setInterval(updateStreamStatus, 60000);
 
-// ===== SCROLL ANIMATION =====
+// ===== SCROLL ANIMATION (REFINED) =====
 function checkScroll() {
-    const elements = document.querySelectorAll('.event-card, .stream-info, .cta-box');
+    const elements = document.querySelectorAll('.event-card, .stream-info, .cta-box, .section-header');
 
     elements.forEach(element => {
         const elementTop = element.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
 
-        if (elementTop < windowHeight - 100) {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
+        if (elementTop < windowHeight - 50) {
+            element.classList.add('active');
         }
     });
 }
 
 // Initialize elements for scroll animation
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.event-card, .stream-info, .cta-box');
+    const animatedElements = document.querySelectorAll('.event-card, .stream-info, .cta-box, .section-header');
     animatedElements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        element.classList.add('reveal-item');
     });
 
     checkScroll();
 });
 
 window.addEventListener('scroll', checkScroll);
+
+// Floating Back to Top
+document.addEventListener('DOMContentLoaded', () => {
+    const backToTop = document.createElement('button');
+    backToTop.id = 'backToTop';
+    backToTop.className = 'back-to-top';
+    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    document.body.appendChild(backToTop);
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});

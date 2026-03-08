@@ -10,7 +10,114 @@
     <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style/ARCHIVE.css">
+    <style>
+        /* PDF Viewer Styles */
+        .pdf-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .pdf-controls button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .pdf-zoom-controls {
+            display: flex;
+            gap: 5px;
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            padding: 0 15px;
+        }
+
+        #pdf-page-info {
+            font-weight: 600;
+            color: #495057;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .canvas-wrapper {
+            background: #525659;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            height: calc(100vh - 200px);
+            min-height: 500px;
+        }
+
+        #pdf-canvas {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .pdf-error {
+            text-align: center;
+            padding: 60px 20px;
+            color: #dc3545;
+        }
+
+        .pdf-error i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        /* Performance UI Styles */
+        .load-more-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: var(--primary-dark);
+        }
+
+        .skeleton-loader {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 12px;
+            height: 250px;
+        }
+
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -46,7 +153,7 @@
                 <ul class="nav-links">
                     <li><a href="index.html" id="nav-home"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="watch online.html" id="nav-watch"><i class="fas fa-video"></i> Watch online</a></li>
-                    <li><a href="about us.html" id="nav-about"><i class="fas fa-book-bible"></i> about us</a></li>
+                    <li><a href="about us.html" id="nav-about"><i class="fas fa-info-circle"></i> about us</a></li>
                     <li><a href="blog.html" id="nav-blog"><i class="fas fa-blog"></i> Blog</a></li>
                     <li><a href="archives.html" class="active" id="nav-archive"><i class="fas fa-archive"></i>
                             Archives</a></li>
@@ -127,7 +234,6 @@
                 <!-- Lessons will be populated here -->
             </div>
         </aside>
-        </div>
     </main>
 
     <!-- Footer -->
@@ -188,10 +294,8 @@
             <div class="modal-header">
                 <h4 id="modal-title">Document Title</h4>
                 <div class="modal-header-actions">
-                    <a id="modal-external" href="#" target="_blank" class="btn btn-secondary btn-icon"
-                        title="View Full PDF">
-                        <i class="fas fa-external-link-alt"></i>
-                        <span class="sr-only" data-key="viewFullBtn">View Full PDF</span>
+                    <a id="modal-download" href="#" class="btn btn-primary btn-icon" title="Download PDF">
+                        <i class="fas fa-download"></i>
                     </a>
                     <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
                         <i class="fas fa-times"></i>
@@ -199,21 +303,8 @@
                 </div>
             </div>
 
-            <div class="modal-body" style="position: relative;">
-                <!-- Loading overlay -->
-                <div id="pdf-loader"
-                    style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.95); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <i class="fas fa-spinner fa-spin"
-                        style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
-                    <span style="color: var(--text-dark); font-weight: 600; font-size: 1.2rem;">Loading
-                        Document...</span>
-                    <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">This may take a moment</p>
-                </div>
-
-                <!-- PDF.js viewer iframe (src removed to prevent background downloading) -->
-                <iframe id="pdf-viewer" frameborder="0" width="100%" height="100%"
-                    style="opacity: 0; transition: opacity 0.3s ease; position: relative; z-index: 5;"></iframe>
-            </div>
+            <!-- Robust PDF Viewer Container -->
+            <div id="pdf-viewer-container" style="width: 100%; height: 100%; overflow: hidden;"></div>
 
             <div class="modal-footer">
                 <div class="modal-nav">
@@ -364,8 +455,14 @@
     <script src="script.js/firebase-config.js"></script>
     <script src="script.js/auth.js"></script>
 
-    <!-- Viewer.js (for PDF.js) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <!-- PDF.js (Core Library) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <!-- Custom PDF Viewer Class -->
+    <script src="script.js/pdf-viewer.js"></script>
 
     <!-- Your Custom JavaScript -->
     <script src="script.js/archive.js"></script>
@@ -376,8 +473,11 @@
                 const modal = document.getElementById('loginModal');
                 if (modal) modal.style.display = 'flex';
             }
-    });
+        });
     </script>
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 </body>
 
 </html>

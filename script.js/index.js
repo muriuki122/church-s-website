@@ -351,24 +351,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', function () {
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
-
     anchorLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            e.preventDefault();
+            const href = this.getAttribute('href');
 
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+            // If we are on index.html and clicking Watch Online, scroll instead of redirect
+            if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+                if (href === 'watch online.html') {
+                    e.preventDefault();
+                    const targetElement = document.getElementById('watch-online-section');
+                    if (targetElement) {
+                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const targetPosition = targetElement.offsetTop - headerHeight - 20;
 
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
-                const targetPosition = targetElement.offsetTop - headerHeight - 20;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
 
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                        // Close mobile menu if open
+                        const navLinks = document.querySelector('.nav-links');
+                        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+                        if (navLinks && navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                            if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                        }
+                    }
+                    return;
+                }
+            }
+
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href;
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight - 20;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     });
@@ -571,6 +598,40 @@ function updateCountdown() {
     if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
     if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
 }
+
+// Back to Top functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+});
+
+// Final button audit - ensures all decorative or partial buttons have active feedback
+document.addEventListener('DOMContentLoaded', () => {
+    const allButtons = document.querySelectorAll('.btn, .lang-btn, .social-btn');
+    allButtons.forEach(btn => {
+        if (!btn.getAttribute('href') && !btn.onclick && !btn.dataset.listenerAdded) {
+            btn.addEventListener('click', () => {
+                console.log('Button clicked:', btn.innerText || 'Icon button');
+            });
+            btn.dataset.listenerAdded = 'true';
+        }
+    });
+});
 
 // Update countdown every second
 setInterval(updateCountdown, 1000);

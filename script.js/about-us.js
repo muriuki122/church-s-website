@@ -413,6 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadLanguagePreference();
     updateLanguage();
     initializeApp();
+    initPDFViewer();
 });
 
 function initializeApp() {
@@ -497,6 +498,48 @@ function initializeApp() {
             showNotification(t.subscribeSuccess);
         });
     }
+
+    // PDF Modal Initialization for About Us
+    window.initPDFViewer = function () {
+        const pdfModal = document.getElementById('pdfModal');
+        const closePdf = document.getElementById('closePdf');
+        const pdfLinks = document.querySelectorAll('.pdf-link');
+
+        if (!pdfModal || !closePdf) return;
+
+        const viewer = new PDFViewer('pdf-canvas-container');
+
+        pdfLinks.forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const url = link.getAttribute('href');
+                pdfModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                try {
+                    await viewer.loadDocument(url);
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    showNotification('Error loading document', 'error');
+                    pdfModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        closePdf.addEventListener('click', () => {
+            pdfModal.classList.remove('active');
+            document.body.style.overflow = '';
+            viewer.clear();
+        });
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+                closePdf.click();
+            }
+        });
+    };
 
     // Form Submission Handling
     const forms = document.querySelectorAll('form');
@@ -688,6 +731,42 @@ window.addEventListener('resize', () => {
             }
         }
     }, 250);
+});
+
+// Floating Back to Top & Scroll Reveal for About Us
+document.addEventListener('DOMContentLoaded', () => {
+    // Back to Top button
+    const backToTop = document.createElement('button');
+    backToTop.id = 'backToTop';
+    backToTop.className = 'back-to-top';
+    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    document.body.appendChild(backToTop);
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Scroll Reveal implementation
+    const revealItems = document.querySelectorAll('.history-section, .schedule-section, .music-section, .ceremonies-section, .youtube-reminder, .origin-book-container');
+    revealItems.forEach(item => item.classList.add('reveal-item'));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealItems.forEach(item => revealObserver.observe(item));
 });
 
 // Add error handling for missing elements
