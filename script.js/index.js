@@ -447,91 +447,88 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showNotification(message, type) {
-        // Newsletter and Notifications handled by global.js
+        // Create toast notification
+        const toast = document.createElement('div');
+        toast.className = `notification-toast ${type}`;
+        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+});
 
-        // Sticky Header and Scroll Reveal Initialization
-        document.addEventListener('DOMContentLoaded', function () {
-            const header = document.querySelector('.header');
-            const revealElements = document.querySelectorAll('.reveal');
+// Sticky Header and Scroll Reveal Initialization
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.querySelector('.header');
+    const revealElements = document.querySelectorAll('.reveal');
 
-            // Sticky Header Logic
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-
-            // Intersection Observer for Scroll Reveal
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            revealElements.forEach(el => revealObserver.observe(el));
-
-            // Animate Nav Links on Mobile
-            const navLinksList = document.querySelectorAll('.nav-links li');
-            navLinksList.forEach((link, index) => {
-                link.style.setProperty('--i', index);
-            });
-        });
-
-        // Sabbath Service Countdown Timer
-        function updateCountdown() {
-            const countdownContainer = document.getElementById('service-countdown');
-            if (!countdownContainer) return;
-
-            const now = new Date();
-
-            // Sabbath is Saturday (day 6). Service starts at 9:00 AM.
-            // Let's target the next Saturday at 9:00 AM.
-            let nextService = new Date();
-            nextService.setDate(now.getDate() + (6 + 7 - now.getDay()) % 7);
-            nextService.setHours(9, 0, 0, 0);
-
-            // If it's Saturday after 9:00 AM, target next week
-            if (now > nextService) {
-                nextService.setDate(nextService.getDate() + 7);
+    // Sticky Header Logic
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
+        });
+    }
 
-            const diff = nextService - now;
+    // Intersection Observer for Scroll Reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    revealElements.forEach(el => revealObserver.observe(el));
 
-            const dEl = document.getElementById('days');
-            const hEl = document.getElementById('hours');
-            const mEl = document.getElementById('minutes');
-            const sEl = document.getElementById('seconds');
+    // Animate Nav Links on Mobile
+    const navLinksList = document.querySelectorAll('.nav-links li');
+    navLinksList.forEach((link, index) => {
+        link.style.setProperty('--i', index);
+    });
 
-            if (dEl) dEl.textContent = String(days).padStart(2, '0');
-            if (hEl) hEl.textContent = String(hours).padStart(2, '0');
-            if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
-            if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+    // Sabbath Service Countdown Timer
+    function updateCountdown() {
+        const countdownContainer = document.getElementById('service-countdown');
+        if (!countdownContainer) return;
+
+        const now = new Date();
+
+        // Sabbath is Saturday (day 6). Service starts at 9:00 AM.
+        let nextService = new Date();
+        nextService.setDate(now.getDate() + (6 + 7 - now.getDay()) % 7);
+        nextService.setHours(9, 0, 0, 0);
+
+        // If it's Saturday after 9:00 AM, target next week
+        if (now > nextService) {
+            nextService.setDate(nextService.getDate() + 7);
         }
 
-        // Back to Top handled by global.js
+        const diff = nextService - now;
 
-        // Final button audit - ensures all decorative or partial buttons have active feedback
-        document.addEventListener('DOMContentLoaded', () => {
-            const allButtons = document.querySelectorAll('.btn, .lang-btn, .social-btn');
-            allButtons.forEach(btn => {
-                if (!btn.getAttribute('href') && !btn.onclick && !btn.dataset.listenerAdded) {
-                    btn.addEventListener('click', () => {
-                        console.log('Button clicked:', btn.innerText || 'Icon button');
-                    });
-                    btn.dataset.listenerAdded = 'true';
-                }
-            });
-        });
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        // Update countdown every second
-        setInterval(updateCountdown, 1000);
-        document.addEventListener('DOMContentLoaded', updateCountdown);
+        const dEl = document.getElementById('days');
+        const hEl = document.getElementById('hours');
+        const mEl = document.getElementById('minutes');
+        const sEl = document.getElementById('seconds');
+
+        if (dEl) dEl.textContent = String(days).padStart(2, '0');
+        if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+        if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+        if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+    }
+
+    // Start countdown
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+});

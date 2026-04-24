@@ -473,56 +473,52 @@ function initializeApp() {
         });
     }
 
-    // PDF Modal Initialization for About Us
+    // PDF Modal Initialization for About Us — Iframe-based for instant loading
     window.initPDFViewer = function () {
         const pdfModal = document.getElementById('pdfModal');
         const closePdf = document.getElementById('closePdf');
+        const pdfIframe = document.getElementById('pdfIframe');
+        const pdfDownloadLink = document.getElementById('pdfDownloadLink');
         const pdfLinks = document.querySelectorAll('.pdf-link');
 
-        if (!pdfModal || !closePdf) return;
-
-        let viewer = null;
+        if (!pdfModal || !closePdf || !pdfIframe) return;
 
         pdfLinks.forEach(link => {
-            link.addEventListener('click', async (e) => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = link.getAttribute('href');
+                if (!url || url === 'undefined') {
+                    showNotification('Document not available', 'error');
+                    return;
+                }
 
-                // Lazy initialize the PDF viewer so the canvas is fresh each time
-                if (!viewer) {
-                    viewer = new PDFViewer('pdf-canvas-container', 'pdfToolbar');
+                // Load the PDF in the iframe
+                pdfIframe.src = url;
+                if (pdfDownloadLink) {
+                    pdfDownloadLink.href = url;
                 }
 
                 pdfModal.classList.add('visible');
                 document.body.style.overflow = 'hidden';
-
-                try {
-                    await viewer.loadPDF(url);
-                } catch (error) {
-                    console.error('Error loading PDF:', error);
-                    showNotification('Error loading document', 'error');
-                    pdfModal.classList.remove('visible');
-                    document.body.style.overflow = '';
-                    if (viewer) {
-                        viewer.destroy();
-                        viewer = null;
-                    }
-                }
             });
         });
 
         closePdf.addEventListener('click', () => {
             pdfModal.classList.remove('visible');
             document.body.style.overflow = '';
-            if (viewer) {
-                viewer.destroy();
-                viewer = null;
-            }
+            pdfIframe.src = ''; // Clear the iframe to free resources
         });
 
         // Close on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && pdfModal.classList.contains('visible')) {
+                closePdf.click();
+            }
+        });
+
+        // Close on background click
+        pdfModal.addEventListener('click', (e) => {
+            if (e.target === pdfModal) {
                 closePdf.click();
             }
         });

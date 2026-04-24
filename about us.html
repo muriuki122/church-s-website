@@ -733,11 +733,11 @@
     <div id="pdfModal" class="pdf-modal">
         <div class="pdf-modal-container">
             <button class="pdf-close" id="closePdf"><i class="fas fa-times"></i></button>
-            <div class="pdf-toolbar" id="pdfToolbar">
-                <!-- Controls injected by JS -->
-            </div>
-            <div id="pdf-canvas-container"></div>
+            <iframe id="pdfIframe" src="" style="width:100%;height:calc(100% - 60px);border:none;"></iframe>
             <div class="pdf-modal-footer">
+                <a id="pdfDownloadLink" href="" download class="btn btn-primary btn-sm" style="margin-right:10px;">
+                    <i class="fas fa-download"></i> Download
+                </a>
                 <a href="archives.html" class="btn btn-secondary btn-sm">
                     <i class="fas fa-archive"></i>
                     <span data-key="viewAllArchives">Explore Our Full Archive</span>
@@ -746,9 +746,6 @@
         </div>
     </div>
 
-    <!-- PDF.js via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="script.js/pdf-viewer.js"></script>
     <script src="script.js/about-us.js"></script>
     <script src="script.js/global.js"></script>
 </body>
