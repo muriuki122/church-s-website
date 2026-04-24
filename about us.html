@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Kaloleni Seventh day Church of Elohim</title>
     <link rel="stylesheet" href="style/about-us.css">
+    <link rel="stylesheet" href="style/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
@@ -20,16 +21,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 27, 61, 0.95);
+            background: rgba(15, 27, 61, 0.9);
             z-index: 2000;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            justify-content: center;
+            align-items: center;
         }
 
-        .pdf-modal.active {
+        .pdf-modal.visible {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            opacity: 1;
         }
 
         .pdf-modal-container {
@@ -40,6 +44,12 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .pdf-modal.visible .pdf-modal-container {
+            transform: translateY(0) scale(1);
         }
 
         .pdf-close {
@@ -83,6 +93,118 @@
             margin-bottom: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
             background: white;
+        }
+
+        .pdf-modal-footer {
+            padding: 15px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .pdf-modal-footer .btn {
+            font-size: 0.9rem;
+            padding: 8px 20px;
+        }
+
+        /* Premium PDF Toolbar */
+        .pdf-toolbar {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dee2e6;
+            z-index: 2005;
+        }
+
+        .pdf-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-tool {
+            background: white;
+            border: 1px solid #dee2e6;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1a2b6d;
+        }
+
+        .btn-tool:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-tool:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #pdf-page-info,
+        #pdf-zoom-info {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #666;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .btn-download-pdf {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+            width: auto;
+            padding: 0 15px;
+            gap: 8px;
+        }
+
+        .btn-download-pdf:hover {
+            background: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-study {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(26, 43, 109, 0.15);
+        }
+
+
+        .btn-study:hover {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: var(--primary-dark);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-study i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-study:hover i {
+            transform: translateX(5px);
         }
     </style>
 </head>
@@ -169,8 +291,8 @@
                                 the Kaloleni Seventh day Church of Elohim in our beautifully crafted history book.</p>
                             <a href="pdfs/A-History-of-the-True-Church-Dugger-and-Dodd.pdf"
                                 class="origin-pdf-btn pdf-link" id="originBookBtn">
-                                <i class="fas fa-file-pdf"></i>
-                                <span data-key="downloadOriginBook">Read Our Story (PDF Book)</span>
+                                <i class="fas fa-book-open"></i>
+                                <span data-key="readOurStory">Read Our Story (PDF Book)</span>
                             </a>
                         </div>
                     </div>
@@ -315,10 +437,34 @@
                 </div>
 
                 <div class="music-groups">
+                    <!-- Group A (Little Children) -->
+                    <div class="music-group">
+                        <div class="group-image symbolic-header">
+                            <i class="fas fa-child-reaching"></i>
+                            <div class="group-overlay">
+                                <a href="https://www.youtube.com/watch?v=t4pfHfSkHB4" class="play-btn" target="_blank">
+                                    <i class="fas fa-play"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="group-content">
+                            <div class="group-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <h3 data-key="groupA">Group A (Little Children)</h3>
+                            <p data-key="groupADesc">Our little children's group brings joy and innocence to our worship
+                                through sweet hymns and songs of praise.</p>
+                            <a href="https://www.youtube.com/watch?v=t4pfHfSkHB4" class="youtube-link" target="_blank">
+                                <i class="fab fa-youtube"></i>
+                                <span data-key="listenToSongs">Listen to Our Songs</span>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Choir -->
                     <div class="music-group">
-                        <div class="group-image">
-                            <img src="images/choir.jpg" alt="Choir Group">
+                        <div class="group-image symbolic-header choir-header">
+                            <i class="fas fa-users-line"></i>
                             <div class="group-overlay">
                                 <a href="#" class="play-btn">
                                     <i class="fas fa-play"></i>
@@ -327,14 +473,14 @@
                         </div>
                         <div class="group-content">
                             <div class="group-icon">
-                                <i class="fas fa-users"></i>
+                                <i class="fas fa-music"></i>
                             </div>
                             <h3 data-key="choir">Choir</h3>
-                            <p data-key="choirDesc">Our choir meets every Thursday to practice hymns and worship songs
+                            <p data-key="choirDesc">Our choir meets to practice hymns and worship songs
                                 that uplift our congregation during services.</p>
                             <div class="meeting-time">
                                 <i class="fas fa-clock"></i>
-                                <span data-key="choirMeetingTime">Every Thursday at 6:00 PM</span>
+                                <span data-key="choirMeetingTime">Scheduled Practice</span>
                             </div>
                             <a href="https://youtu.be/EILQY1d-U_Y?si=NiainwVnZJURXbKP" class="youtube-link"
                                 target="_blank">
@@ -346,8 +492,8 @@
 
                     <!-- Youths -->
                     <div class="music-group">
-                        <div class="group-image">
-                            <img src="images/youths.png" alt="Youth Group">
+                        <div class="group-image symbolic-header youth-header">
+                            <i class="fas fa-hands-holding-circle"></i>
                             <div class="group-overlay">
                                 <a href="#" class="play-btn">
                                     <i class="fas fa-play"></i>
@@ -356,7 +502,7 @@
                         </div>
                         <div class="group-content">
                             <div class="group-icon">
-                                <i class="fas fa-users"></i>
+                                <i class="fas fa-hands-holding-child"></i>
                             </div>
                             <h3 data-key="youths">Youths</h3>
                             <p data-key="youthsDesc">Our vibrant youth group gathers during lunch time for an uplifting
@@ -375,8 +521,8 @@
 
                     <!-- Group B -->
                     <div class="music-group">
-                        <div class="group-image">
-                            <img src="images/Group B.jpg" alt="Group B">
+                        <div class="group-image symbolic-header teen-header">
+                            <i class="fas fa-guitar"></i>
                             <div class="group-overlay">
                                 <a href="#" class="play-btn">
                                     <i class="fas fa-play"></i>
@@ -387,7 +533,7 @@
                             <div class="group-icon">
                                 <i class="fas fa-music"></i>
                             </div>
-                            <h3 data-key="groupB">Group B</h3>
+                            <h3 data-key="groupB">Teens</h3>
                             <p data-key="groupBDesc">This group specializes in traditional hymns and contemporary
                                 worship songs that resonate with our diverse congregation.</p>
                             <a href="https://youtu.be/I3Wg_UExSnM?si=NjACA6s_dkwTO4YY" class="youtube-link"
@@ -400,8 +546,8 @@
 
                     <!-- Highschoolers -->
                     <div class="music-group">
-                        <div class="group-image">
-                            <img src="images/highschoolers.png" alt="Highschoolers">
+                        <div class="group-image symbolic-header school-header">
+                            <i class="fas fa-graduation-cap"></i>
                             <div class="group-overlay">
                                 <a href="#" class="play-btn">
                                     <i class="fas fa-play"></i>
@@ -425,61 +571,83 @@
                 </div>
         </section>
 
-        <!-- Israelite Ceremonies Section -->
-        <section class="ceremonies-section">
+        <!-- Judah and Tracts Section -->
+        <section class="archive-highlight-section ceremonies-section">
             <div class="container">
                 <div class="section-header">
-                    <h2 data-key="ceremoniesTitle">Israelite Ceremonies We Observe</h2>
+                    <h2 data-key="judahAndTractsTitle">Judah and Tracts</h2>
                     <div class="section-divider"></div>
-                    <p data-key="ceremoniesSubtitle">As part of our spiritual practice, we remember and observe certain
-                        ceremonies that connect us
-                        to our biblical roots.</p>
+                    <p data-key="judahAndTractsSubtitle">Explore our extensive collection of Judah reports, spiritual
+                        tracts, and historical documents from our archives.</p>
                 </div>
 
                 <div class="ceremonies-grid">
                     <div class="ceremony-card">
                         <div class="ceremony-icon">
-                            <i class="fas fa-dove"></i>
+                            <i class="fas fa-landmark"></i>
                         </div>
-                        <h3 data-key="passover">Passover</h3>
-                        <p data-key="passoverDesc">We commemorate the Exodus from Egypt and reflect on Jesus as our
-                            Passover Lamb who was
-                            sacrificed for us.</p>
-                        <div class="ceremony-time" data-key="passoverTime">Observed in Spring</div>
+                        <h3 data-key="doc1Title">A History of the True Church</h3>
+                        <p data-key="doc1Desc">A comprehensive historical account of the true church through the ages,
+                            documented by Dugger and Dodd.</p>
+                        <a href="pdfs/A-History-of-the-True-Church-Dugger-and-Dodd.pdf" class="btn-study pdf-link">
+                            <span data-key="readTract">Study Document</span> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
 
                     <div class="ceremony-card">
                         <div class="ceremony-icon">
-                            <i class="fas fa-fire"></i>
+                            <i class="fas fa-scroll"></i>
                         </div>
-                        <h3 data-key="pentecost">Pentecost (Shavuot)</h3>
-                        <p data-key="pentecostDesc">We celebrate the giving of the Torah at Mount Sinai and the
-                            outpouring of the Holy Spirit
-                            in the New Testament.</p>
-                        <div class="ceremony-time" data-key="pentecostTime">50 days after Passover</div>
+                        <h3 data-key="doc2Title">Judah - Failure to Stand by Her Agreed Test</h3>
+                        <p data-key="doc2Desc">An insightful tract examining the historical and spiritual journey of
+                            Judah.</p>
+                        <a href="tracks/Judah-Failure-to-Stand-by-Her-Agreed-Test-of-Over-1900-Years-Ago-But-many-are-now.pdf"
+                            class="btn-study pdf-link">
+                            <span data-key="readTract">Study Document</span> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
 
                     <div class="ceremony-card">
                         <div class="ceremony-icon">
-                            <i class="fas fa-trumpet"></i>
+                            <i class="fas fa-file-pdf"></i>
                         </div>
-                        <h3 data-key="feastOfTrumpets">Feast of Trumpets</h3>
-                        <p data-key="feastOfTrumpetsDesc">A day of blowing trumpets and spiritual preparation, looking
-                            forward to the return of
-                            Christ.</p>
-                        <div class="ceremony-time" data-key="feastOfTrumpetsTime">Autumn observance</div>
+                        <h3 data-key="doc3Title">Judah Report (72-sebat)</h3>
+                        <p data-key="doc3Desc">A significant archival report from our collection detailing spiritual
+                            insights from 1972.</p>
+                        <a href="judah/72-Sebat.pdf" class="btn-study pdf-link">
+                            <span data-key="readTract">Study Document</span> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
 
                     <div class="ceremony-card">
                         <div class="ceremony-icon">
-                            <i class="fas fa-cloud-sun"></i>
+                            <i class="fas fa-clock"></i>
                         </div>
-                        <h3 data-key="feastOfTabernacles">Feast of Tabernacles</h3>
-                        <p data-key="feastOfTabernaclesDesc">We remember Israel's wilderness journey and look forward to
-                            the Kingdom of Elohim when He
-                            will dwell with us.</p>
-                        <div class="ceremony-time" data-key="feastOfTabernaclesTime">Autumn observance</div>
+                        <h3 data-key="doc4Title">Beginning and Ending of Elohim's Day</h3>
+                        <p data-key="doc4Desc">Understanding the biblical foundations of time and the Sabbath day.</p>
+                        <a href="tracks/Beginning_and_Ending_of_Gods_Day.pdf" class="btn-study pdf-link">
+                            <span data-key="readTract">Study Document</span> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
+
+                    <div class="ceremony-card">
+                        <div class="ceremony-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <h3 data-key="doc5Title">The Bible Name for the Church</h3>
+                        <p data-key="doc5Desc">Examinations of the scriptural basis for our identity as the Church of
+                            Elohim.</p>
+                        <a href="tracks/The-Bible-Name-for-the-Church.pdf" class="btn-study pdf-link">
+                            <span data-key="readTract">Study Document</span> <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="section-footer" style="text-align: center; margin-top: 40px;">
+                    <a href="archives.html" class="btn btn-primary">
+                        <i class="fas fa-archive"></i>
+                        <span data-key="viewAllArchives">Explore Our Full Archive</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -524,12 +692,12 @@
                     <p class="footer-desc">A spiritual home dedicated to worshiping Elohim and serving our community
                         with love and grace.</p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a href="https://youtube.com/@churchofelohimkaloleni" target="_blank"><i
+                        <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"
+                            class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://youtube.com/@churchofelohimkaloleni" target="_blank" class="social-btn"><i
                                 class="fab fa-youtube"></i></a>
-                        <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz"
-                            target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"
+                            class="social-btn"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -565,7 +733,16 @@
     <div id="pdfModal" class="pdf-modal">
         <div class="pdf-modal-container">
             <button class="pdf-close" id="closePdf"><i class="fas fa-times"></i></button>
+            <div class="pdf-toolbar" id="pdfToolbar">
+                <!-- Controls injected by JS -->
+            </div>
             <div id="pdf-canvas-container"></div>
+            <div class="pdf-modal-footer">
+                <a href="archives.html" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-archive"></i>
+                    <span data-key="viewAllArchives">Explore Our Full Archive</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -573,6 +750,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="script.js/pdf-viewer.js"></script>
     <script src="script.js/about-us.js"></script>
+    <script src="script.js/global.js"></script>
 </body>
 
 </html>

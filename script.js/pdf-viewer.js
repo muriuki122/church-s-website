@@ -1,15 +1,15 @@
 // pdf-viewer.js
 class PDFViewer {
-    constructor(containerId) {
+    constructor(containerId, toolbarId) {
         this.container = document.getElementById(containerId);
+        this.toolbar = document.getElementById(toolbarId);
         this.currentPDF = null;
         this.pdfDoc = null;
         this.pageNum = 1;
         this.pageRendering = false;
         this.pageNumPending = null;
-        this.scale = 1.0; // Start with a more mobile-friendly default scale
+        this.scale = 1.0;
 
-        // Debounce resize listener
         this.resizeTimeout = null;
 
         this.init();
@@ -20,53 +20,66 @@ class PDFViewer {
         // Create canvas for PDF rendering
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'pdf-canvas';
-        this.canvas.style.display = 'block';
-        this.canvas.style.margin = '0 auto';
-        this.canvas.style.maxWidth = '100%';
+        this.canvas.className = 'pdf-page-canvas';
 
-        // Create controls
-        this.controls = document.createElement('div');
-        this.controls.className = 'pdf-controls';
-        this.controls.innerHTML = `
-            <button id="pdf-prev" class="btn btn-secondary">
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-            <span id="pdf-page-info">Page 1 of 1</span>
-            <button id="pdf-next" class="btn btn-secondary">
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
-            <div class="pdf-zoom-controls">
-                <button id="pdf-zoom-out" class="btn btn-secondary">
-                    <i class="fas fa-search-minus"></i>
+        // Use toolbar if provided, otherwise create default
+        const controlsHTML = `
+            <div class="pdf-controls-group pdf-nav-group">
+                <button id="pdf-prev" class="pdf-nav-btn" title="Previous Page" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                    <span class="pdf-nav-label">Prev</span>
                 </button>
-                <button id="pdf-zoom-in" class="btn btn-secondary">
-                    <i class="fas fa-search-plus"></i>
+                <div class="pdf-page-badge">
+                    <span id="pdf-page-info">Page 1 of 1</span>
+                </div>
+                <button id="pdf-next" class="pdf-nav-btn" title="Next Page">
+                    <span class="pdf-nav-label">Next</span>
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
-            <button id="pdf-download" class="btn btn-primary">
-                <i class="fas fa-download"></i> Download
-            </button>
+            <div class="pdf-controls-group pdf-zoom-group">
+                <button id="pdf-zoom-out" class="pdf-zoom-btn" title="Zoom Out">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span id="pdf-zoom-info" class="pdf-zoom-badge">100%</span>
+                <button id="pdf-zoom-in" class="pdf-zoom-btn" title="Zoom In">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="pdf-controls-group">
+                <button id="pdf-download" class="pdf-action-btn" title="Download PDF">
+                    <i class="fas fa-download"></i>
+                    <span class="pdf-nav-label">Save</span>
+                </button>
+            </div>
         `;
 
-        // Clear container and add elements
-        this.container.innerHTML = '';
-        this.container.appendChild(this.controls);
+        if (this.toolbar) {
+            this.toolbar.innerHTML = controlsHTML;
+        } else {
+            this.controls = document.createElement('div');
+            this.controls.className = 'pdf-controls-default';
+            this.controls.innerHTML = controlsHTML;
+            this.container.appendChild(this.controls);
+        }
 
         const canvasWrapper = document.createElement('div');
-        canvasWrapper.className = 'canvas-wrapper';
-        canvasWrapper.style.overflow = 'auto';
-        canvasWrapper.style.background = '#888';
-        canvasWrapper.style.padding = '20px 0';
+        canvasWrapper.className = 'pdf-canvas-wrapper';
         canvasWrapper.appendChild(this.canvas);
+        this.container.innerHTML = '';
         this.container.appendChild(canvasWrapper);
 
-        // Add event listeners
-        document.getElementById('pdf-prev').addEventListener('click', () => this.onPrevPage());
-        document.getElementById('pdf-next').addEventListener('click', () => this.onNextPage());
-        document.getElementById('pdf-zoom-in').addEventListener('click', () => this.zoomIn());
-        document.getElementById('pdf-zoom-out').addEventListener('click', () => this.zoomOut());
+        // Add event listeners with null checks for toolbar buttons
+        const subscribeEvent = (id, fn) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', fn);
+        };
 
-        // Ensure PDF.js is available
+        subscribeEvent('pdf-prev', () => this.onPrevPage());
+        subscribeEvent('pdf-next', () => this.onNextPage());
+        subscribeEvent('pdf-zoom-in', () => this.zoomIn());
+        subscribeEvent('pdf-zoom-out', () => this.zoomOut());
+
         this.ensurePDFJS();
     }
 
@@ -79,6 +92,30 @@ class PDFViewer {
                 }
             }, 300);
         });
+        
+        // Setup Swipe Gestures for Professional Navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        this.container.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        this.container.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        }, { passive: true });
+    }
+
+    handleSwipe(startX, endX) {
+        const threshold = 50; // Minimum swipe distance
+        if (startX - endX > threshold) {
+            // Swipe Left -> Next Page
+            this.onNextPage();
+        } else if (endX - startX > threshold) {
+            // Swipe Right -> Previous Page
+            this.onPrevPage();
+        }
     }
 
     ensurePDFJS() {
@@ -151,6 +188,10 @@ class PDFViewer {
         this.pageRendering = true;
 
         try {
+            // Add professional fade transition
+            this.canvas.style.opacity = '0.5';
+            this.canvas.style.transition = 'opacity 0.2s ease-in-out';
+            
             const page = await this.pdfDoc.getPage(num);
 
             // Calculate scale based on container width for responsiveness
@@ -176,6 +217,9 @@ class PDFViewer {
             const renderTask = page.render(renderContext);
             await renderTask.promise;
 
+            // Fade back in completely once rendered
+            this.canvas.style.opacity = '1';
+
             this.pageRendering = false;
             if (this.pageNumPending !== null) {
                 this.renderPage(this.pageNumPending);
@@ -184,6 +228,7 @@ class PDFViewer {
         } catch (error) {
             console.error('Error rendering page:', error);
             this.pageRendering = false;
+            this.canvas.style.opacity = '1';
         }
     }
 
@@ -214,10 +259,15 @@ class PDFViewer {
     }
 
     updateControls() {
-        document.getElementById('pdf-page-info').textContent =
-            `Page ${this.pageNum} of ${this.numPages}`;
-        document.getElementById('pdf-prev').disabled = this.pageNum <= 1;
-        document.getElementById('pdf-next').disabled = this.pageNum >= this.numPages;
+        const pageInfo = document.getElementById('pdf-page-info');
+        const zoomInfo = document.getElementById('pdf-zoom-info');
+        const prevBtn = document.getElementById('pdf-prev');
+        const nextBtn = document.getElementById('pdf-next');
+
+        if (pageInfo) pageInfo.textContent = `Page ${this.pageNum} of ${this.numPages}`;
+        if (zoomInfo) zoomInfo.textContent = `${Math.round(this.scale * 100)}%`;
+        if (prevBtn) prevBtn.disabled = this.pageNum <= 1;
+        if (nextBtn) nextBtn.disabled = this.pageNum >= this.numPages;
     }
 
     showLoading() {
@@ -262,5 +312,10 @@ class PDFViewer {
         this.pdfDoc = null;
         this.currentPDF = null;
         this.container.innerHTML = '';
+        this.container.style.position = '';
+    }
+
+    clear() {
+        this.destroy();
     }
 }

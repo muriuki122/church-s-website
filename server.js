@@ -29,7 +29,7 @@ function scanDocuments() {
                         id: idCounter++,
                         title: file.replace('.pdf', '').replace(/-/g, ' ').replace(/_/g, ' '),
                         fileName: `${dir}/${file}`,
-                        type: dir === 'judah' ? 'Judah' : (dir === 'tracks' ? 'Tract' : 'Book'),
+                        type: dir === 'judah' ? 'Judah' : (dir === 'tracks' ? 'Tracts' : 'Books'),
                         date: fs.statSync(path.join(fullPath, file)).mtime.toISOString().split('T')[0]
                     });
                 }
@@ -74,6 +74,78 @@ app.get('/api/documents', (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching documents:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API endpoint to handle contact form submissions
+app.post('/api/contact', (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+
+        if (!name || !email || !message) {
+            return res.status(400).json({ error: 'Name, email, and message are required.' });
+        }
+
+        const contactMessage = {
+            id: Date.now(),
+            timestamp: new Date().toISOString(),
+            name,
+            email,
+            subject: subject || 'General Inquiry',
+            message
+        };
+
+        // Save to messages.json
+        const messagesPath = path.join(__dirname, 'messages.json');
+        let messages = [];
+
+        if (fs.existsSync(messagesPath)) {
+            const fileData = fs.readFileSync(messagesPath, 'utf8');
+            messages = JSON.parse(fileData || '[]');
+        }
+
+        messages.push(contactMessage);
+        fs.writeFileSync(messagesPath, JSON.stringify(messages, null, 2));
+
+        console.log(`New contact message from ${name} (${email})`);
+        res.status(201).json({ success: true, message: 'Message received successfully.' });
+    } catch (error) {
+        console.error('Error saving contact message:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// API endpoint for newsletter subscriptions
+app.post('/api/newsletter', (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required.' });
+        }
+
+        const subscription = {
+            timestamp: new Date().toISOString(),
+            email
+        };
+
+        const subsPath = path.join(__dirname, 'subscriptions.json');
+        let subscriptions = [];
+
+        if (fs.existsSync(subsPath)) {
+            const fileData = fs.readFileSync(subsPath, 'utf8');
+            subscriptions = JSON.parse(fileData || '[]');
+        }
+
+        if (!subscriptions.some(s => s.email === email)) {
+            subscriptions.push(subscription);
+            fs.writeFileSync(subsPath, JSON.stringify(subscriptions, null, 2));
+        }
+
+        res.status(201).json({ success: true, message: 'Subscribed successfully.' });
+    } catch (error) {
+        console.error('Error saving subscription:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

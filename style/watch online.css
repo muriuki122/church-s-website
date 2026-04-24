@@ -35,10 +35,10 @@ body {
 }
 
 .container {
-    width: 95%;
+    width: clamp(90%, 95%, 1400px);
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 clamp(1rem, 5vw, 2.5rem);
 }
 
 /* Top Banner */
@@ -337,7 +337,7 @@ header .container {
 }
 
 .section-header h2 {
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
     color: var(--primary);
     margin-bottom: 15px;
     position: relative;
@@ -368,12 +368,12 @@ header .container {
         url('https://images.unsplash.com/photo-1642756936657-8634761ab859?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGhlJTIwZ2F0ZXMlMjBvZiUyMGplcnVzYWxlbXxlbnwwfHwwfHx8MA%3D%3D');
     background-size: cover;
     background-position: center;
-    height: 70vh;
+    min-height: clamp(400px, 70vh, 800px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0 20px;
+    padding: clamp(60px, 10vh, 100px) 20px;
 }
 
 @media (max-width: 768px) {

@@ -60,7 +60,7 @@ body>* {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 clamp(1rem, 5vw, 2.5rem);
 }
 
 /* Language Switcher */
@@ -192,11 +192,21 @@ body>* {
     color: var(--primary-color);
 }
 
+/* Mobile Toggle - Standardized */
 .mobile-menu-btn {
     display: none;
-    font-size: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    color: var(--text-light);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
 }
 
 /* Hero Section */
@@ -206,12 +216,12 @@ body>* {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    height: 85vh;
+    min-height: clamp(600px, 85vh, 900px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 60px 20px 0;
+    padding: clamp(80px, 15vh, 120px) 20px 0;
     margin-top: 0;
 }
 
@@ -315,8 +325,9 @@ body>* {
 
 .hero-content h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    margin-bottom: 20px;
+    font-size: clamp(2rem, 8vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: clamp(15px, 3vh, 25px);
     color: var(--text-light);
     text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.4);
     animation: slideInDown 0.8s ease-out;
@@ -335,9 +346,9 @@ body>* {
 }
 
 .hero-content p {
-    font-size: 1.4rem;
-    margin-bottom: 40px;
-    max-width: 800px;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    margin-bottom: clamp(25px, 5vh, 45px);
+    max-width: clamp(300px, 80vw, 800px);
     margin-left: auto;
     margin-right: auto;
     color: rgba(255, 255, 255, 0.9);
@@ -456,7 +467,7 @@ body>* {
 
 .upcoming-events h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
     margin-bottom: 40px;
     position: relative;
     color: #333333;
@@ -650,9 +661,9 @@ body>* {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 25px;
-    padding: 50px 80px;
+    padding: clamp(20px, 5vw, 50px) clamp(15px, 8vw, 80px);
     margin: 30px auto;
-    width: 90%;
+    width: 95%;
     max-width: 1000px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
     text-align: center;
@@ -665,7 +676,7 @@ body>* {
 }
 
 .watch-content p {
-    font-size: 1.1rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     max-width: 700px;
     margin: 0 auto 30px;
     line-height: 1.6;
@@ -853,7 +864,7 @@ body>* {
 .social-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: clamp(10px, 3vw, 20px);
     flex-wrap: wrap;
 }
 
@@ -919,8 +930,7 @@ body>* {
     }
 
     .mobile-menu-btn {
-        display: block;
-        z-index: 1001;
+        display: flex;
     }
 
     .nav-links {
@@ -928,22 +938,50 @@ body>* {
         top: 0;
         right: -100%;
         width: 70%;
+        max-width: 300px;
         height: 100vh;
         background: white;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: 0.4s;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-top: 80px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
+        z-index: 2000;
+        display: flex !important;
     }
 
     .nav-links.active {
         right: 0;
+        visibility: visible;
     }
 
     .nav-links li {
-        margin: 20px 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .nav-links a {
+        color: var(--text-dark);
+        width: 100%;
+        padding: 15px 25px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        justify-content: flex-start;
+        border-radius: 0;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background-color: var(--bg-light);
+        color: var(--primary-color);
+        box-shadow: none;
+    }
+
+    .nav-links a i {
+        color: var(--primary-color);
+        width: 20px;
+        text-align: center;
+        margin-right: 15px;
     }
 
     .watch-online {
@@ -1122,27 +1160,25 @@ body>* {
     }
 
     .mobile-menu-btn {
-        display: block;
+        display: flex;
     }
 
     .nav-links {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
+        width: 70%;
         max-width: 300px;
         height: 100vh;
-        background: var(--glass-bg);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-left: 1px solid var(--glass-border);
+        background: white;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        padding-top: 100px;
-        transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: var(--shadow-lg);
-        z-index: 999;
+        padding-top: 80px;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 2000;
+        display: flex !important;
     }
 
     .nav-links.active {
@@ -1163,14 +1199,7 @@ body>* {
         transform: translateX(0);
     }
 
-    .nav-links a {
-        color: var(--text-dark);
-        padding: 20px 30px;
-        width: 100%;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        border-radius: 0;
-        font-size: 1.1rem;
-    }
+    /* Mobile nav overrides handled by global.css */
 
     .hero-content h2 {
         font-size: 2rem;
@@ -1305,27 +1334,7 @@ section {
 }
 
 /* Enhanced Mobile Styles */
-@media (max-width: 768px) {
-
-    /* Mobile menu animation */
-    .mobile-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .mobile-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .mobile-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -6px);
-    }
-
-    /* Ensure mobile menu stays on top */
-    .nav-links.active {
-        display: flex !important;
-        right: 0 !important;
-    }
-}
+/* Mobile menu animation handled by global.css */
 
 /* Ensure all interactive elements have proper cursor */
 button,

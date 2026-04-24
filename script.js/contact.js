@@ -169,40 +169,9 @@ langOptions.forEach(opt => {
     });
 });
 
-// Mobile Menu
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+// Mobile Menu handled by global.js
 
-if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        navLinks.classList.toggle('active');
-        const isActive = navLinks.classList.contains('active');
-
-        mobileMenuBtn.innerHTML = isActive
-            ? '<i class="fas fa-times"></i>'
-            : '<i class="fas fa-bars"></i>';
-    });
-
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.main-header') && navLinks.classList.contains('active')) {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        }
-    });
-}
-
-// Form Submission via Formspree (AJAX)
+// Form Submission via local API
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -210,33 +179,36 @@ if (contactForm) {
         const btn = contactForm.querySelector('.btn-submit');
         const originalText = btn.innerHTML;
 
-        // Formspree requires headers and the body formatted correctly
-        const data = new FormData(contactForm);
+        const formData = new FormData(contactForm);
+        const data = Object.fromEntries(formData.entries());
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            const response = await fetch(contactForm.action, {
-                method: contactForm.method,
-                body: data,
+            const response = await fetch('/api/contact', {
+                method: 'POST',
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             });
 
-            if (response.ok) {
+            const result = await response.json();
+
+            if (response.ok && result.success) {
                 showNotification(currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
                     currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :
                         'Message sent! Elohim bless you.');
                 contactForm.reset();
             } else {
-                throw new Error('Submission failed');
+                throw new Error(result.error || 'Submission failed');
             }
         } catch (error) {
-            showNotification(currentLang === 'sw' ? 'Hitilafu ilitokea. Jaribu tena.' :
-                currentLang === 'rw' ? 'Byanze. Ongera ugerageze.' :
-                    'Error occurred. Please try again.');
+            console.error('Submission error:', error);
+            showNotification(currentLang === 'sw' ? 'Hitilafu ilitokea: ' + error.message :
+                currentLang === 'rw' ? 'Byanze: ' + error.message :
+                    'Error occurred: ' + error.message);
         } finally {
             btn.disabled = false;
             btn.innerHTML = originalText;

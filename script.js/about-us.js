@@ -21,6 +21,7 @@ const translations = {
 
         // History Section
         ourStory: "Our Story",
+        readOurStory: "Read Our Story (PDF Book)",
         theBeginning: "The Beginning",
         beginningText: "Kaloleni Church was established with a vision to create a vibrant community of believers dedicated to serving Elohim and spreading His message of love and salvation.",
         growthExpansion: "Growth & Expansion",
@@ -69,8 +70,8 @@ const translations = {
         prayerMeetingsTime: "Wednesday | 7:00 PM",
         prayerMeetingsDesc: "Join us for corporate prayer and intercession.",
         choirPractice: "Choir Practice",
-        choirPracticeTime: "Thursday | 6:00 PM",
-        choirPracticeDesc: "Our choir prepares for Sunday worship services.",
+        choirPracticeTime: "Scheduled Practice",
+        choirPracticeDesc: "Our choir prepares for Saturday worship services.",
         youthFellowship: "Youth Fellowship",
         youthFellowshipTime: "Friday | 5:00 PM",
         youthFellowshipDesc: "Young people gathering for Bible study and activities.",
@@ -78,33 +79,35 @@ const translations = {
         // Music Ministry
         musicMinistryTitle: "Our Music Ministry",
         musicMinistrySubtitle: "Experience the power of worship through our diverse music groups",
+        groupA: "Group A (Little Children)",
+        groupADesc: "Our little children's group brings joy and innocence to our worship through sweet hymns and songs of praise.",
         choir: "Choir",
-        choirDesc: "Our choir meets every Thursday to practice hymns and worship songs that uplift our congregation during services.",
-        choirMeetingTime: "Every Thursday at 6:00 PM",
+        choirDesc: "Our choir meets to practice hymns and worship songs that uplift our congregation during services.",
+        choirMeetingTime: "Scheduled Practice",
         youths: "Youths",
         youthsDesc: "Our vibrant youth group gathers during lunch time for an uplifting session of messianic music, fellowship, and spiritual growth.",
         youthsMeetingTime: "Lunch Time",
         listenToSongs: "Listen to Our Songs",
-        groupB: "Group B",
-        groupBDesc: "This group specializes in traditional hymns and contemporary worship songs that resonate with our diverse congregation.",
+        groupB: "Teens",
+        groupBDesc: "Our teens specialize in traditional hymns and contemporary worship songs that resonate with our diverse congregation.",
         highschoolers: "Highschoolers",
         highschoolersDesc: "Our youth group brings energy and contemporary messianic music that speaks to the younger generation.",
 
-        // Ceremonies
-        ceremoniesTitle: "Israelite Ceremonies We Observe",
-        ceremoniesSubtitle: "As part of our spiritual practice, we remember and observe certain ceremonies that connect us to our biblical roots.",
-        passover: "Passover",
-        passoverDesc: "We commemorate the Exodus from Egypt and reflect on Jesus as our Passover Lamb who was sacrificed for us.",
-        passoverTime: "Observed in Spring",
-        pentecost: "Pentecost (Shavuot)",
-        pentecostDesc: "We celebrate the giving of the Torah at Mount Sinai and the outpouring of the Holy Spirit in the New Testament.",
-        pentecostTime: "50 days after Passover",
-        feastOfTrumpets: "Feast of Trumpets",
-        feastOfTrumpetsDesc: "A day of blowing trumpets and spiritual preparation, looking forward to the return of Christ.",
-        feastOfTrumpetsTime: "Autumn observance",
-        feastOfTabernacles: "Feast of Tabernacles",
-        feastOfTabernaclesDesc: "We remember Israel's wilderness journey and look forward to the Kingdom of Elohim when He will dwell with us.",
-        feastOfTabernaclesTime: "Autumn observance",
+        // Judah and Tracts
+        judahAndTractsTitle: "Judah and Tracts",
+        judahAndTractsSubtitle: "Explore our extensive collection of Judah reports, spiritual tracts, and historical documents from our archives.",
+        doc1Title: "A History of the True Church",
+        doc1Desc: "A comprehensive historical account of the true church through the ages, documented by Dugger and Dodd.",
+        doc2Title: "Judah - Failure to Stand by Her Agreed Test",
+        doc2Desc: "An insightful tract examining the historical and spiritual journey of Judah.",
+        doc3Title: "Judah Report (72-sebat)",
+        doc3Desc: "A significant archival report from our collection detailing spiritual insights from 1972.",
+        doc4Title: "Beginning and Ending of Elohim's Day",
+        doc4Desc: "Understanding the biblical foundations of time and the Sabbath day.",
+        doc5Title: "The Bible Name for the Church",
+        doc5Desc: "Examinations of the scriptural basis for our identity as the Church of Elohim.",
+        viewAllArchives: "Explore Our Full Archive",
+        readTract: "Study Document",
 
         // YouTube Section
         youtubeTitle: "Follow Us on YouTube",
@@ -143,6 +146,7 @@ const translations = {
 
         // History Section
         ourStory: "Hadithi Yetu",
+        readOurStory: "Soma Hadithi Yetu (Kitabu cha PDF)",
         theBeginning: "Mwanzo",
         beginningText: "Kanisa la Kaloleni lilianzishwa kwa maono ya kuunda jamii yenye nguvu ya waumini waliojitolea kutumikia Mungu na kueneza ujumbe wake wa upendo na wokovu.",
         growthExpansion: "Ukuaji na Upanuzi",
@@ -191,8 +195,8 @@ const translations = {
         prayerMeetingsTime: "Jumatano | 7:00 PM",
         prayerMeetingsDesc: "Jiunge nasi kwa maombi ya pamoja na uombezi.",
         choirPractice: "Mazoezi ya Kwaya",
-        choirPracticeTime: "Alhamisi | 6:00 PM",
-        choirPracticeDesc: "Kwaya yetu inajiandaa kwa huduma za ibada za Jumapili.",
+        choirPracticeTime: "Mazoezi Yaliyopangwa",
+        choirPracticeDesc: "Kwaya yetu inajiandaa kwa huduma za ibada za Sabato.",
         youthFellowship: "Ushirikiano wa Vijana",
         youthFellowshipTime: "Ijumaa | 5:00 PM",
         youthFellowshipDesc: "Vijana wanakusanyika kwa masomo ya Biblia na shughuli.",
@@ -200,33 +204,35 @@ const translations = {
         // Music Ministry
         musicMinistryTitle: "Huduma Yetu ya Muziki",
         musicMinistrySubtitle: "Pata uzoefu wa nguvu za ibada kupitia vikundi vyetu mbalimbali vya muziki",
+        groupA: "Kikundi A (Watoto Wadogo)",
+        groupADesc: "Kikundi chetu cha watoto wadogo kinaleta furaha na utakatifu katika ibada zetu kupitia nyimbo tamu za sifa.",
         choir: "Kwaya",
-        choirDesc: "Kwaya yetu inakutana kila Alhamisi kufanya mazoezi ya nyimbo za ibada na nyimbo za ibada ambazo zinainua mkusanyiko wetu wakati wa huduma.",
-        choirMeetingTime: "Kila Alhamisi saa 6:00 PM",
+        choirDesc: "Kwaya yetu inakutana kufanya mazoezi ya nyimbo za ibada zinazoinua mkusanyiko wetu wakati wa huduma.",
+        choirMeetingTime: "Mazoezi Yaliyopangwa",
         youths: "Vijana",
         youthsDesc: "Kikundi chetu cha vijana kinakutana wakati wa chakula cha mchana kwa kipindi cha kuinua cha muziki wa kimesiya, ushirika, na ukuaji wa kiroho.",
         youthsMeetingTime: "Wakati wa Chakula cha Mchana",
         listenToSongs: "Sikiliza Nyimbo Zetu",
-        groupB: "Kikundi B",
-        groupBDesc: "Kikundi hiki kinajulikana kwa nyimbo za jadi na nyimbo za kisasa za ibada ambazo zinaendana na mkusanyiko wetu wa watu mbalimbali.",
+        groupB: "Vijana Chipukizi",
+        groupBDesc: "Vijana wetu chipukizi wanajulikana kwa nyimbo za jadi na nyimbo za kisasa za ibada zinazofaa mkusanyiko wetu.",
         highschoolers: "Wanafunzi wa Sekondari",
         highschoolersDesc: "Kikundi chetu cha vijana kinaleta nishati na muziki wa kisasa wa Kikristo ambao unazungumza na kizazi kipya.",
 
-        // Ceremonies
-        ceremoniesTitle: "Sherehe za Kiisraeli Tunazozingatia",
-        ceremoniesSubtitle: "Kama sehemu ya mazoezi yetu ya kiroho, tunakumbuka na kuzingatia sherehe fulani ambazo zinatunganisha na mizizi yetu ya Biblia.",
-        passover: "Pasaka",
-        passoverDesc: "Tunakumbuka Kutoka kutoka Misri na kutafakari juu ya Yesu kama Mwana-Kondoo wetu wa Pasaka aliyetolewa dhabihu kwa ajili yetu.",
-        passoverTime: "Inazingatiwa wakati wa Majira ya Kuchipua",
-        pentecost: "Pentekoste (Shavuoti)",
-        pentecostDesc: "Tunasherehekea kutolewa kwa Torati katika Mlima Sinai na kumwagika kwa Roho Mtakatifu katika Agano Jipya.",
-        pentecostTime: "Siku 50 baada ya Pasaka",
-        feastOfTrumpets: "Sikukuu ya Tarumbeta",
-        feastOfTrumpetsDesc: "Siku ya kupiga tarumbeta na maandalizi ya kiroho, tukitazamia kurudi kwa Kristo.",
-        feastOfTrumpetsTime: "Inazingatiwa wakati wa Vuli",
-        feastOfTabernacles: "Sikukuu ya Vibanda",
-        feastOfTabernaclesDesc: "Tunakumbuka safari ya Israeli jangwani na kutazamia Ufalme wa Mungu wakati atakapokaa nasi.",
-        feastOfTabernaclesTime: "Inazingatiwa wakati wa Vuli",
+        // Judah and Tracts
+        judahAndTractsTitle: "Yuda na Trakti",
+        judahAndTractsSubtitle: "Gundua mkusanyiko wetu mpana wa ripoti za Yuda, trakti za kiroho, na nyaraka za kihistoria kutoka kwa kumbukumbu zetu.",
+        doc1Title: "Historia ya Kanisa la Kweli",
+        doc1Desc: "Maelezo kamili ya kihistoria ya kanisa la kweli kupitia nyakati, yaliyoandikwa na Dugger na Dodd.",
+        doc2Title: "Yuda - Kushindwa Kusimama kwa Mtihani Alioafiki",
+        doc2Desc: "Trakti yenye ufahamu inayochunguza safari ya kihistoria na ya kiroho ya Yuda.",
+        doc3Title: "Ripoti ya Yuda (72-sebat)",
+        doc3Desc: "Ripoti muhimu ya kumbukumbu kutoka kwa mkusanyiko wetu inayoezea ufahamu wa kiroho kutoka 1972.",
+        doc4Title: "Mwanzo na Mwisho wa Siku ya Elohim",
+        doc4Desc: "Kuelewa misingi ya Biblia ya muda na siku ya Sabato.",
+        doc5Title: "Jina la Biblia la Kanisa",
+        doc5Desc: "Uchunguzi wa msingi wa maandiko kwa utambulisho wetu kama Kanisa la Elohim.",
+        viewAllArchives: "Gundua Kumbukumbu Yetu Kamili",
+        readTract: "Soma Andiko",
 
         // YouTube Section
         youtubeTitle: "Tufuate kwenye YouTube",
@@ -265,6 +271,7 @@ const translations = {
 
         // History Section
         ourStory: "Inkuru Yacu",
+        readOurStory: "Soma Inkuru Yacu (Ibitabo bya PDF)",
         theBeginning: "Intangiriro",
         beginningText: "Itorero rya Kaloleni ryashinzwe rifite icyerekezo cyo gushinga umuryango ukomeye w'abizera biyemeje gukorera Imana no gukwirakwiza ubutumwa bwayo bw'urukundo n'agakiza.",
         growthExpansion: "Iterambere n'Ubwaguke",
@@ -313,8 +320,8 @@ const translations = {
         prayerMeetingsTime: "Ku wa Gatatu | 7:00 PM",
         prayerMeetingsDesc: "Twinjire mu masengesho y'abanyamuryango no gusenga.",
         choirPractice: "Imyitozo y'Amatorero",
-        choirPracticeTime: "Ku wa Kane | 6:00 PM",
-        choirPracticeDesc: "Amatorero yacu yitegura serivisi z'isengesho za Ku cyumweru.",
+        choirPracticeTime: "Imyitozo Teganyijwe",
+        choirPracticeDesc: "Amatorero yacu yitegura serivisi z'isengesho za Ku sabato.",
         youthFellowship: "Ubumwe bw'Urubyiruko",
         youthFellowshipTime: "Ku wa Gatanu | 5:00 PM",
         youthFellowshipDesc: "Urubyiruko ruteranira amasomo y'ibitabo n'ibikorwa.",
@@ -322,33 +329,35 @@ const translations = {
         // Music Ministry
         musicMinistryTitle: "Ubutumwa Bwacu bw'Umuziki",
         musicMinistrySubtitle: "Hura imbaraga z'isengesho binyuze mu matsinda yacu atandukanye y'umuziki",
+        groupA: "Itsinda A (Abana Bato)",
+        groupADesc: "Itsinda ry'abana bato rizanye ibyishimo n'ubuziranenge mu masengesho yacu binyuze mu ndirimbo nziza zo guhimbariza Imana.",
         choir: "Amatorero",
-        choirDesc: "Amatorero yacu ahura buri wa Kane kugira ngo yitoze indirimbo z'isengesho n'indirimbo z'isengesho zizamura itorero ryacu mu gihe cy'isengesho.",
-        choirMeetingTime: "Buri wa Kane saa 6:00 PM",
+        choirDesc: "Amatorero yacu ahura kugira ngo yitoze indirimbo z'isengesho n'indirimbo z'isengesho zizamura itorero ryacu mu gihe cy'isengesho.",
+        choirMeetingTime: "Imyitozo Teganyijwe",
         youths: "Urubyiruko",
         youthsDesc: "Urubyiruko rwacu ruteranira mu gihe cy'ifunguro rya sasita mu masaha yo kugarura ubuzima kw'umuziki wa kimesiya, ubumwe, n'iterambere ryumwuka.",
         youthsMeetingTime: "Umuhango wa Sasita",
         listenToSongs: "Umva Indirimbo Zacu",
-        groupB: "Itsinda B",
-        groupBDesc: "Iri tsinda ryihariye mu ndirimbo gakondo n'indirimbo z'isengesho zigezweho zihuza n'itorero ryacu ry'abantu batandukanye.",
+        groupB: "Abatumburuke",
+        groupBDesc: "Itsinda ry'abatumburuke ryihariye mu ndirimbo gakondo n'izigezweho zihuza n'itorero ryacu.",
         highschoolers: "Abanyeshuri bo mu Mashuri Yisumbuye",
         highschoolersDesc: "Itsinda ryacu ry'urubyiruko rizana ingufu n'umuziki wa kijyambere w'ubukristo uvugana n'igisata gishya.",
 
-        // Ceremonies
-        ceremoniesTitle: "Imihango y'Abisirayeli Tubahiriza",
-        ceremoniesSubtitle: "Nk'igice cy'imyitozo yacu y'umwuka, twibuka kandi tubahiriza imihango imwe iduhuza n'imizi yacu y'ibitabo.",
-        passover: "Pasika",
-        passoverDesc: "Twibuka Kuva muri Egiputa kandi tutekereza kuri Yesu nk'Intama yacu ya Pasika yatanzwe kuri twe.",
-        passoverTime: "Yubahirizwa mu mpeshyi",
-        pentecost: "Pentekosite (Shavuoti)",
-        pentecostDesc: "Twizihiza gutangwa kw'Amategeko kuri Musine no gusuka kw'Umwuka Wera mu Sezerano Nshya.",
-        pentecostTime: "Iminsi 50 nyuma ya Pasika",
-        feastOfTrumpets: "Umunsi w'Amakondera",
-        feastOfTrumpetsDesc: "Umunsi wo gukora amakondera no kwitegura mu mwuka, dukeka gusubira kwa Kristo.",
-        feastOfTrumpetsTime: "Yubahirizwa mu mpeshyi",
-        feastOfTabernacles: "Umunsi w'Ibihome",
-        feastOfTabernaclesDesc: "Twibuka urugendo rw'Isirayeli mu butayu kandi dukeka Ubwami bw'Imana igihe azaba ari kumwe natwe.",
-        feastOfTabernaclesTime: "Yubahirizwa mu mpeshyi",
+        // Judah and Tracts
+        judahAndTractsTitle: "Yuda n'Inyandiko",
+        judahAndTractsSubtitle: "Shakisha itsinda ryacu ryagutse rya raporo za Yuda, inyandiko z'umwuka, n'iz'amateka mu bubiko bwacu.",
+        doc1Title: "Amateka y'Itorero ry'Ukuri",
+        doc1Desc: "Amateka arambuye y'itorero ry'ukuri mu bihe bitandukanye, yanditswe na Dugger na Dodd.",
+        doc2Title: "Yuda - Kunanirwa Guhagarara ku Kigeragezo Bamaze Kwemeranya",
+        doc2Desc: "Inyandiko isobanura urugendo rw'amateka n'umwuka rwa Yuda.",
+        doc3Title: "Raporo ya Yuda (72-sebat)",
+        doc3Desc: "Raporo y'amateka y'ingenzi mu bubiko bwacu isobanura ubushishozi bw'umwuka bwo mu 1972.",
+        doc4Title: "Intangiriro n'Iherezo ry'Umunsi wa Elohim",
+        doc4Desc: "Gusobanukirwa n'ishingiro rishingiye kuri Bibiliya ry'igihe n'umunsi w'Isabato.",
+        doc5Title: "Izina rya Bibiliya ry'Itorero",
+        doc5Desc: "Gusuzuma ishingiro ry'ibyanditswe ku miterere yacu nk'Itorero rya Elohim.",
+        viewAllArchives: "Shakisha mu Bubiko bwacu bwite",
+        readTract: "Kwiga Inyandiko",
 
         // YouTube Section
         youtubeTitle: "Dukurikire kuri YouTube",
@@ -428,42 +437,7 @@ function initializeApp() {
         });
     }
 
-    // Mobile Navigation Toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-
-    if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            navLinks.classList.toggle('active');
-            const isActive = navLinks.classList.contains('active');
-
-            mobileMenuBtn.innerHTML = isActive
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const isClickInsideMenu = navLinks.contains(e.target);
-            const isClickOnButton = mobileMenuBtn.contains(e.target);
-
-            if (!isClickInsideMenu && !isClickOnButton && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-    }
+    // Mobile Navigation Toggle handled by global.js
 
     // Schedule Tabs Functionality
     const scheduleTabs = document.querySelectorAll('.schedule-tab');
@@ -507,56 +481,54 @@ function initializeApp() {
 
         if (!pdfModal || !closePdf) return;
 
-        const viewer = new PDFViewer('pdf-canvas-container');
+        let viewer = null;
 
         pdfLinks.forEach(link => {
             link.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const url = link.getAttribute('href');
-                pdfModal.classList.add('active');
+
+                // Lazy initialize the PDF viewer so the canvas is fresh each time
+                if (!viewer) {
+                    viewer = new PDFViewer('pdf-canvas-container', 'pdfToolbar');
+                }
+
+                pdfModal.classList.add('visible');
                 document.body.style.overflow = 'hidden';
 
                 try {
-                    await viewer.loadDocument(url);
+                    await viewer.loadPDF(url);
                 } catch (error) {
                     console.error('Error loading PDF:', error);
                     showNotification('Error loading document', 'error');
-                    pdfModal.classList.remove('active');
+                    pdfModal.classList.remove('visible');
                     document.body.style.overflow = '';
+                    if (viewer) {
+                        viewer.destroy();
+                        viewer = null;
+                    }
                 }
             });
         });
 
         closePdf.addEventListener('click', () => {
-            pdfModal.classList.remove('active');
+            pdfModal.classList.remove('visible');
             document.body.style.overflow = '';
-            viewer.clear();
+            if (viewer) {
+                viewer.destroy();
+                viewer = null;
+            }
         });
 
         // Close on escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && pdfModal.classList.contains('active')) {
+            if (e.key === 'Escape' && pdfModal.classList.contains('visible')) {
                 closePdf.click();
             }
         });
     };
 
-    // Form Submission Handling
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const t = translations[currentLanguage];
-
-            const emailInput = form.querySelector('input[type="email"]');
-            if (emailInput && emailInput.value) {
-                showNotification(`${t.formSuccess} ${emailInput.value}`);
-                emailInput.value = '';
-            } else {
-                showNotification(t.formError, 'error');
-            }
-        });
-    });
+    // Form Submission Handling handled by global.js
 
     // YouTube Play Button Functionality
     document.querySelectorAll('.play-btn').forEach(btn => {
@@ -586,58 +558,16 @@ function initializeApp() {
 
     // Initialize animations
     initAnimations();
+
+    // Initialize PDF Viewer
+    if (typeof window.initPDFViewer === 'function') {
+        window.initPDFViewer();
+    }
 }
 
-// Enhanced Notification System
+// Notifications handled by global.js
 function showNotification(message, type = 'success') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => {
-        notification.remove();
-    });
-
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
-        </div>
-        <button class="notification-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-
-    // Add notification to page
-    document.body.appendChild(notification);
-
-    // Show notification with animation
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 100);
-
-    // Close notification on button click
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => {
-        closeNotification(notification);
-    });
-
-    // Auto-remove notification after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            closeNotification(notification);
-        }
-    }, 5000);
-}
-
-function closeNotification(notification) {
-    notification.classList.remove('show');
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, 300);
+    showGlobalNotification(message, type);
 }
 
 // Enhanced Scroll Animations
@@ -733,41 +663,21 @@ window.addEventListener('resize', () => {
     }, 250);
 });
 
-// Floating Back to Top & Scroll Reveal for About Us
-document.addEventListener('DOMContentLoaded', () => {
-    // Back to Top button
-    const backToTop = document.createElement('button');
-    backToTop.id = 'backToTop';
-    backToTop.className = 'back-to-top';
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    document.body.appendChild(backToTop);
+// Back to Top and Reveal handled by global.js and local reveal logic
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 400) {
-            backToTop.classList.add('visible');
-        } else {
-            backToTop.classList.remove('visible');
+// Scroll Reveal implementation
+const revealItems = document.querySelectorAll('.history-section, .schedule-section, .music-section, .ceremonies-section, .youtube-reminder, .origin-book-container');
+revealItems.forEach(item => item.classList.add('reveal-item'));
+
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
         }
     });
+}, { threshold: 0.1 });
 
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Scroll Reveal implementation
-    const revealItems = document.querySelectorAll('.history-section, .schedule-section, .music-section, .ceremonies-section, .youtube-reminder, .origin-book-container');
-    revealItems.forEach(item => item.classList.add('reveal-item'));
-
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    revealItems.forEach(item => revealObserver.observe(item));
-});
+revealItems.forEach(item => revealObserver.observe(item));
 
 // Add error handling for missing elements
 window.addEventListener('error', (e) => {

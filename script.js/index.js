@@ -31,10 +31,8 @@ const translations = {
         "july": "",
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Saturday, 9:00 AM - 4:00 PM",
-        "event1-desc": "the bible the whole bible and nothing but the whole bible",
-        "event2-title": "Eating only unleavened bread (matzah)",
-        "event2-time": "7 days.",
-        "event2-desc": "This event takes 7 days",
+        "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
+
         "event3-title": "All-night Torah study feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Theme: Receiving the Torah at Mount Sinai.",
@@ -97,10 +95,8 @@ const translations = {
         "july": "",
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Jumamosi, saa 3:00 asubuhi - saa 10:00 jioni",
-        "event1-desc": "the bible the whole bible and nothing but the whole bible",
-        "event2-title": "Kula mkate usio na chachu (matzah) pekee",
-        "event2-time": "Siku 7.",
-        "event2-desc": "Tukio hili huchukua siku 7",
+        "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
+
         "event3-title": "Masomo ya Torati usiku kucha feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Mada: Kupokea Torati kwenye Mlima Sinai.",
@@ -163,10 +159,8 @@ const translations = {
         "july": "",
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Kuwa gatandatu, saa 3:00 z'umutaga - saa 10:00 z'umugoroba",
-        "event1-desc": "the bible the whole bible and nothing but the whole bible",
-        "event2-title": "Kurya umugati udafite imvutsa (matzah) wenyine",
-        "event2-time": "Iminsi irindwi.",
-        "event2-desc": "Iki gikorwa gihari iminsi irindwi",
+        "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
+
         "event3-title": "Kwiga Torati ijoro ryose feast of first fruit (act:2)",
         "event3-time": "",
         "event3-desc": "Ingingo: Gukira Torati ku Musozi wa Sinai.",
@@ -304,50 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setActiveLanguageButton(currentLang);
 });
 
-// Mobile menu functionality
-// Mobile menu functionality
-document.addEventListener('DOMContentLoaded', function () {
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-
-    // Debug logging
-    console.log('Mobile menu setup:', { mobileMenuBtn, navLinks });
-
-    if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default behavior
-            e.stopPropagation(); // Stop propagation
-
-            navLinks.classList.toggle('active');
-            const isActive = navLinks.classList.contains('active');
-
-            mobileMenuBtn.innerHTML = isActive
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
-
-            console.log('Mobile menu toggled. Active:', isActive);
-        });
-
-        // Close mobile menu when clicking on a link
-        const navItems = document.querySelectorAll('.nav-links a');
-        navItems.forEach(item => {
-            item.addEventListener('click', function () {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.main-nav') && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-    } else {
-        console.error('Mobile menu elements not found!');
-    }
-});
+// Mobile menu functionality is handled by global.js
 
 // Smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', function () {
@@ -461,19 +412,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const newsletterForm = document.querySelector('.newsletter-form');
 
     if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function (e) {
+        newsletterForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const emailInput = this.querySelector('input[type="email"]');
             const email = emailInput.value.trim();
 
             if (email && isValidEmail(email)) {
-                // Here you would typically send the data to your server
-                console.log('Newsletter subscription:', email);
+                try {
+                    const response = await fetch('/api/newsletter', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
 
-                // Show success message
-                showNotification('Thank you for subscribing!', 'success');
-                emailInput.value = '';
+                    if (response.ok) {
+                        showNotification('Thank you for subscribing!', 'success');
+                        emailInput.value = '';
+                    } else {
+                        throw new Error('Subscription failed');
+                    }
+                } catch (error) {
+                    showNotification('Error: ' + error.message, 'error');
+                }
             } else {
                 showNotification('Please enter a valid email address', 'error');
             }
@@ -486,153 +447,91 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showNotification(message, type) {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
+        // Newsletter and Notifications handled by global.js
 
-        // Style the notification
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            transition: all 0.3s ease;
-            transform: translateX(100%);
-        `;
+        // Sticky Header and Scroll Reveal Initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.header');
+            const revealElements = document.querySelectorAll('.reveal');
 
-        if (type === 'success') {
-            notification.style.backgroundColor = '#4CAF50';
-        } else {
-            notification.style.backgroundColor = '#f44336';
-        }
-
-        // Add to page
-        document.body.appendChild(notification);
-
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
+            // Sticky Header Logic
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
                 }
-            }, 300);
-        }, 3000);
-    }
-});
+            });
 
-// Sticky Header and Scroll Reveal Initialization
-document.addEventListener('DOMContentLoaded', function () {
-    const header = document.querySelector('.header');
-    const revealElements = document.querySelectorAll('.reveal');
+            // Intersection Observer for Scroll Reveal
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-    // Sticky Header Logic
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+            revealElements.forEach(el => revealObserver.observe(el));
 
-    // Intersection Observer for Scroll Reveal
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    // Animate Nav Links on Mobile
-    const navLinksList = document.querySelectorAll('.nav-links li');
-    navLinksList.forEach((link, index) => {
-        link.style.setProperty('--i', index);
-    });
-});
-
-// Sabbath Service Countdown Timer
-function updateCountdown() {
-    const countdownContainer = document.getElementById('service-countdown');
-    if (!countdownContainer) return;
-
-    const now = new Date();
-
-    // Sabbath is Saturday (day 6). Service starts at 9:00 AM.
-    // Let's target the next Saturday at 9:00 AM.
-    let nextService = new Date();
-    nextService.setDate(now.getDate() + (6 + 7 - now.getDay()) % 7);
-    nextService.setHours(9, 0, 0, 0);
-
-    // If it's Saturday after 9:00 AM, target next week
-    if (now > nextService) {
-        nextService.setDate(nextService.getDate() + 7);
-    }
-
-    const diff = nextService - now;
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    const dEl = document.getElementById('days');
-    const hEl = document.getElementById('hours');
-    const mEl = document.getElementById('minutes');
-    const sEl = document.getElementById('seconds');
-
-    if (dEl) dEl.textContent = String(days).padStart(2, '0');
-    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
-    if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
-    if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
-}
-
-// Back to Top functionality
-document.addEventListener('DOMContentLoaded', function () {
-    const backToTopBtn = document.getElementById('backToTop');
-    if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                backToTopBtn.classList.add('visible');
-            } else {
-                backToTopBtn.classList.remove('visible');
-            }
-        });
-
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+            // Animate Nav Links on Mobile
+            const navLinksList = document.querySelectorAll('.nav-links li');
+            navLinksList.forEach((link, index) => {
+                link.style.setProperty('--i', index);
             });
         });
-    }
-});
 
-// Final button audit - ensures all decorative or partial buttons have active feedback
-document.addEventListener('DOMContentLoaded', () => {
-    const allButtons = document.querySelectorAll('.btn, .lang-btn, .social-btn');
-    allButtons.forEach(btn => {
-        if (!btn.getAttribute('href') && !btn.onclick && !btn.dataset.listenerAdded) {
-            btn.addEventListener('click', () => {
-                console.log('Button clicked:', btn.innerText || 'Icon button');
-            });
-            btn.dataset.listenerAdded = 'true';
+        // Sabbath Service Countdown Timer
+        function updateCountdown() {
+            const countdownContainer = document.getElementById('service-countdown');
+            if (!countdownContainer) return;
+
+            const now = new Date();
+
+            // Sabbath is Saturday (day 6). Service starts at 9:00 AM.
+            // Let's target the next Saturday at 9:00 AM.
+            let nextService = new Date();
+            nextService.setDate(now.getDate() + (6 + 7 - now.getDay()) % 7);
+            nextService.setHours(9, 0, 0, 0);
+
+            // If it's Saturday after 9:00 AM, target next week
+            if (now > nextService) {
+                nextService.setDate(nextService.getDate() + 7);
+            }
+
+            const diff = nextService - now;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const dEl = document.getElementById('days');
+            const hEl = document.getElementById('hours');
+            const mEl = document.getElementById('minutes');
+            const sEl = document.getElementById('seconds');
+
+            if (dEl) dEl.textContent = String(days).padStart(2, '0');
+            if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+            if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+            if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
         }
-    });
-});
 
-// Update countdown every second
-setInterval(updateCountdown, 1000);
-document.addEventListener('DOMContentLoaded', updateCountdown);
+        // Back to Top handled by global.js
+
+        // Final button audit - ensures all decorative or partial buttons have active feedback
+        document.addEventListener('DOMContentLoaded', () => {
+            const allButtons = document.querySelectorAll('.btn, .lang-btn, .social-btn');
+            allButtons.forEach(btn => {
+                if (!btn.getAttribute('href') && !btn.onclick && !btn.dataset.listenerAdded) {
+                    btn.addEventListener('click', () => {
+                        console.log('Button clicked:', btn.innerText || 'Icon button');
+                    });
+                    btn.dataset.listenerAdded = 'true';
+                }
+            });
+        });
+
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        document.addEventListener('DOMContentLoaded', updateCountdown);

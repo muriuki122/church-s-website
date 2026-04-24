@@ -290,39 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ===== MOBILE NAVIGATION =====
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const navLinks = document.querySelector('.nav-links');
-
-if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        navLinks.classList.toggle('active');
-        const isActive = navLinks.classList.contains('active');
-
-        mobileMenuBtn.innerHTML = isActive
-            ? '<i class="fas fa-times"></i>'
-            : '<i class="fas fa-bars"></i>';
-    });
-
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('nav.main-nav') && navLinks.classList.contains('active')) {
-            navLinks.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        }
-    });
-}
+// ===== MOBILE NAVIGATION handled by global.js =====
 
 // ===== YOUTUBE FUNCTIONALITY =====
 const youtubeSearchInput = document.getElementById('youtube-search-input');
@@ -366,19 +334,9 @@ if (browseBtns.length > 0 && videoPlayerFrame) {
     });
 }
 
-// ===== TOAST NOTIFICATION =====
+// ===== TOAST NOTIFICATION handled by global.js =====
 function showToast(message, duration = 3000) {
-    const toast = document.getElementById('notification-success');
-    const toastMessage = document.getElementById('notification-message');
-
-    if (toast && toastMessage) {
-        toastMessage.textContent = message;
-        toast.classList.add('show');
-
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, duration);
-    }
+    showGlobalNotification(message, 'success');
 }
 
 // ===== BUTTON FUNCTIONALITY =====
@@ -455,29 +413,7 @@ if (subscribeBtn) {
     });
 }
 
-// ===== FORM SUBMISSION =====
-const forms = document.querySelectorAll('form');
-forms.forEach(form => {
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const t = translations[currentLanguage];
-        const emailInput = form.querySelector('input[type="email"]');
-        const submitBtn = form.querySelector('button[type="submit"]');
-
-        if (emailInput && emailInput.value) {
-            const originalContent = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            submitBtn.disabled = true;
-
-            setTimeout(() => {
-                showToast(`${t.toastSubscriptionSuccess} ${emailInput.value}`);
-                emailInput.value = '';
-                submitBtn.innerHTML = originalContent;
-                submitBtn.disabled = false;
-            }, 1000);
-        }
-    });
-});
+// ===== FORM SUBMISSION handled by global.js =====
 
 // ===== LIVE STREAM STATUS =====
 function updateStreamStatus() {

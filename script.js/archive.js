@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Only re-render if data has changed or we were using defaults
                     mainFilteredDocuments = [...allDocuments];
+                    populateCategories();
                     renderPage(1);
                     console.log('Backend data synced');
                 }
@@ -506,14 +507,29 @@ document.addEventListener('DOMContentLoaded', () => {
         mainFilteredDocuments = allDocuments.filter(doc => {
             if (!doc) return false;
 
-            const docTitle = doc.title || '';
-            const docCategory = doc.category || 'Uncategorized';
+            const docTitle = (doc.title || '').toLowerCase();
+            const docCategory = doc.category || doc.type || 'General';
+            const normalizedDocCategory = docCategory.toLowerCase().trim();
 
-            const titleMatch = docTitle.toLowerCase().includes(query);
-            const categoryMatch = docCategory.toLowerCase().includes(query);
-            const filterMatch = (category === 'all') || (docCategory === category);
+            const titleMatch = docTitle.includes(query);
+            const categorySearchMatch = normalizedDocCategory.includes(query);
 
-            return (titleMatch || categoryMatch) && filterMatch;
+            // Normalize current filter category for comparison
+            const normalizedFilterCat = category.toLowerCase().trim();
+
+            // Flexible match for singular/plural standardized categories
+            const categoryMatch = (normalizedFilterCat === 'all') ||
+                (normalizedDocCategory === normalizedFilterCat) ||
+                (normalizedFilterCat === 'books' && normalizedDocCategory === 'book') ||
+                (normalizedFilterCat === 'tracts' && normalizedDocCategory === 'tract');
+
+            // CRITICAL: If searching by name, bypass the lesson categories exclusion
+            // This ensures searched documents "emerge" in the main list
+            if (query.length === 0 && category === 'all' && lessonCategories.includes(docCategory)) {
+                return false;
+            }
+
+            return (titleMatch || categorySearchMatch) && categoryMatch;
         });
 
         renderPage(1);
@@ -576,6 +592,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (err) {
             console.error('Firestore Document Sync Error:', err);
+        } finally {
+            populateCategories();
+            filterDocuments();
         }
     }
 
@@ -815,7 +834,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 10. RENDERING FUNCTIONS ---
     function populateCategories() {
         const t = translations[currentLanguage];
-        const categories = [...new Set(allDocuments.map(doc => doc.category))];
+        const mainCategories = ["Books", "Tracts", "Judah"];
+
+        const foundCategories = [...new Set(allDocuments
+            .map(doc => {
+                const cat = doc.category || doc.type;
+                if (cat === 'Book') return 'Books';
+                if (cat === 'Tract') return 'Tracts';
+                return cat;
+            })
+            .filter(cat => cat && cat !== "undefined")
+        )];
+
+        const categories = [...new Set([...mainCategories, ...foundCategories])]
+            .filter(cat => cat && !lessonCategories.includes(cat));
 
         categoryFilter.innerHTML = `<option value="all">${t.allCategories}</option>`;
         categories.sort().forEach(category => {
@@ -931,8 +963,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'document-card';
 
-        // Use the helper function to get the correct path
         const docPath = getDocumentPath(doc);
+        const title = doc.title || 'Untitled';
+        let displayCategory = doc.category || doc.type || 'General';
+
+        if (displayCategory === 'Book') displayCategory = 'Books';
+        if (displayCategory === 'Tract') displayCategory = 'Tracts';
 
         card.innerHTML = `
             <div class="doc-card-body">
@@ -940,9 +976,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fas fa-file-pdf"></i>
                 </div>
                 <div class="document-info">
-                    <h4 class="document-title">${doc.title}</h4>
+                    <h4 class="document-title">${title}</h4>
                     <div class="document-meta">
-                        <span class="document-category">${doc.category}</span>
+                        <span class="document-category">${displayCategory}</span>
                     </div>
                 </div>
             </div>
@@ -950,7 +986,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="btn btn-secondary btn-preview" data-id="${doc.id}">
                     <i class="fas fa-eye"></i> ${t.previewBtn}
                 </button>
-                <a href="${docPath}" download="${doc.fileName || doc.title}" class="btn btn-primary btn-download">
+                <a href="${docPath}" download="${doc.fileName || title}" class="btn btn-primary btn-download">
                     <i class="fas fa-download"></i> ${t.downloadBtn}
                 </a>
             </div>
@@ -1037,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize PDF viewer if not already done
         if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer-container');
+            pdfViewerInstance = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
         }
 
         modalTitle.textContent = doc.title;
@@ -1073,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize PDF viewer if not already done
         if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer-container');
+            pdfViewerInstance = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
         }
 
         modalTitle.textContent = lesson.title;

@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style/ARCHIVE.css">
+    <link rel="stylesheet" href="style/global.css">
     <style>
         /* PDF Viewer Styles */
         .pdf-controls {
@@ -55,11 +56,12 @@
             text-align: center;
         }
 
-        .canvas-wrapper {
+        .pdf-canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            min-height: 100%;
             background: #525659;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-            height: calc(100vh - 200px);
-            min-height: 500px;
+            padding: 20px 0;
         }
 
         #pdf-canvas {
@@ -182,58 +184,59 @@
     <main class="container">
 
         <div class="archive-layout-wrapper">
-            <!-- Main Content Area (Original Structure) -->
-            <!-- Controls: Search and Filter -->
-            <div class="controls-wrapper">
-                <div class="search-box">
-                    <input type="text" id="search-input" data-key-placeholder="searchPlaceholder">
-                    <i class="fas fa-search"></i>
+            <!-- Main Content Area -->
+            <div class="main-archive-content">
+                <!-- Controls: Search and Filter -->
+                <div class="controls-wrapper">
+                    <div class="search-box">
+                        <input type="text" id="search-input" data-key-placeholder="searchPlaceholder">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="filter-box">
+                        <i class="fas fa-filter"></i>
+                        <span class="filter-label">Category:</span>
+                        <select id="category-filter">
+                            <!-- Categories will be populated by JavaScript -->
+                        </select>
+                    </div>
                 </div>
-                <div class="filter-box">
-                    <i class="fas fa-filter"></i>
-                    <span class="filter-label">Category:</span>
-                    <select id="category-filter">
-                        <!-- Categories will be populated by JavaScript -->
-                    </select>
+
+                <!-- Document List Header -->
+                <div class="list-header">
+                    <h3 data-key="documentsTitle">Documents</h3>
+                    <span id="doc-count" data-key="docCount"></span>
                 </div>
-            </div>
 
-            <!-- Document List Header -->
-            <div class="list-header">
-                <h3 data-key="documentsTitle">Documents</h3>
-                <span id="doc-count" data-key="docCount"></span>
-            </div>
-
-            <!-- Document Grid -->
-            <div id="document-list" class="document-grid">
-                <!-- Documents will be populated by JavaScript -->
-            </div>
-
-            <!-- Pagination -->
-            <nav id="pagination" class="pagination-nav"></nav>
-        </div>
-
-        <!-- Side Lesson Column (New Addition) -->
-        <aside class="lessons-sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-scroll"></i> Bible Lessons</h3>
-                <div class="sidebar-search">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="lessons-search" placeholder="Search lessons...">
+                <!-- Document Grid -->
+                <div id="document-list" class="document-grid">
+                    <!-- Documents will be populated by JavaScript -->
                 </div>
+
+                <!-- Pagination -->
+                <nav id="pagination" class="pagination-nav"></nav>
             </div>
 
-            <div class="quarter-pills">
-                <button class="quarter-pill active" data-quarter="1">Q1</button>
-                <button class="quarter-pill" data-quarter="2">Q2</button>
-                <button class="quarter-pill" data-quarter="3">Q3</button>
-                <button class="quarter-pill" data-quarter="4">Q4</button>
-            </div>
+            <!-- Side Lesson Column (New Addition) -->
+            <aside class="lessons-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-scroll"></i> Bible Lessons</h3>
+                    <div class="sidebar-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="lessons-search" placeholder="Search lessons...">
+                    </div>
+                </div>
 
-            <div id="lessons-list" class="sidebar-list">
-                <!-- Lessons will be populated here -->
-            </div>
-        </aside>
+                <div class="quarter-pills">
+                    <button class="quarter-pill active" data-quarter="1">Q1</button>
+                    <button class="quarter-pill" data-quarter="2">Q2</button>
+                    <button class="quarter-pill" data-quarter="3">Q3</button>
+                    <button class="quarter-pill" data-quarter="4">Q4</button>
+                </div>
+
+                <div id="lessons-list" class="sidebar-list">
+                    <!-- Lessons will be populated here -->
+                </div>
+            </aside>
     </main>
 
     <!-- Footer -->
@@ -247,12 +250,12 @@
                 <p class="footer-desc">A spiritual home dedicated to worshiping Elohim and serving our community with
                     love and grace.</p>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"><i
-                            class="fab fa-facebook-f"></i></a>
-                    <a href="https://youtube.com/@churchofelohimkaloleni" target="_blank"><i
+                    <a href="https://www.facebook.com/profile.php?id=61584533983372" target="_blank"
+                        class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://youtube.com/@churchofelohimkaloleni" target="_blank" class="social-btn"><i
                             class="fab fa-youtube"></i></a>
-                    <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"><i
-                            class="fab fa-tiktok"></i></a>
+                    <a href="https://www.tiktok.com/@churchofelohimkaloleni?_r=1&_t=ZS-93fr7UsleOz" target="_blank"
+                        class="social-btn"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -294,33 +297,37 @@
             <div class="modal-header">
                 <h4 id="modal-title">Document Title</h4>
                 <div class="modal-header-actions">
-                    <a id="modal-download" href="#" class="btn btn-primary btn-icon" title="Download PDF">
-                        <i class="fas fa-download"></i>
-                    </a>
                     <button id="modal-close" class="modal-close-btn" aria-label="Close modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
+            <!-- Premium PDF Toolbar -->
+            <div id="pdf-toolbar" class="pdf-toolbar">
+                <!-- Controls dynamically injected by PDFViewer -->
+            </div>
+
             <!-- Robust PDF Viewer Container -->
-            <div id="pdf-viewer-container" style="width: 100%; height: 100%; overflow: hidden;"></div>
+            <div id="pdf-viewer-container"
+                style="width: 100%; height: calc(100vh - 200px); overflow: auto; position: relative; background: #525659;">
+            </div>
 
             <div class="modal-footer">
                 <div class="modal-nav">
-                    <button id="modal-prev" class="btn btn-secondary">
+                    <button id="modal-prev" class="modal-nav-btn modal-nav-prev" aria-label="Previous Document">
                         <i class="fas fa-arrow-left"></i>
-                        <span data-key="prevBtn">Previous</span>
+                        <span>Previous</span>
                     </button>
-                    <button id="modal-next" class="btn btn-secondary">
-                        <span data-key="nextBtn">Next</span>
+                    <a id="modal-download" href="#" download class="modal-download-btn">
+                        <i class="fas fa-download"></i>
+                        <span>Download</span>
+                    </a>
+                    <button id="modal-next" class="modal-nav-btn modal-nav-next" aria-label="Next Document">
+                        <span>Next</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-                <a id="modal-download" href="#" download class="btn btn-primary">
-                    <i class="fas fa-download"></i>
-                    <span data-key="downloadBtn">Download</span>
-                </a>
             </div>
         </div>
     </div>
@@ -466,6 +473,7 @@
 
     <!-- Your Custom JavaScript -->
     <script src="script.js/archive.js"></script>
+    <script src="script.js/global.js"></script>
     <script>
         // Backup Admin Shortcut (Ctrl + Alt + L)
         document.addEventListener('keydown', (e) => {
