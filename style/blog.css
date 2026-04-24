@@ -418,6 +418,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
+    .blog-form-container,
+    .blog-posts-container {
+        padding: 20px 15px !important;
+        border-radius: 8px;
+    }
+
     .form-row {
         grid-template-columns: 1fr;
     }

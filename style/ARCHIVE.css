@@ -195,19 +195,25 @@ body {
 
 @media (max-width: 600px) {
     .document-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        /* Reduce gap on mobile to fit 3 items */
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* 2 columns is better than 3 on small mobiles */
+        gap: 12px !important;
     }
 
     .document-card {
-        padding: 10px;
-        /* Tighten padding */
+        padding: 12px !important;
     }
 
     .document-title {
-        font-size: 0.75rem;
-        /* Scale down text for 3-column mobile */
+        font-size: 0.85rem !important;
+        /* Slightly larger than 0.75rem for readability */
+    }
+}
+
+@media (max-width: 400px) {
+    .document-grid {
+        grid-template-columns: 1fr !important;
+        /* Single column for very narrow phones */
     }
 }
 
@@ -348,6 +354,17 @@ header .container {
         visibility: visible;
     }
 
+    .archive-layout-wrapper {
+        grid-template-columns: 1fr !important;
+    }
+
+    .lessons-sidebar {
+        position: relative !important;
+        top: 0 !important;
+        max-height: none !important;
+        margin-bottom: 30px;
+    }
+
     .nav-links li {
         margin: 0;
         width: 100%;
@@ -380,15 +397,16 @@ header .container {
 .pdf-toolbar {
     background: #f8fafc;
     border-bottom: 1px solid var(--border-color);
-    padding: 6px 20px;
-    /* Reduced from 10px */
+    padding: 10px 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     position: sticky;
     top: 0;
     z-index: 10;
+    flex-wrap: wrap;
+    /* Allow wrapping on mobile */
 }
 
 .pdf-toolbar .toolbar-group {

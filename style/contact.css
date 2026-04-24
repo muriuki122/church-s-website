@@ -268,7 +268,8 @@ body {
 
 @media (max-width: 768px) {
     .contact-form-container {
-        padding: 30px 20px;
+        padding: 25px 15px !important;
+        /* Slightly more space-efficient */
     }
 
     .form-row {

@@ -58,10 +58,14 @@
         background: white !important;
         flex-direction: column !important;
         align-items: flex-start !important;
-        padding: 80px 40px !important;
-        transition: right 0.4s ease !important;
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important;
+        padding: 80px 30px !important;
+        /* Slightly reduced for better mobile space */
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2) !important;
         z-index: 2000 !important;
+        backdrop-filter: blur(10px);
+        /* Add blur for premium feel */
+        -webkit-backdrop-filter: blur(10px);
     }
 
     .nav-links.active {
@@ -118,4 +122,22 @@
 
 .notification-toast.error {
     background: #ef4444;
+}
+
+/* Base Container Fix for Mobile Edge Touching */
+.container,
+.header-container,
+.logo-container,
+.footer-grid {
+    padding-left: clamp(15px, 4vw, 30px) !important;
+    padding-right: clamp(15px, 4vw, 30px) !important;
+}
+
+@media (max-width: 480px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+    }
 }

@@ -1404,11 +1404,24 @@ section {
     }
 
     .logo-text h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        /* Slightly smaller to prevent pushing menu button */
     }
 
     .logo-text p {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+    }
+
+    .history-stats {
+        flex-wrap: wrap !important;
+        gap: 15px !important;
+        justify-content: center !important;
+    }
+
+    .stat {
+        flex: 1 1 40% !important;
+        /* Two stats per row */
+        min-width: 100px !important;
     }
 
     .mobile-menu-btn {
@@ -1464,10 +1477,53 @@ section {
         text-align: center;
         margin-right: 15px;
     }
+
+    /* Grid layout fixes for mobile */
+    .music-groups,
+    .ceremonies-grid,
+    .leaders-grid {
+        grid-template-columns: 1fr !important;
+        gap: 25px !important;
+    }
+
+    .ceremony-card h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .ceremony-icon {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 1.5rem !important;
+    }
+
+    .btn-study {
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Timeline fixes for mobile */
+    .timeline::before {
+        left: 15px !important;
+    }
+
+    .timeline-item {
+        margin-left: 0 !important;
+        padding-left: 45px !important;
+    }
+
+    .timeline-item::after {
+        left: 8px !important;
+        top: 22px !important;
+        /* Align with first line of text */
+    }
+
+    .timeline-time {
+        font-size: 0.85rem !important;
+        margin-bottom: 5px !important;
+    }
 }
 
 @media (max-width: 600px) {
-
     .hero-content h1 {
         font-size: 2.2rem;
     }
@@ -1490,44 +1546,13 @@ section {
         font-size: 0.9rem;
     }
 
-    .timeline::before {
-        left: 20px;
-    }
-
-    .timeline-item {
-        margin-left: 45px;
-    }
-
-    .timeline-item::after {
-        left: -33px;
-    }
-
+    /* These were causing issues with 3 columns on small screens */
+    /* Handled above in 768px query but refined here for 1 column */
     .music-groups,
     .ceremonies-grid,
     .leaders-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-    }
-
-    .ceremony-card {
-        padding: 15px 10px;
-    }
-
-    .ceremony-card h3 {
-        font-size: 0.8rem;
-        line-height: 1.2;
-    }
-
-    .ceremony-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-
-    .btn-study {
-        padding: 6px 12px;
-        font-size: 0.7rem;
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .footer-grid {

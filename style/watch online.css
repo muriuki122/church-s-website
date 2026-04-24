@@ -378,12 +378,15 @@ header .container {
 
 @media (max-width: 768px) {
     .hero {
-        height: 50vh;
-        min-height: 300px;
+        height: 60vh;
+        /* Increased from 50vh for better visible impact */
+        min-height: 350px;
+        background-attachment: scroll;
     }
 
     .hero-content h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        /* Slightly smaller for better fit */
     }
 
     .hero-content p {
@@ -433,6 +436,26 @@ header .container {
 .youtube-search-bar button:hover {
     background: var(--secondary);
     color: var(--primary);
+}
+
+@media (max-width: 600px) {
+    .youtube-search-bar {
+        flex-direction: column;
+        border-radius: 15px;
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .youtube-search-bar input {
+        padding: 10px 15px;
+        text-align: center;
+    }
+
+    .youtube-search-bar button {
+        padding: 10px;
+        width: 100%;
+        border-radius: 10px;
+    }
 }
 
 .quick-browse {
@@ -576,6 +599,18 @@ header .container {
 .meta-item i {
     margin-right: 8px;
     color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .stream-meta {
+        justify-content: center !important;
+        text-align: center;
+    }
+
+    .meta-item {
+        justify-content: center;
+        width: 100%;
+    }
 }
 
 .stream-actions {
