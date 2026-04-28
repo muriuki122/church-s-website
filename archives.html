@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <!-- Title will be set by JavaScript -->
     <title id="site-title">PDF Archive</title>
 
@@ -161,12 +161,6 @@
                             Archives</a></li>
                     <li><a href="contact.html" id="nav-contact"><i class="fas fa-envelope"></i> Contact</a></li>
                 </ul>
-                <div class="header-actions" style="margin-left: 20px;">
-                    <button id="adminLoginBtn" class="btn-admin-login"
-                        style="padding: 8px 15px; background: var(--primary); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-user-shield"></i> <span id="authStatusText">Admin Login</span>
-                    </button>
-                </div>
                 <div class="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
                 </div>
@@ -179,6 +173,12 @@
         <h2 id="hero-title" data-key="heroTitle">Explore Our Document Collection</h2>
         <p id="hero-subtitle" data-key="heroSubtitle">Browse, preview, and download from our extensive library.</p>
     </section>
+
+    <!-- Mobile Tab Switcher -->
+    <div class="mobile-archive-tabs">
+        <button class="mobile-tab active" data-target="library">Library</button>
+        <button class="mobile-tab" data-target="lessons">Bible Lessons</button>
+    </div>
 
     <!-- Main Content Area -->
     <main class="container">
@@ -266,11 +266,9 @@
                     <li><a href="about us.html">About Us</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                     <li><a href="archives.html">Archives</a></li>
+                    <li><a href="javascript:void(0)" id="adminLoginBtn" class="footer-admin-link"><i
+                                class="fas fa-user-shield"></i> Admin Portal</a></li>
                 </ul>
-                <div style="margin-top:20px; text-align:center;">
-                    <a href="javascript:void(0)" onclick="document.getElementById('loginModal').style.display='flex'"
-                        style="font-size:0.7rem; color:#888; text-decoration:none; opacity:0.5;">Admin Panel Access</a>
-                </div>
             </div>
             <div class="footer-col">
                 <h4>Contact Us</h4>
@@ -309,7 +307,7 @@
             </div>
 
             <!-- Robust PDF Viewer Container -->
-            <div id="pdf-viewer-container"
+            <div id="pdf-viewer"
                 style="width: 100%; height: calc(100vh - 200px); overflow: auto; position: relative; background: #525659;">
             </div>
 
@@ -375,6 +373,8 @@
                         Document</button>
                     <button class="btn btn-secondary btn-sm" id="tabLessonBtn" style="padding: 5px 15px;">Bible
                         Lesson</button>
+                    <button class="btn btn-secondary btn-sm" id="tabBlogBtn" style="padding: 5px 15px;">Blog
+                        Content</button>
                 </div>
 
                 <!-- Add Document Form -->
@@ -450,16 +450,54 @@
                         style="padding:12px; border:none; border-radius:6px; background:var(--primary); color:#fff; cursor:pointer; font-weight:600;">Save
                         Lesson</button>
                 </form>
+
+                <!-- Add Blog Content Form (Optimized for Pasted Info) -->
+                <form id="addBlogForm" style="display: none; gap: 15px;">
+                    <div>
+                        <label
+                            style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:var(--primary);">Blog
+                            Message Title</label>
+                        <input type="text" id="blogTitle" required placeholder="Enter the subject or title here"
+                            style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-family:inherit; font-size:1rem;">
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem; color:var(--primary);">Paste
+                            Your Content Below (Automatically becomes PDF)</label>
+                        <textarea id="blogContent" required rows="10"
+                            placeholder="Paste the long text/message here. This content will be formatted and converted into a PDF for readers."
+                            style="width:100%; padding:12px; border:1px solid #ddd; border-radius:6px; font-family:inherit; resize: vertical; line-height:1.5;"></textarea>
+                    </div>
+                    <div>
+                        <label
+                            style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Category</label>
+                        <select id="blogCategory"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                            <option value="announcement">Announcement</option>
+                            <option value="sermon">Sermon Notes</option>
+                            <option value="new_document">New Document</option>
+                            <option value="devotional">Devotional</option>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <!-- Hidden field for compatibility, can be used for explicit PDF paths if needed -->
+                        <input type="text" id="blogImage" value="">
+                    </div>
+                    <div>
+                        <label style="display:block; margin-bottom:5px; font-weight:600; font-size:0.9rem;">Publish
+                            Date</label>
+                        <input type="date" id="blogDate" required
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; font-family:inherit;">
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="padding:14px; border:none; border-radius:6px; background:var(--primary); color:#fff; cursor:pointer; font-weight:700; text-transform: uppercase; letter-spacing: 1px;">Publish
+                        Content to Blog</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-measurement-compat.js"></script>
-    <script src="script.js/firebase-config.js"></script>
+    <!-- Church Admin API & Auth -->
     <script src="script.js/auth.js"></script>
 
     <!-- PDF.js (Core Library) -->
@@ -472,8 +510,8 @@
     <script src="script.js/pdf-viewer.js"></script>
 
     <!-- Your Custom JavaScript -->
-    <script src="script.js/archive.js"></script>
     <script src="script.js/global.js"></script>
+    <script src="script.js/archive.js"></script>
     <script>
         // Backup Admin Shortcut (Ctrl + Alt + L)
         document.addEventListener('keydown', (e) => {

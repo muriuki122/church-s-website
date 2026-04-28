@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Kaloleni Seventh day Church of Elohim</title>
     <meta name="description"
         content="Welcome to Kaloleni Seventh day Church of Elohim - Growing in faith, serving with love. Join us for worship, community, and spiritual growth.">
@@ -121,6 +121,26 @@
         </div>
     </section>
 
+    <!-- Featured Publication -->
+    <section class="featured-publication reveal">
+        <div class="container">
+            <div class="booklet-card">
+                <div class="booklet-mini-cover">
+                    <img src="images/knessiah_cover.png" alt="Knessiah Booklet Cover" class="booklet-img">
+                </div>
+                <div class="booklet-details">
+                    <span class="badge" data-i18n="booklet-title">New Publication</span>
+                    <h2 data-i18n="booklet-heading">Knessiah Print Media Booklet Vol 1</h2>
+                    <p data-i18n="booklet-desc">Explore our latest publication detailing the mission, faith, and
+                        community of the Kaloleni Church of Elohim.</p>
+                    <a href="pdfs/Knessiah Print Media Booklet_Vol_1.pdf" class="btn primary lite-trigger">
+                        <i class="fas fa-book-open"></i> <span data-i18n="booklet-btn">Read the Booklet</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Upcoming Events -->
     <section class="upcoming-events reveal">
         <h2 data-i18n="upcoming">Upcoming Events</h2>
@@ -137,16 +157,7 @@
                 </div>
             </div>
 
-            <div class="event-card">
-                <div class="event-date">
-                    <span class="day">Shavuot (Weeks)</span>
-                </div>
-                <div class="event-details">
-                    <h3 data-i18n="event3-title">All-night Torah study feast of first fruit (act:2)</h3>
-                    <p class="event-time" data-i18n="event3-time"></p>
-                    <p data-i18n="event3-desc">Theme: Receiving the Torah at Mount Sinai.</p>
-                </div>
-            </div>
+
         </div>
         <a href="watch online.html" class="btn secondary view-all" data-i18n="view-all">View All Events</a>
     </section>
@@ -277,6 +288,18 @@
         </div>
     </footer>
 
+
+    <!-- Lite PDF Viewer Modal -->
+    <div id="liteModal" class="lite-modal">
+        <div class="lite-modal-body">
+            <button id="liteClose" class="lite-close" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="lite-iframe-container">
+                <iframe id="liteIframe" src="" title="PDF Viewer"></iframe>
+            </div>
+        </div>
+    </div>
 
     <button id="backToTop" class="back-to-top">
         <i class="fas fa-arrow-up"></i>

@@ -25,6 +25,12 @@ const translations = {
         "visit-title": "Visit Us",
         "visit-desc": "Join us in person at Kaloleni Estate. We have a seat saved for you every Shabbat morning.",
 
+        // Featured Booklet
+        "booklet-title": "New Publication",
+        "booklet-heading": "Knessiah Print Media Booklet Vol 1",
+        "booklet-desc": "Explore our latest publication detailing the mission, faith, and community of the Kaloleni Church of Elohim.",
+        "booklet-btn": "Read the Booklet",
+
         // Upcoming Events
         "upcoming": "Upcoming Events",
         "june": "Weekly, sunset Friday to nightfall Saturday.",
@@ -33,9 +39,7 @@ const translations = {
         "event1-time": "Saturday, 9:00 AM - 4:00 PM",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
 
-        "event3-title": "All-night Torah study feast of first fruit (act:2)",
-        "event3-time": "",
-        "event3-desc": "Theme: Receiving the Torah at Mount Sinai.",
+
         "view-all": "View All Events",
 
         // Watch Online Section
@@ -89,6 +93,12 @@ const translations = {
         "visit-title": "Tutembelee",
         "visit-desc": "Jiunge nasi ana kwa ana katika Kaloleni Estate. Tumekuwekea kiti kila asubuhi ya Sabato.",
 
+        // Featured Booklet
+        "booklet-title": "Toleo Jipya",
+        "booklet-heading": "Kitabu cha Knessiah Print Media Vol 1",
+        "booklet-desc": "Gundua toleo letu jipya linaloelezea dhumuni, imani, na jamii ya Kanisa la Kaloleni la Elohim.",
+        "booklet-btn": "Soma Kitabu",
+
         // Upcoming Events
         "upcoming": "Matukio Yajayo",
         "june": "Kila wiki, jua linapozama Ijumaa hadi usiku Jumamosi.",
@@ -97,9 +107,7 @@ const translations = {
         "event1-time": "Jumamosi, saa 3:00 asubuhi - saa 10:00 jioni",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
 
-        "event3-title": "Masomo ya Torati usiku kucha feast of first fruit (act:2)",
-        "event3-time": "",
-        "event3-desc": "Mada: Kupokea Torati kwenye Mlima Sinai.",
+
         "view-all": "Tazama Matukio Yote",
 
         // Watch Online Section
@@ -161,9 +169,7 @@ const translations = {
         "event1-time": "Kuwa gatandatu, saa 3:00 z'umutaga - saa 10:00 z'umugoroba",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
 
-        "event3-title": "Kwiga Torati ijoro ryose feast of first fruit (act:2)",
-        "event3-time": "",
-        "event3-desc": "Ingingo: Gukira Torati ku Musozi wa Sinai.",
+
         "view-all": "Reba Ibizaba Byose",
 
         // Watch Online Section
@@ -407,8 +413,47 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// Compact PDF Viewer Logic
+function initLiteViewer() {
+    const modal = document.getElementById('liteModal');
+    const iframe = document.getElementById('liteIframe');
+    const closeBtn = document.getElementById('liteClose');
+    const triggers = document.querySelectorAll('.lite-trigger');
+
+    if (!modal || !iframe || !closeBtn) return;
+
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', function (e) {
+            e.preventDefault();
+            const url = this.getAttribute('href');
+            iframe.src = url;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+            if (iframe) iframe.src = '';
+        }, 300);
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+}
+
 // Newsletter form handling
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Compact Viewer
+    initLiteViewer();
+
     const newsletterForm = document.querySelector('.newsletter-form');
 
     if (newsletterForm) {
@@ -465,16 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const header = document.querySelector('.header');
     const revealElements = document.querySelectorAll('.reveal');
 
-    // Sticky Header Logic
-    if (header) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-    }
 
     // Intersection Observer for Scroll Reveal
     const revealObserver = new IntersectionObserver((entries) => {

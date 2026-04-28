@@ -45,66 +45,86 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     ];
 
-    // --- 2. FIRESTORE SYNC ---
-    function fetchPosts() {
-        if (!db) {
-            // If no DB, just show static posts
-            postsList.innerHTML = '';
-            staticPosts.forEach(post => addNewPostToList(post, post.id));
-            return;
-        }
+    // --- 2. REST API SYNC ---
+    async function fetchPosts() {
+        console.log("Fetching blog posts from Python API...");
+        const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
+        let success = false;
 
-        db.collection('blog_posts').orderBy('publishDate', 'desc')
-            .onSnapshot((querySnapshot) => {
-                postsList.innerHTML = '';
+        for (const path of paths) {
+            try {
+                const response = await fetch(path);
+                const text = await response.text();
+                if (!text) continue;
 
-                // Add dynamic posts from Firestore
-                const dynamicPosts = [];
-                querySnapshot.forEach((doc) => {
-                    dynamicPosts.push({ id: doc.id, ...doc.data() });
-                });
+                const dynamicPosts = JSON.parse(text);
+                console.log(`Received ${dynamicPosts.length} posts from ${path}.`);
 
                 // Combine and sort (static posts act as baseline)
                 const allPosts = [...dynamicPosts, ...staticPosts].sort((a, b) =>
                     new Date(b.publishDate) - new Date(a.publishDate)
                 );
 
-                if (allPosts.length === 0) {
-                    postsList.innerHTML = '<p class="text-center">No posts yet.</p>';
-                    return;
-                }
-
-                allPosts.forEach((post) => {
-                    addNewPostToList(post, post.id);
-                });
-            }, (error) => {
-                console.error("Error fetching posts: ", error);
-                // Fallback to static if error
                 postsList.innerHTML = '';
-                staticPosts.forEach(post => addNewPostToList(post, post.id));
-            });
-    }
-
-    // Save post to Firestore
-    function savePostToFirestore(postData) {
-        if (!db) {
-            showToast('Error', 'Database not initialized', 'error');
-            return;
+                if (allPosts.length === 0) {
+                    postsList.innerHTML = '<div class="empty-state"><p>No messages have been published yet.</p></div>';
+                } else {
+                    allPosts.forEach((post) => {
+                        addNewPostToList(post, post.id);
+                    });
+                }
+                success = true;
+                break;
+            } catch (error) {
+                console.warn(`Fetch posts failed on ${path}:`, error.message);
+            }
         }
 
-        db.collection('blog_posts').add(postData)
-            .then(() => {
-                showToast('Post Published', 'Your blog post has been shared with the community.', 'success');
-                blogForm.reset();
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('publishDate').value = today;
-            })
-            .catch((error) => {
-                showToast('Error', error.message, 'error');
-            });
+        if (!success) {
+            console.error("API ERROR: All fetch attempts failed.");
+            showToast('Sync Error', 'Could not connect to the church server. Showing offline content.', 'error');
+            postsList.innerHTML = '';
+            staticPosts.forEach(post => addNewPostToList(post, post.id));
+        }
     }
 
-    // --- 2. FORM HANDLING ---
+    // Save post to Python API
+    async function savePostToFirestore(postData) {
+        const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
+        let success = false;
+
+        for (const path of paths) {
+            try {
+                const response = await fetch(path, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postData)
+                });
+                const text = await response.text();
+                if (!text) continue;
+
+                const result = JSON.parse(text);
+                if (result.success) {
+                    showToast('Post Published', 'Your blog post has been shared with the community.', 'success');
+                    if (blogForm) blogForm.reset();
+                    const today = new Date().toISOString().split('T')[0];
+                    const publishDateInput = document.getElementById('publishDate');
+                    if (publishDateInput) publishDateInput.value = today;
+                    fetchPosts();
+                    success = true;
+                    break;
+                }
+            } catch (error) {
+                console.warn(`Post failed on ${path}:`, error.message);
+            }
+        }
+
+        if (!success) {
+            showToast('Error', 'Could not save post to server. Please try again.', 'error');
+        }
+    }
+
+    // --- 3. FORM HANDLING ---
     const blogForm = document.getElementById('blogForm');
     if (blogForm) {
         blogForm.addEventListener('submit', function (e) {
@@ -113,22 +133,29 @@ document.addEventListener('DOMContentLoaded', function () {
             const postData = {
                 title: document.getElementById('blogTitle').value,
                 category: document.getElementById('blogCategory').value,
-                tags: document.getElementById('blogTags').value,
+                tags: document.getElementById('blogTags').value || '',
                 content: document.getElementById('blogContent').value,
-                image: document.getElementById('blogImage').value,
+                image: document.getElementById('blogImage') ? document.getElementById('blogImage').value : '',
                 publishDate: document.getElementById('publishDate').value,
-                status: 'published',
-                author: auth.currentUser ? auth.currentUser.email : 'Anonymous',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                author: (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser.email : 'Church Admin'
             };
 
             savePostToFirestore(postData);
         });
     }
 
+    // Start fetching
+    fetchPosts();
+
     // --- 3. UI RENDERING ---
+    let allPostsCache = [];
+    let blogPDFViewer = null;
+    let currentBlobUrl = null;
+
     function addNewPostToList(postData, postId) {
         if (!postsList) return;
+
+        allPostsCache.push({ id: postId, ...postData });
 
         const newPost = document.createElement('div');
         newPost.className = 'blog-post';
@@ -159,6 +186,12 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <p class="post-excerpt">${excerpt}</p>
             <div class="post-actions">
+                <button class="post-action-btn view-btn" onclick="viewPostAsPDF('${postId}')">
+                    <i class="fas fa-file-pdf"></i> Read Message as PDF
+                </button>
+                <button class="post-action-btn pdf-btn" onclick="exportPostToPDF('${postId}')" title="Download PDF">
+                    <i class="fas fa-download"></i>
+                </button>
                 ${postData.isStatic ?
                 `<a href="archives.html" class="post-action-btn view-btn"><i class="fas fa-archive"></i> View in Archive</a>` :
                 (auth.currentUser ? `<button class="post-action-btn delete-btn" onclick="deletePost('${postId}')"><i class="fas fa-trash"></i> Delete</button>` : '')
@@ -168,6 +201,144 @@ document.addEventListener('DOMContentLoaded', function () {
 
         postsList.appendChild(newPost);
     }
+
+    // Admin PDF Preview
+    const previewPdfBtn = document.getElementById('previewPdf');
+    if (previewPdfBtn) {
+        previewPdfBtn.addEventListener('click', function () {
+            const draftData = {
+                title: document.getElementById('blogTitle').value || 'Untitled Draft',
+                category: document.getElementById('blogCategory').value || 'General',
+                content: document.getElementById('blogContent').value || 'No content provided.',
+                publishDate: document.getElementById('publishDate').value || new Date().toISOString().split('T')[0],
+                author: auth.currentUser ? auth.currentUser.email : 'Church Admin'
+            };
+
+            // Use a temporary ID for preview
+            const tempId = 'preview-' + Date.now();
+            allPostsCache.push({ id: tempId, ...draftData });
+            viewPostAsPDF(tempId);
+        });
+    }
+
+    // Initialize the viewer immediately
+    if (document.getElementById('pdf-viewer-container')) {
+        blogPDFViewer = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
+    }
+
+    // Modal Closing Logic
+    const pdfModal = document.getElementById('pdf-modal');
+    const modalClose = document.getElementById('modal-close');
+    if (modalClose && pdfModal) {
+        modalClose.addEventListener('click', () => {
+            pdfModal.style.display = 'none';
+            if (blogPDFViewer) blogPDFViewer.clear();
+            if (currentBlobUrl) {
+                URL.revokeObjectURL(currentBlobUrl);
+                currentBlobUrl = null;
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === pdfModal) {
+                pdfModal.style.display = 'none';
+                if (blogPDFViewer) blogPDFViewer.clear();
+                if (currentBlobUrl) {
+                    URL.revokeObjectURL(currentBlobUrl);
+                    currentBlobUrl = null;
+                }
+            }
+        });
+    }
+
+    // Inline PDF View Function
+    window.viewPostAsPDF = function (postId) {
+        const post = allPostsCache.find(p => p.id === postId);
+        if (!post) {
+            showToast('Error', 'Post content not found', 'error');
+            return;
+        }
+
+        const date = new Date(post.publishDate);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Create temporary template for conversion
+        const element = document.createElement('div');
+        element.style.padding = '40px';
+        element.style.background = '#fff';
+        element.style.fontFamily = "'Montserrat', sans-serif";
+        element.style.color = '#1e293b';
+        element.style.width = '800px'; // Standard A4-ish width for conversion
+
+        element.innerHTML = `
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #0f172a; padding-bottom: 20px;">
+                <img src="images/minorah%20image.jpg" style="height: 90px; border-radius: 50%; margin-bottom: 15px; border: 2px solid #d4af37;">
+                <h1 style="color: #0f172a; margin: 0; font-family: 'Playfair Display', serif; font-size: 26px;">Kaloleni Seventh Day Church</h1>
+                <p style="color: #d4af37; font-weight: 700; margin: 8px 0; text-transform: uppercase; letter-spacing: 1.5px; font-size: 14px;">Official Church Message</p>
+                <p style="color: #64748b; font-style: italic; margin: 5px 0; font-size: 12px;">Growing in faith, serving with love</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <h2 style="font-size: 24px; color: #1a2b6d; margin-bottom: 10px;">${post.title}</h2>
+                <div style="font-size: 14px; color: #64748b; margin-bottom: 20px;">
+                    <span>Date: ${formattedDate}</span> | 
+                    <span>Category: ${post.category || 'General'}</span> | 
+                    <span>Author: ${post.author || 'Church Admin'}</span>
+                </div>
+            </div>
+            <div style="line-height: 1.8; font-size: 16px; white-space: pre-wrap;">
+                ${post.content}
+            </div>
+            <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8; text-align: center;">
+                &copy; 2026 Kaloleni Church of Elohim. All Rights Reserved.
+            </div>
+        `;
+
+        showToast('Processing', 'Opening document...', 'success');
+
+        const opt = {
+            margin: [10, 10],
+            filename: 'temp.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).output('blob').then(function (blob) {
+            if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+            currentBlobUrl = URL.createObjectURL(blob);
+
+            pdfModal.style.display = 'flex';
+            document.getElementById('modal-title').textContent = post.title;
+
+            if (blogPDFViewer) {
+                blogPDFViewer.loadPDF(currentBlobUrl);
+            }
+
+            // Setup download button in modal
+            const downloadBtn = document.getElementById('downloadPdfBtn');
+            if (downloadBtn) {
+                downloadBtn.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = currentBlobUrl;
+                    a.download = `${post.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+            }
+        });
+    };
+
+    // PDF Export Function (Legacy / Quick Download)
+    window.exportPostToPDF = function (postId) {
+        const post = allPostsCache.find(p => p.id === postId);
+        if (!post) return;
+
+        // Use the same element creation logic or a simplified version
+        viewPostAsPDF(postId); // Reuse the view logic but also trigger download if needed
+    };
 
     // Global delete function
     window.deletePost = function (postId) {

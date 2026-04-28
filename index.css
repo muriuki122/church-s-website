@@ -1108,11 +1108,15 @@ body>* {
 
     .hero-btns {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 15px;
+        padding: 0 20px;
     }
 
     .watch-online {
-        padding: 30px 20px;
+        padding: clamp(20px, 5vw, 40px) 15px;
+        margin: 20px 10px;
+        border-radius: 15px;
     }
 
     .watch-content h2 {
@@ -1124,14 +1128,16 @@ body>* {
     }
 
     .btn {
-        padding: 12px 24px;
-        font-size: 1rem;
-        min-width: 200px;
+        padding: var(--btn-padding-y) var(--btn-padding-x);
+        font-size: var(--btn-font-size);
+        width: 100%;
+        max-width: none;
     }
 
     .watch-btns {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 12px;
     }
 
     .footer-grid {

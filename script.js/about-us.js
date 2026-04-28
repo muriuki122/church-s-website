@@ -56,6 +56,7 @@ const translations = {
         lunchDesc: "We share a meal together, strengthening our bonds as a church family.",
         afternoonSession: "Afternoon Session",
         afternoonSessionDesc: "Individual songs and choir presentations, followed by a closing sermon before we depart.",
+        closingPrayers: "Closing Prayers",
 
         // Friday Schedule
         eveningWorship: "Evening Worship",
@@ -181,6 +182,7 @@ const translations = {
         lunchDesc: "Tunashiriki chakula pamoja, tukiimarisha uhusiano wetu kama familia ya kanisa.",
         afternoonSession: "Kipindi cha Mchana",
         afternoonSessionDesc: "Nyimbo za mtu binafsi na mawasilisho ya kwaya, ikifuatiwa na mahubiri ya kufunga kabla hatujaondoka.",
+        closingPrayers: "Maombi ya Kufunga",
 
         // Friday Schedule
         eveningWorship: "Ibada ya Jioni",
@@ -306,6 +308,7 @@ const translations = {
         lunchDesc: "Dusangira ifunguro hamwe, dukomeretsa umubano wacu nk'umuryango w'itorero.",
         afternoonSession: "Icyumba cyo mu nyuma y'umunsi",
         afternoonSessionDesc: "Indirimbo z'umuntu ku giti cye n'ibiganiro by'amatorero, bikurikirwa n'ibibazo byo gufunga mbere y'uko tugenda.",
+        closingPrayers: "Isengesho ryo Gufunga",
 
         // Friday Schedule
         eveningWorship: "Isengesho ryo mu mugoroba",

@@ -360,6 +360,22 @@
     box-shadow: 0 2px 8px rgba(26, 43, 109, 0.2);
 }
 
+.pdf-btn {
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+}
+
+.pdf-btn:hover {
+    background: #e2e8f0;
+    color: #2563eb;
+    border-color: #2563eb;
+}
+
+.pdf-btn i {
+    color: #ef4444;
+}
+
 /* Toast Notification */
 .toast {
     position: fixed;
@@ -448,4 +464,230 @@
         width: 100%;
         justify-content: center;
     }
+}
+
+/* PDF Viewer Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    padding: 15px 25px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h4 {
+    color: #1a2b6d;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #94a3b8;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #ef4444;
+}
+
+/* PDF Toolbar Stylings (re-standardized) */
+.pdf-toolbar {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.pdf-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pdf-nav-btn,
+.pdf-zoom-btn,
+.pdf-action-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e0;
+    background: white;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pdf-nav-btn:hover:not(:disabled),
+.pdf-zoom-btn:hover,
+.pdf-action-btn:hover {
+    background: #1a2b6d;
+    color: white;
+    border-color: #1a2b6d;
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pdf-page-badge,
+.pdf-zoom-badge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a2b6d;
+    background: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 20px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.pdf-canvas-wrapper {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.pdf-page-canvas {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    background: white;
+    max-width: 100%;
+}
+
+/* Header Override for Blog - Deep Navy (Non-White) */
+.header {
+    background: #0f172a !important;
+    /* Static Deep Navy - No Purple */
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    border-bottom: 2px solid #d4af37 !important;
+    /* Gold border */
+}
+
+.church-name,
+.church-motto {
+    color: white !important;
+}
+
+.logo-container {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+}
+
+.nav-links a {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+    color: white !important;
+    background: rgba(212, 175, 55, 0.1) !important;
+}
+
+.mobile-menu-btn {
+    color: white !important;
+    background: #1a2b6d !important;
+    border-radius: 4px !important;
+}
+
+/* Mobile Menu Drawer - Deep Navy */
+@media (max-width: 768px) {
+    .nav-links {
+        background: #0f172a !important;
+        /* Deep Navy Drawer */
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
+        padding-top: 100px !important;
+        border-left: 2px solid #d4af37 !important;
+    }
+
+    .nav-links li {
+        width: 100% !important;
+    }
+
+    .nav-links a {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 18px 25px !important;
+        color: white !important;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+        background: rgba(212, 175, 55, 0.1) !important;
+        color: #d4af37 !important;
+        /* Gold accent */
+    }
+}
+
+/* Sorting and Layout Refinements */
+.blog-posts-container {
+    margin-top: 30px;
+    border-top: 6px solid #0f172a;
+    background: #ffffff !important;
+    border-radius: 12px;
+}
+
+.post-title {
+    color: #1e3a8a !important;
+    /* Dark Blue */
+}
+
+.view-btn {
+    background-color: #0f172a !important;
+    border: none;
+    color: white !important;
+}
+
+.view-btn:hover {
+    background-color: #1a2b6d !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+}
+
+.pdf-modal {
+    background: rgba(15, 23, 42, 0.92) !important;
+    /* Deep Navy Overlay */
+}
+
+.modal-header h4 {
+    color: #0f172a !important;
 }

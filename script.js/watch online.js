@@ -56,12 +56,7 @@ const translations = {
         pesachDuration: "7 days.",
         pesachLocation: "Takes 7 days",
 
-        // Shavuot Event
-        shavuotTitle: "Shavuot (Weeks)",
-        shavuotTime: "6 Sivan (50 days after Passover).",
-        shavuotDesc: "All-night Torah study (Tikkun Leil Shavuot).",
-        shavuotTheme: "Theme: Receiving the Torah at Mount Sinai.",
-        shavuotLocation: "Naivasha",
+
 
         moreDetails: "More Details",
         viewAllEvents: "View All Events",
@@ -134,12 +129,7 @@ const translations = {
         pesachDuration: "Siku 7.",
         pesachLocation: "Inachukua siku 7",
 
-        // Shavuot Event
-        shavuotTitle: "Shavuoti (Wiki)",
-        shavuotTime: "6 Sivani (siku 50 baada ya Pasaka).",
-        shavuotDesc: "Kusoma Torah usiku kucha (Tikuni Leili Shavuoti).",
-        shavuotTheme: "Mada: Kupokea Torah katika Mlima Sinai.",
-        shavuotLocation: "Naivasha",
+
 
         moreDetails: "Maelezo Zaidi",
         viewAllEvents: "Tazama Matukio Yote",
@@ -212,12 +202,7 @@ const translations = {
         pesachDuration: "Iminsi 7.",
         pesachLocation: "Bifata iminsi 7",
 
-        // Shavuot Event
-        shavuotTitle: "Shavuoti (Ibyumweru)",
-        shavuotTime: "6 Sivani (iminsi 50 nyuma ya Pasika).",
-        shavuotDesc: "Kwiga Torah ijoro ryose (Tikuni Leili Shavuoti).",
-        shavuotTheme: "Insanganyamatsiko: Kwakira Amategeko kuri Musine.",
-        shavuotLocation: "Naivasha",
+
 
         moreDetails: "Ibisobanuro Byinshi",
         viewAllEvents: "Reba Ibyabaye Byose",
@@ -293,12 +278,152 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== MOBILE NAVIGATION handled by global.js =====
 
 // ===== YOUTUBE FUNCTIONALITY =====
+let player;
 const youtubeSearchInput = document.getElementById('youtube-search-input');
 const youtubeSearchBtn = document.getElementById('youtube-search-btn');
 const videoPlayerFrame = document.querySelector('.stream-player iframe');
+const muteToggleBtn = document.getElementById('btn-mute-toggle');
+const muteText = document.getElementById('mute-text');
 
 const CHANNEL_ID = 'UCRlkkd6Koyi5biTO8W7eRaQ';
 const UPLOADS_PLAYLIST_ID = 'UURlkkd6Koyi5biTO8W7eRaQ';
+
+// YouTube IFrame API initialization
+window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player(videoPlayerFrame, {
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+};
+
+function onPlayerReady(event) {
+    console.log('YouTube Player Ready');
+    updateMuteUI();
+}
+
+function updateMuteUI() {
+    if (!player || !muteToggleBtn) return;
+    const isMuted = player.isMuted();
+    const icon = muteToggleBtn.querySelector('i');
+    if (isMuted) {
+        icon.className = 'fas fa-volume-mute';
+        muteText.textContent = 'Unmute';
+    } else {
+        icon.className = 'fas fa-volume-up';
+        muteText.textContent = 'Mute';
+    }
+}
+
+if (muteToggleBtn) {
+    muteToggleBtn.addEventListener('click', () => {
+        if (!player) {
+            // Fallback: reload without mute param
+            const currentSrc = videoPlayerFrame.src;
+            if (currentSrc.includes('mute=1')) {
+                videoPlayerFrame.src = currentSrc.replace('mute=1', 'mute=0');
+                if (muteText) muteText.textContent = 'Mute';
+            }
+            return;
+        }
+
+        try {
+            if (player.isMuted()) {
+                player.unMute();
+                player.setVolume(100);
+            } else {
+                player.mute();
+            }
+            updateMuteUI();
+        } catch (e) {
+            console.error("Unmute failed");
+            const currentSrc = videoPlayerFrame.src;
+            videoPlayerFrame.src = currentSrc.includes('mute=1') ? currentSrc.replace('mute=1', 'mute=0') : currentSrc;
+        }
+    });
+}
+
+const sermonData = [
+    {
+        id: 'dQw4w9WgXcQ', // Sample IDs, replace with real church video IDs later
+        title: "Faith in Uncertain Times",
+        date: "April 25, 2026",
+        thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
+        category: "recent"
+    },
+    {
+        id: 'L_jWHffIx5E',
+        title: "The Power of Prayer",
+        date: "April 18, 2026",
+        thumbnailUrl: "https://img.youtube.com/vi/L_jWHffIx5E/mqdefault.jpg",
+        category: "recent"
+    },
+    {
+        id: '3JZ_D3ELwOQ',
+        title: "Walking by the Spirit",
+        date: "April 11, 2026",
+        thumbnailUrl: "https://img.youtube.com/vi/3JZ_D3ELwOQ/mqdefault.jpg",
+        category: "series"
+    },
+    {
+        id: 'yPYZpwSpKmA',
+        title: "Biblical Stewardship",
+        date: "April 4, 2026",
+        thumbnailUrl: "https://img.youtube.com/vi/yPYZpwSpKmA/mqdefault.jpg",
+        category: "all"
+    }
+];
+
+function createSermonCard(sermon) {
+    return `
+        <div class="sermon-card reveal-item" data-video-id="${sermon.id}">
+            <div class="sermon-thumbnail" onclick="playSermon('${sermon.id}')">
+                <img src="${sermon.thumbnailUrl}" alt="${sermon.title}">
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="sermon-details">
+                <div class="sermon-date">
+                    <i class="far fa-calendar-alt"></i> ${sermon.date}
+                </div>
+                <h3>${sermon.title}</h3>
+                <button class="btn btn-primary" style="width:100%" onclick="playSermon('${sermon.id}')">Watch Now</button>
+            </div>
+        </div>
+    `;
+}
+
+window.playSermon = function (videoId) {
+    if (player && player.loadVideoById) {
+        player.loadVideoById(videoId);
+        document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
+        showToast("Playing: " + videoId);
+    } else if (videoPlayerFrame) {
+        videoPlayerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
+    }
+};
+
+function loadSermons(filter = 'all') {
+    const grid = document.getElementById('sermons-grid');
+    if (!grid) return;
+
+    const filtered = sermonData.filter(s => filter === 'all' || s.category === filter);
+    grid.innerHTML = filtered.map(createSermonCard).join('');
+
+    // Trigger scroll reveal for new items
+    checkScroll();
+}
+
+// Filter listeners
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadSermons(btn.dataset.filter);
+    });
+});
 
 if (youtubeSearchBtn && youtubeSearchInput && videoPlayerFrame) {
     youtubeSearchBtn.addEventListener('click', () => {
@@ -355,16 +480,24 @@ if (notifyToggleBtn && notifyFormInline) {
 }
 
 if (notifySubmitBtn) {
-    notifySubmitBtn.addEventListener('click', () => {
+    notifySubmitBtn.addEventListener('click', async () => {
         const contactLine = notifyContactInput.value.trim();
         const duration = document.getElementById('notify-duration').value;
-        const t = translations[currentLanguage];
 
         if (contactLine) {
-            // No redirection, just show success locally
+            // FIRM SYSTEM: Browser Notification 
+            if ("Notification" in window) {
+                const permission = await Notification.requestPermission();
+                if (permission === "granted") {
+                    new Notification("Kaloleni Church", {
+                        body: "Notification Alert Active! You will be notified.",
+                        icon: "images/minorah image.jpg"
+                    });
+                }
+            }
             showToast("Success! You are now subscribed for: " + duration);
 
-            // Reset to button state
+            // Reset UI
             notifyFormInline.style.display = 'none';
             notifyToggleBtn.style.display = 'inline-block';
             notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Subscribed';
@@ -469,14 +602,17 @@ function updateStreamStatus() {
 }
 
 // Update stream status on page load
-document.addEventListener('DOMContentLoaded', updateStreamStatus);
+document.addEventListener('DOMContentLoaded', () => {
+    updateStreamStatus();
+    loadSermons();
+});
 
 // Update stream status every minute
 setInterval(updateStreamStatus, 60000);
 
 // ===== SCROLL ANIMATION (REFINED) =====
 function checkScroll() {
-    const elements = document.querySelectorAll('.event-card, .stream-info, .cta-box, .section-header');
+    const elements = document.querySelectorAll('.event-card, .stream-info, .cta-box, .section-header, .sermon-card');
 
     elements.forEach(element => {
         const elementTop = element.getBoundingClientRect().top;

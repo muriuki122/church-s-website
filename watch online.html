@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Kaloleni church of Elohim - Live show</title>
     <link rel="stylesheet" href="style/watch online.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -123,6 +123,9 @@
                     <button class="btn btn-notify" id="btn-check-live">
                         <i class="fas fa-sync"></i> <span data-key="checkLiveBtn">Check Live</span>
                     </button>
+                    <button class="btn btn-outline" id="btn-mute-toggle">
+                        <i class="fas fa-volume-mute"></i> <span id="mute-text">Unmute</span>
+                    </button>
                     <div class="notify-container" id="notify-container">
                         <button class="btn btn-notify" id="btn-notify-toggle">
                             <i class="fas fa-bell"></i> <span data-key="notifyMeBtn">Notify Me</span>
@@ -144,6 +147,7 @@
         </div>
         </div>
     </section>
+
 
     <!-- Call to Action -->
     <section class="cta-section">
@@ -180,7 +184,7 @@
                                 PM</span></p>
                         <p class="event-location"><i class="fas fa-map-marker-alt"></i> <span
                                 data-key="churchSanctuary">Church Sanctuary</span></p>
-                        <a href="archives.html" class="event-link" data-key="moreDetails">More Details</a>
+
                     </div>
                 </div>
 
@@ -198,21 +202,7 @@
                     </div>
                 </div>
 
-                <div class="event-card">
-                    <div class="event-date">
-                        <span class="day" data-key="shavuotTitle">Shavuot (Weeks)</span>
-                        <span class="month" data-key="shavuotTime">6 Sivan (50 days after Passover).</span>
-                    </div>
-                    <div class="event-details">
-                        <h3 data-key="shavuotDesc">All-night Torah study (Tikkun Leil Shavuot).</h3>
-                        <p class="event-time"><i class="fas fa-clock"></i> <span data-key="shavuotTheme">Theme:
-                                Receiving the Torah at Mount Sinai.</span>
-                        </p>
-                        <p class="event-location"><i class="fas fa-map-marker-alt"></i> <span
-                                data-key="shavuotLocation">Naivasha</span></p>
-                        <a href="archives.html" class="event-link" data-key="moreDetails">More Details</a>
-                    </div>
-                </div>
+
             </div>
 
             <div class="section-footer">
@@ -275,6 +265,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js/watch online.js"></script>
     <script src="script.js/global.js"></script>
 </body>

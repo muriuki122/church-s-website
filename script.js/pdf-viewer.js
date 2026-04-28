@@ -92,15 +92,15 @@ class PDFViewer {
                 }
             }, 300);
         });
-        
+
         // Setup Swipe Gestures for Professional Navigation
         let touchStartX = 0;
         let touchEndX = 0;
-        
+
         this.container.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
-        
+
         this.container.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
@@ -191,7 +191,7 @@ class PDFViewer {
             // Add professional fade transition
             this.canvas.style.opacity = '0.5';
             this.canvas.style.transition = 'opacity 0.2s ease-in-out';
-            
+
             const page = await this.pdfDoc.getPage(num);
 
             // Calculate scale based on container width for responsiveness

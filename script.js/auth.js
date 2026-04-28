@@ -1,8 +1,63 @@
-// Authorized Admin Emails
+// Authorized Admin Emails (Baseline)
 const AUTHORIZED_ADMINS = [
     'muriukic522@gmail.com',
     'admin@kalolenichurch.org'
 ];
+
+// Global Auth State
+window.auth = {
+    currentUser: JSON.parse(localStorage.getItem('church_admin')) || null,
+    onAuthStateChanged: function (callback) {
+        // Simple observer pattern
+        this._callback = callback;
+        callback(this.currentUser);
+    },
+    signIn: async function (email, password) {
+        try {
+            // Try relative first, then absolute fallback
+            const paths = ['/api/login', 'http://localhost:5000/api/login'];
+            let lastError = "Could not connect to server";
+
+            for (const path of paths) {
+                try {
+                    const response = await fetch(path, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const text = await response.text();
+                    if (!text) continue; // Try next path if empty
+
+                    const data = JSON.parse(text);
+                    if (data.success) {
+                        this.currentUser = data.user;
+                        localStorage.setItem('church_admin', JSON.stringify(data.user));
+                        if (this._callback) this._callback(this.currentUser);
+                        // FIRM SYSTEM: Standard sync event for all management pages
+                        window.dispatchEvent(new CustomEvent('church-auth-sync', { detail: this.currentUser }));
+                        return { success: true };
+                    } else {
+                        return { success: false, message: data.message || 'Invalid credentials' };
+                    }
+                } catch (e) {
+                    lastError = e.message;
+                    console.warn(`Auth failed on ${path}:`, e.message);
+                }
+            }
+            return { success: false, message: lastError };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    },
+    signOut: async function () {
+        this.currentUser = null;
+        localStorage.removeItem('church_admin');
+        if (this._callback) this._callback(null);
+        window.dispatchEvent(new CustomEvent('church-auth-update', { detail: null }));
+        return Promise.resolve();
+    }
+};
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginModal = document.getElementById('loginModal');
@@ -26,11 +81,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Close Modal
-    closeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            loginModal.style.display = 'none';
+    if (closeBtns) {
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
         });
-    });
+    }
 
     window.addEventListener('click', (e) => {
         if (e.target === loginModal) {
@@ -40,36 +97,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle Login Implementation
     if (adminLoginForm) {
-        adminLoginForm.addEventListener('submit', (e) => {
+        adminLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('adminEmail').value.trim();
             const password = document.getElementById('adminPassword').value;
 
-            console.log("Attempting login for:", email);
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    if (AUTHORIZED_ADMINS.includes(user.email)) {
-                        showToast('Welcome Admin', `Logged in as ${user.email}`, 'success');
-                        loginModal.style.display = 'none';
-                        adminLoginForm.reset();
-                    } else {
-                        // User is authenticated but NOT in our allowed admin list
-                        auth.signOut();
-                        showToast('Access Denied', 'Your account does not have admin privileges.', 'error');
-                    }
-                })
-                .catch((error) => {
-                    console.error("Login Details Error:", error);
-                    let errorMessage = error.message;
-                    if (error.code === 'auth/configuration-not-found') {
-                        errorMessage = "CRITICAL: Email/Password login is NOT enabled in your Firebase Console. Please go to Authentication > Sign-in Method and enable it.";
-                    } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                        errorMessage = "The email or password you entered is incorrect. If you haven't added the user yet, please go to the 'Users' tab in Firebase and click 'Add user'.";
-                    }
-                    showToast('Login Failed', errorMessage, 'error');
-                });
+            const result = await auth.signIn(email, password);
+            if (result.success) {
+                showToast('Welcome Admin', `Logged in successfully`, 'success');
+                loginModal.style.display = 'none';
+                adminLoginForm.reset();
+            } else {
+                showToast('Login Failed', result.message, 'error');
+            }
         });
     }
 
@@ -77,22 +117,33 @@ document.addEventListener('DOMContentLoaded', function () {
     auth.onAuthStateChanged(user => {
         const adminFormContainer = document.getElementById('adminFormContainer');
         const adminActions = document.querySelectorAll('.post-actions');
+        const blogAdminSection = document.querySelector('.admin-section');
 
-        if (user && AUTHORIZED_ADMINS.includes(user.email)) {
+        if (user) {
             // Logged in as Admin
-            authStatusText.textContent = 'Logout Admin';
-            adminLoginBtn.classList.add('auth-logged-in');
+            if (authStatusText) authStatusText.textContent = 'Logout Admin';
+            if (adminLoginBtn) adminLoginBtn.classList.add('auth-logged-in');
 
-            // Show Admin-only sections (Blog form, etc.)
-            if (adminFormContainer) adminFormContainer.style.display = 'block';
+            // Show Admin-only sections 
+            if (adminFormContainer) {
+                adminFormContainer.style.display = 'flex';
+                const tabBlogBtn = document.getElementById('tabBlogBtn');
+                if (tabBlogBtn) tabBlogBtn.click();
+            }
+
+            if (blogAdminSection) {
+                blogAdminSection.style.display = 'block';
+                blogAdminSection.scrollIntoView({ behavior: 'smooth' });
+            }
+
             adminActions.forEach(el => el.style.display = 'flex');
         } else {
-            // Not logged in or not an admin
-            authStatusText.textContent = 'Admin Login';
-            adminLoginBtn.classList.remove('auth-logged-in');
+            // Not logged in
+            if (authStatusText) authStatusText.textContent = 'Admin Login';
+            if (adminLoginBtn) adminLoginBtn.classList.remove('auth-logged-in');
 
-            // Hide Admin-only sections
             if (adminFormContainer) adminFormContainer.style.display = 'none';
+            if (blogAdminSection) blogAdminSection.style.display = 'none';
             adminActions.forEach(el => el.style.display = 'none');
         }
     });

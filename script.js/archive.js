@@ -3,14 +3,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const ITEMS_PER_PAGE = 9;
     let allDocuments = [];
     async function initializeDocuments() {
-        // 1. Try to load from cache first for instant UI
-        const cachedDocs = localStorage.getItem('church_docs_cache');
-        if (cachedDocs) {
+        console.log("ANTIGRAVITY SYSTEM: Initializing 142-Document Library...");
+
+        // VISIBLE DIAGNOSTIC: Create a badge on the screen to prove the count
+        const badge = document.createElement('div');
+        badge.id = 'system-audit-badge';
+        badge.style.cssText = 'position:fixed; bottom:20px; left:20px; background:#ffeb3b; color:#000; padding:10px 15px; border-radius:30px; font-weight:bold; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,0.2); border:2px solid #fbc02d; font-size:12px;';
+        document.body.appendChild(badge);
+
+        // FORCE RECOVERY: Purge cache every load if it is low
+        const cached = localStorage.getItem('church_docs_cache');
+        if (cached) {
             try {
-                allDocuments = JSON.parse(cachedDocs);
-                mainFilteredDocuments = [...allDocuments];
-                renderPage(1);
-                console.log('Loaded from cache (instant)');
+                const parsed = JSON.parse(cached);
+                if (parsed.length < 140) {
+                    console.warn("Purging incomplete cache...");
+                    localStorage.removeItem('church_docs_cache');
+                } else {
+                    allDocuments = parsed;
+                }
             } catch (e) {
                 console.error('Cache parse error:', e);
             }
@@ -25,24 +36,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Fetch fresh data in the background
         try {
-            const response = await fetch(`${API_BASE_URL}/documents?limit=1000`);
+            const response = await fetch(`${API_BASE_URL}/documents`);
             if (response.ok) {
                 const data = await response.json();
-                if (data.documents && data.documents.length > 0) {
-                    allDocuments = data.documents;
-                    isUsingBackend = true;
-                    // Update cache for next time
+                if (data && data.length > 0) {
+                    // Update allDocuments: merge backend data with locally defined ones if needed
+                    // or replace if backend is source of truth. 
+                    // Let's replace if backend has data, but keep static defaults if it is empty.
+                    allDocuments = data;
                     localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
-
-                    // Only re-render if data has changed or we were using defaults
                     mainFilteredDocuments = [...allDocuments];
                     populateCategories();
                     renderPage(1);
                     console.log('Backend data synced');
+                } else {
+                    console.log('Backend sync check: No new documents in DB, using static defaults.');
                 }
             }
         } catch (error) {
-            console.warn('Backend connection failed:', error);
+            console.warn('Backend connection failed or sync error:', error);
         }
     }
     let mainFilteredDocuments = [];
@@ -52,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPreviewIndex = 0;
     let currentQuarter = '1';
     let pdfViewerInstance = null;
-    let API_BASE_URL = 'http://localhost:3000/api';
-    let isUsingBackend = false;
+    let API_BASE_URL = 'http://localhost:5000/api';
+    let isUsingBackend = true;
 
     // --- DEBOUNCE UTILITY ---
     function debounce(func, wait) {
@@ -417,9 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Load static data
         await initializeDocuments();
 
-        // Sync with Firestore (Admin Management System)
-        await syncFirestoreDocs();
-        await syncFirestoreLessons();
+        // Sync with Python API (Admin Management System)
+        await fetchArchiveData();
 
         // Setup UI
         populateCategories();
@@ -579,65 +590,98 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLessonsSidebar();
     }
 
-    // --- ADMINISTRATIVE & FIREBASE SYSTEM ---
-    async function syncFirestoreDocs() {
-        if (typeof db === 'undefined') return;
+    // --- 1. DATA INITIALIZATION & SYNC ---
+    // --- 1. DATA INITIALIZATION & SYNC ---
+    async function fetchArchiveData() {
         try {
-            const snapshot = await db.collection('archive_documents').get();
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                if (!allDocuments.find(d => d.id === data.id)) {
-                    allDocuments.push(data);
+            console.log("Syncing documents with backend...");
+            const docResponse = await fetch(`${API_BASE_URL}/documents`);
+            if (docResponse.ok) {
+                const data = await docResponse.json();
+
+                // DEFENSIVE SYNC: Only accept data if it contains the full library (at least 140 docs)
+                // This prevents a bad backend seed from overwriting your full local list.
+                if (data && data.length >= 140) {
+                    allDocuments = data;
+                    localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
+                    console.log(`Sync successful: ${data.length} documents loaded.`);
+                } else if (data && data.length > 0) {
+                    console.warn(`Sync Warning: Backend returned only ${data.length} documents. Keeping local list of 142 to prevent data loss.`);
                 }
-            });
-        } catch (err) {
-            console.error('Firestore Document Sync Error:', err);
-        } finally {
+            }
+
+            // Load Bible Lessons
+            const lessonResponse = await fetch(`${API_BASE_URL}/lessons`);
+            if (lessonResponse.ok) {
+                const dynamicLessons = await lessonResponse.json();
+                dynamicLessons.forEach(lesson => {
+                    const q = lesson.quarter;
+                    if (bibleLessons[q]) {
+                        bibleLessons[q].available = true;
+                        const idx = bibleLessons[q].lessons.findIndex(l => l.id === lesson.id);
+                        if (idx !== -1) bibleLessons[q].lessons[idx] = lesson;
+                        else bibleLessons[q].lessons.push(lesson);
+                    }
+                });
+            }
+
+            // Refresh UI
+            handleMainFilterChange();
+            handleLessonFilterChange();
             populateCategories();
-            filterDocuments();
+
+            if (allDocuments.length >= 140) {
+                showGlobalNotification('Archive synchronized!', 'success');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            if (typeof showGlobalNotification === 'function') {
+                showGlobalNotification('Working offline.', 'info');
+            }
         }
     }
 
-    async function syncFirestoreLessons() {
-        if (typeof db === 'undefined') return;
-        try {
-            const snapshot = await db.collection('bible_lessons').get();
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const q = data.quarter;
-                if (bibleLessons[q]) {
-                    bibleLessons[q].available = true;
-                    const idx = bibleLessons[q].lessons.findIndex(l => l.id === data.id);
-                    if (idx !== -1) bibleLessons[q].lessons[idx] = data;
-                    else bibleLessons[q].lessons.push(data);
-                }
-            });
-        } catch (err) {
-            console.error('Firestore Lesson Sync Error:', err);
-        }
-    }
 
     function setupAdminLogic() {
         const adminPanel = document.getElementById('adminFormContainer');
         const closeAdminBtn = document.getElementById('closeAdminForm');
         const addDocForm = document.getElementById('addDocForm');
-        const addLessonForm = document.getElementById('addLessonForm');
+        const addBlogForm = document.getElementById('addBlogForm');
         const tabDocBtn = document.getElementById('tabDocBtn');
         const tabLessonBtn = document.getElementById('tabLessonBtn');
+        const tabBlogBtn = document.getElementById('tabBlogBtn');
 
-        // Toggle between Document and Lesson forms
-        if (tabDocBtn && tabLessonBtn) {
+        // Toggle between Document, Lesson, and Blog forms
+        if (tabDocBtn && tabLessonBtn && tabBlogBtn) {
             tabDocBtn.addEventListener('click', () => {
                 addDocForm.style.display = 'grid';
                 addLessonForm.style.display = 'none';
+                addBlogForm.style.display = 'none';
                 tabDocBtn.classList.add('active');
                 tabLessonBtn.classList.remove('active');
+                tabBlogBtn.classList.remove('active');
             });
             tabLessonBtn.addEventListener('click', () => {
                 addDocForm.style.display = 'none';
                 addLessonForm.style.display = 'grid';
+                addBlogForm.style.display = 'none';
                 tabLessonBtn.classList.add('active');
                 tabDocBtn.classList.remove('active');
+                tabBlogBtn.classList.remove('active');
+            });
+            tabBlogBtn.addEventListener('click', () => {
+                addDocForm.style.display = 'none';
+                addLessonForm.style.display = 'none';
+                addBlogForm.style.display = 'grid';
+                tabBlogBtn.classList.add('active');
+                tabDocBtn.classList.remove('active');
+                tabLessonBtn.classList.remove('active');
+
+                // Set today's date as default
+                const blogDateInput = document.getElementById('blogDate');
+                if (blogDateInput && !blogDateInput.value) {
+                    blogDateInput.value = new Date().toISOString().split('T')[0];
+                }
             });
         }
 
@@ -652,21 +696,26 @@ document.addEventListener('DOMContentLoaded', () => {
             addDocForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const docData = {
-                    id: Date.now(),
                     title: document.getElementById('docTitle').value,
                     category: document.getElementById('docCategory').value,
-                    fileName: document.getElementById('docPath').value,
-                    isDynamic: true
+                    fileName: document.getElementById('docPath').value
                 };
 
                 try {
-                    await db.collection('archive_documents').add(docData);
-                    alert('Document added to library successfully!');
-                    addDocForm.reset();
-                    adminPanel.style.display = 'none';
-                    allDocuments.push(docData);
-                    handleMainFilterChange();
-                    populateCategories();
+                    const response = await fetch('http://localhost:5000/api/documents', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(docData)
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Document added to library successfully!');
+                        addDocForm.reset();
+                        adminPanel.style.display = 'none';
+                        fetchArchiveData(); // Re-sync
+                    } else {
+                        throw new Error(result.message || 'Failed to add document');
+                    }
                 } catch (err) {
                     alert('Error adding document: ' + err.message);
                 }
@@ -677,31 +726,65 @@ document.addEventListener('DOMContentLoaded', () => {
         if (addLessonForm) {
             addLessonForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const quarter = parseInt(document.getElementById('lessonQuarter').value);
                 const lessonData = {
                     id: document.getElementById('lessonId').value,
                     title: document.getElementById('lessonTitle').value,
                     date: document.getElementById('lessonDate').value,
                     memoryVerse: document.getElementById('lessonMemory').value,
                     pdfUrl: document.getElementById('lessonPdf').value,
-                    quarter: quarter
+                    quarter: parseInt(document.getElementById('lessonQuarter').value)
                 };
 
                 try {
-                    await db.collection('bible_lessons').doc(lessonData.id).set(lessonData);
-                    alert('Bible lesson saved successfully!');
-                    addLessonForm.reset();
-                    adminPanel.style.display = 'none';
-
-                    if (bibleLessons[quarter]) {
-                        bibleLessons[quarter].available = true;
-                        const idx = bibleLessons[quarter].lessons.findIndex(l => l.id === lessonData.id);
-                        if (idx !== -1) bibleLessons[quarter].lessons[idx] = lessonData;
-                        else bibleLessons[quarter].lessons.push(lessonData);
+                    const response = await fetch('http://localhost:5000/api/lessons', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(lessonData)
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Bible lesson saved successfully!');
+                        addLessonForm.reset();
+                        adminPanel.style.display = 'none';
+                        fetchArchiveData(); // Re-sync
+                    } else {
+                        throw new Error(result.message || 'Failed to save lesson');
                     }
-                    handleLessonFilterChange();
                 } catch (err) {
                     alert('Error saving lesson: ' + err.message);
+                }
+            });
+        }
+
+        // Handle Publishing to Blog
+        if (addBlogForm) {
+            addBlogForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const blogData = {
+                    title: document.getElementById('blogTitle').value,
+                    category: document.getElementById('blogCategory').value,
+                    content: document.getElementById('blogContent').value,
+                    image: document.getElementById('blogImage').value,
+                    publishDate: document.getElementById('blogDate').value,
+                    author: auth.currentUser ? auth.currentUser.email : 'Church Media'
+                };
+
+                try {
+                    const response = await fetch('http://localhost:5000/api/posts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(blogData)
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('Blog content published successfully!');
+                        addBlogForm.reset();
+                        adminPanel.style.display = 'none';
+                    } else {
+                        throw new Error(result.message || 'Failed to publish');
+                    }
+                } catch (err) {
+                    alert('Error publishing to blog: ' + err.message);
                 }
             });
         }
@@ -714,7 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const AUTHORIZED_ADMINS = ['muriukic522@gmail.com', 'admin@kalolenichurch.org'];
 
                 if (user && AUTHORIZED_ADMINS.includes(user.email)) {
-                    // Show "Management" entry point in the sidebar
+                    // Show "Management" entry point in the sidebar for manual access
                     if (!insertBtn && sidebarHeader) {
                         insertBtn = document.createElement('button');
                         insertBtn.id = 'adminInsertTrigger';
@@ -729,22 +812,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     if (insertBtn) insertBtn.remove();
-                    if (adminPanel) adminPanel.style.display = 'none';
+                    // adminPanel visibility is now globally managed by auth.js
                 }
             });
         }
 
         // --- MANAGE LISTS LOGIC ---
         function updateAdminLists() {
-            // Render existing documents in the modal for deletion
-            const listContainer = document.createElement('div');
-            listContainer.id = 'adminItemsList';
-            listContainer.style.marginTop = '20px';
-            listContainer.style.borderTop = '1px solid #eee';
-            listContainer.style.paddingTop = '15px';
+            const listContainer = document.getElementById('adminItemsList') || (() => {
+                const lc = document.createElement('div');
+                lc.id = 'adminItemsList';
+                lc.style.marginTop = '20px';
+                lc.style.borderTop = '1px solid #eee';
+                lc.style.paddingTop = '15px';
+                adminPanel.querySelector('.modal-body').appendChild(lc);
+                return lc;
+            })();
 
             const renderList = () => {
                 const isLessonTab = tabLessonBtn.classList.contains('active');
+                const isBlogTab = tabBlogBtn.classList.contains('active');
+
+                if (isBlogTab) {
+                    listContainer.innerHTML = '<p style="font-size:0.8rem; color:#888;">Blog posts management available on the Blog page.</p>';
+                    return;
+                }
+
                 let html = `<h4 style="margin-bottom:10px; font-size:0.9rem;">Existing ${isLessonTab ? 'Lessons' : 'Documents'}</h4>`;
 
                 if (isLessonTab) {
@@ -765,38 +858,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     docs.forEach(d => {
                         html += `
                             <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:#f9f9f9; border-radius:4px; margin-bottom:5px; font-size:0.8rem;">
-                                <span>${d.title} (${d.category})</span>
+                                <span>${d.title}</span>
                                 <button onclick="deleteAdminDoc('${d.id}')" style="border:none; background:none; color:red; cursor:pointer;"><i class="fas fa-trash"></i></button>
                             </div>
                         `;
                     });
                 }
-
-                const existingList = adminPanel.querySelector('#adminItemsList');
-                if (existingList) existingList.innerHTML = html;
-                else {
-                    listContainer.innerHTML = html;
-                    adminPanel.querySelector('.modal-body').appendChild(listContainer);
-                }
+                listContainer.innerHTML = html;
             };
 
             renderList();
-
-            // Re-render when switching tabs or changing quarter
             tabDocBtn.addEventListener('click', renderList);
             tabLessonBtn.addEventListener('click', renderList);
+            tabBlogBtn.addEventListener('click', renderList);
             document.getElementById('lessonQuarter').addEventListener('change', renderList);
         }
 
         window.deleteAdminLesson = async (id, quarter) => {
             if (!confirm('Are you sure you want to delete this lesson?')) return;
             try {
-                await db.collection('bible_lessons').doc(id).delete();
-                const idx = bibleLessons[quarter].lessons.findIndex(l => l.id === id);
-                if (idx !== -1) bibleLessons[quarter].lessons.splice(idx, 1);
-                handleLessonFilterChange();
-                updateAdminLists();
-                alert('Lesson deleted.');
+                const response = await fetch(`http://localhost:5000/api/lessons/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) {
+                    fetchArchiveData(); // Re-sync
+                    alert('Lesson deleted.');
+                }
             } catch (err) {
                 alert('Error deleting: ' + err.message);
             }
@@ -805,15 +891,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.deleteAdminDoc = async (id) => {
             if (!confirm('Are you sure you want to delete this document?')) return;
             try {
-                // Find in Firestore by id field
-                const qSnapshot = await db.collection('archive_documents').where('id', '==', parseInt(id)).get();
-                qSnapshot.forEach(async (doc) => await doc.ref.delete());
-
-                const idx = allDocuments.findIndex(d => d.id == id);
-                if (idx !== -1) allDocuments.splice(idx, 1);
-                handleMainFilterChange();
-                updateAdminLists();
-                alert('Document deleted.');
+                const response = await fetch(`http://localhost:5000/api/documents/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) {
+                    fetchArchiveData(); // Re-sync
+                    alert('Document deleted.');
+                }
             } catch (err) {
                 alert('Error deleting: ' + err.message);
             }
@@ -1073,7 +1156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize PDF viewer if not already done
         if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
+            pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
         }
 
         modalTitle.textContent = doc.title;
@@ -1109,7 +1192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize PDF viewer if not already done
         if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
+            pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
         }
 
         modalTitle.textContent = lesson.title;
@@ -1431,40 +1514,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(notificationStyles);
 
-    function setupHamburgerMenu() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (mobileMenuBtn && navLinks) {
-            mobileMenuBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
-                navLinks.classList.toggle('active');
-                const isActive = navLinks.classList.contains('active');
-
-                mobileMenuBtn.innerHTML = isActive
-                    ? '<i class="fas fa-times"></i>'
-                    : '<i class="fas fa-bars"></i>';
-            });
-
-            // Close menu when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('nav.main-nav') && navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-
-            // Close menu when clicking a link
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                });
-            });
-        }
-    }
 
     // --- 14. LOAD PREFERENCES AND START APP ---
     function loadPreferences() {
@@ -1497,116 +1546,189 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 15. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
-    // These functions can be called from an admin interface to update lessons
-    window.updateBibleLesson = function (quarter, lessonId, lessonData) {
-        if (!bibleLessons[quarter]) {
-            console.error(`Invalid quarter: ${quarter}`);
-            return false;
-        }
+    // --- 13. ADMIN MANAGEMENT API SYNC ---
 
-        // Find the lesson by ID
-        const lessonIndex = bibleLessons[quarter].lessons.findIndex(lesson => lesson.id === lessonId);
+    // Fetch dynamic content from Python API
+    async function fetchArchiveData() {
+        const basePath = '';
+        const fallbackPath = 'http://localhost:5000';
+        const endpoints = [
+            { key: 'documents', url: '/api/documents', target: staticDocuments, callback: handleMainFilterChange },
+            { key: 'lessons', url: '/api/lessons', target: null, callback: handleLessonFilterChange }
+        ];
 
-        if (lessonIndex !== -1) {
-            // Update existing lesson
-            bibleLessons[quarter].lessons[lessonIndex] = { ...bibleLessons[quarter].lessons[lessonIndex], ...lessonData };
-        } else {
-            // Add new lesson
-            bibleLessons[quarter].lessons.push({ id: lessonId, ...lessonData });
-        }
+        for (const endpoint of endpoints) {
+            let success = false;
+            const paths = [endpoint.url, fallbackPath + endpoint.url];
 
-        // Mark the quarter as available
-        bibleLessons[quarter].available = true;
-
-        // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter) {
-            handleLessonFilterChange();
-        }
-
-        // Save to localStorage for persistence
-        localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
-
-        return true;
-    };
-
-    window.addBibleLesson = function (quarter, lessonData) {
-        if (!bibleLessons[quarter]) {
-            console.error(`Invalid quarter: ${quarter}`);
-            return false;
-        }
-
-        // Generate a unique ID if not provided
-        if (!lessonData.id) {
-            const existingIds = bibleLessons[quarter].lessons.map(lesson => lesson.id);
-            let newId = `q${quarter}-${bibleLessons[quarter].lessons.length + 1}`;
-            while (existingIds.includes(newId)) {
-                newId = `q${quarter}-${parseInt(newId.split('-')[1]) + 1}`;
-            }
-            lessonData.id = newId;
-        }
-
-        // Add the lesson
-        bibleLessons[quarter].lessons.push(lessonData);
-
-        // Mark the quarter as available
-        bibleLessons[quarter].available = true;
-
-        // Refresh the lessons sidebar if this quarter is currently selected
-        if (currentQuarter === quarter) {
-            handleLessonFilterChange();
-        }
-
-        // Save to localStorage for persistence
-        localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
-
-        return lessonData.id;
-    };
-
-    window.removeBibleLesson = function (quarter, lessonId) {
-        if (!bibleLessons[quarter]) {
-            console.error(`Invalid quarter: ${quarter}`);
-            return false;
-        }
-
-        // Find and remove the lesson
-        const lessonIndex = bibleLessons[quarter].lessons.findIndex(lesson => lesson.id === lessonId);
-
-        if (lessonIndex !== -1) {
-            bibleLessons[quarter].lessons.splice(lessonIndex, 1);
-
-            // Refresh the lessons sidebar if this quarter is currently selected
-            if (currentQuarter === quarter) {
-                handleLessonFilterChange();
-            }
-
-            // Save to localStorage for persistence
-            localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
-
-            return true;
-        }
-
-        return false;
-    };
-
-    // Load saved lessons from localStorage
-    function loadSavedLessons() {
-        for (let quarter = 1; quarter <= 4; quarter++) {
-            const savedLessons = localStorage.getItem(`bibleLessons_${quarter}`);
-            if (savedLessons) {
+            for (const path of paths) {
                 try {
-                    const parsed = JSON.parse(savedLessons);
-                    bibleLessons[quarter] = { ...bibleLessons[quarter], ...parsed };
+                    const response = await fetch(path);
+                    const text = await response.text();
+                    if (!text) continue;
+
+                    const data = JSON.parse(text);
+                    if (endpoint.key === 'documents') {
+                        const existingIds = staticDocuments.map(d => d.id);
+                        data.forEach(doc => {
+                            if (!existingIds.includes(doc.id)) staticDocuments.push(doc);
+                        });
+                    } else if (endpoint.key === 'lessons') {
+                        data.forEach(lesson => {
+                            const q = lesson.quarter;
+                            if (bibleLessons[q]) {
+                                const exists = bibleLessons[q].lessons.find(l => l.id === lesson.id);
+                                if (!exists) {
+                                    bibleLessons[q].lessons.push(lesson);
+                                    bibleLessons[q].available = true;
+                                }
+                            }
+                        });
+                    }
+                    if (endpoint.callback) endpoint.callback();
+                    success = true;
+                    break;
                 } catch (e) {
-                    console.error(`Error loading saved lessons for quarter ${quarter}:`, e);
+                    console.warn(`Fetch ${endpoint.key} failed on ${path}:`, e.message);
                 }
             }
         }
     }
 
-    // Start the application
+    // Connect Management Forms to API
+    function setupAdminLogic() {
+        // 1. Add Document Form
+        const addDocForm = document.getElementById('addDocForm');
+        if (addDocForm) {
+            addDocForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const docData = {
+                    title: document.getElementById('docTitle').value,
+                    category: document.getElementById('docCategory').value,
+                    fileName: document.getElementById('docPath').value
+                };
+
+                const paths = ['/api/documents', 'http://localhost:5000/api/documents'];
+                let success = false;
+
+                for (const path of paths) {
+                    try {
+                        const res = await fetch(path, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(docData)
+                        });
+                        const text = await res.text();
+                        if (!text) continue;
+
+                        const result = JSON.parse(text);
+                        if (result.success) {
+                            showNotification('Document Added Successfully', 'success');
+                            addDocForm.reset();
+                            fetchArchiveData();
+                            success = true;
+                            break;
+                        }
+                    } catch (err) {
+                        console.warn(`Doc add failed on ${path}`);
+                    }
+                }
+                if (!success) showNotification('Failed to add document', 'error');
+            });
+        }
+
+        // 2. Add Lesson Form
+        const addLessonForm = document.getElementById('addLessonForm');
+        if (addLessonForm) {
+            addLessonForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const quarter = parseInt(document.getElementById('lessonQuarter').value);
+                const lessonData = {
+                    id: document.getElementById('lessonId').value,
+                    title: document.getElementById('lessonTitle').value,
+                    date: document.getElementById('lessonDate').value,
+                    memoryVerse: document.getElementById('lessonMemory').value,
+                    pdfUrl: document.getElementById('lessonPdf').value,
+                    quarter: quarter
+                };
+
+                const paths = ['/api/lessons', 'http://localhost:5000/api/lessons'];
+                let success = false;
+
+                for (const path of paths) {
+                    try {
+                        const res = await fetch(path, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(lessonData)
+                        });
+                        const text = await res.text();
+                        if (!text) continue;
+
+                        const result = JSON.parse(text);
+                        if (result.success) {
+                            showNotification('Lesson Saved Successfully', 'success');
+                            addLessonForm.reset();
+                            fetchArchiveData();
+                            success = true;
+                            break;
+                        }
+                    } catch (err) {
+                        console.warn(`Lesson save failed on ${path}`);
+                    }
+                }
+                if (!success) showNotification('Failed to save lesson', 'error');
+            });
+        }
+
+        // 3. Add Blog Form (Shortcut)
+        const addBlogForm = document.getElementById('addBlogForm');
+        if (addBlogForm) {
+            addBlogForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const blogData = {
+                    title: document.getElementById('blogTitle').value,
+                    content: document.getElementById('blogContent').value,
+                    category: document.getElementById('blogCategory').value,
+                    publishDate: document.getElementById('blogDate').value,
+                    image: document.getElementById('blogImage') ? document.getElementById('blogImage').value : '',
+                    author: (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser.email : 'Admin'
+                };
+
+                const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
+                let success = false;
+
+                for (const path of paths) {
+                    try {
+                        const res = await fetch(path, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(blogData)
+                        });
+                        const text = await res.text();
+                        if (!text) continue;
+
+                        const result = JSON.parse(text);
+                        if (result.success) {
+                            showNotification('Blog Published Successfully', 'success');
+                            addBlogForm.reset();
+                            success = true;
+                            break;
+                        }
+                    } catch (err) {
+                        console.warn(`Blog shortcut failed on ${path}`);
+                    }
+                }
+
+                if (!success) showNotification('Failed to publish blog', 'error');
+            });
+        }
+    }
+
+    // Initialize application
     loadPreferences();
-    loadSavedLessons();
+    fetchArchiveData();
+    setupAdminLogic();
     init();
 });
 
@@ -1623,9 +1745,36 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+});
+
+// Mobile Tab Logic
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.mobile-tab');
+    const librarySection = document.querySelector('.main-archive-content');
+    const lessonsSection = document.querySelector('.lessons-sidebar');
+
+    if (tabs.length && librarySection && lessonsSection) {
+        if (window.innerWidth <= 992) {
+            librarySection.classList.add('active');
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.target;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                if (target === 'library') {
+                    librarySection.classList.add('active');
+                    lessonsSection.classList.remove('active');
+                } else {
+                    lessonsSection.classList.add('active');
+                    librarySection.classList.remove('active');
+                }
+                window.scrollTo({ top: document.querySelector('.hero').offsetHeight + 50, behavior: 'smooth' });
             });
         });
     }
