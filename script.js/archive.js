@@ -543,12 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 (normalizedFilterCat === 'books' && normalizedDocCategory === 'book') ||
                 (normalizedFilterCat === 'tracts' && normalizedDocCategory === 'tract');
 
-            // CRITICAL: If searching by name, bypass the lesson categories exclusion
-            // This ensures searched documents "emerge" in the main list
-            if (query.length === 0 && category === 'all' && lessonCategories.includes(docCategory)) {
-                return false;
-            }
-
             return (titleMatch || categorySearchMatch) && categoryMatch;
         });
 
@@ -940,7 +934,7 @@ document.addEventListener('DOMContentLoaded', () => {
         )];
 
         const categories = [...new Set([...mainCategories, ...foundCategories])]
-            .filter(cat => cat && !lessonCategories.includes(cat));
+            .filter(cat => cat);
 
         categoryFilter.innerHTML = `<option value="all">${t.allCategories}</option>`;
         categories.sort().forEach(category => {
