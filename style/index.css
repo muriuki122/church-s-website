@@ -645,15 +645,15 @@ body>* {
 /* 3D Book Structure */
 .book-container {
     perspective: 1500px;
-    flex: 0 0 100px;
-    width: 100px;
+    flex: 0 0 70px;
+    width: 70px;
     filter: drop-shadow(15px 20px 25px rgba(0, 0, 0, 0.2));
 }
 
 .book-main {
     position: relative;
     width: 100%;
-    height: 140px;
+    height: 100px;
     transform-style: preserve-3d;
     transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform: rotateY(-30deg) rotateX(5deg);
@@ -732,8 +732,8 @@ body>* {
 .booklet-vol {
     color: var(--secondary-color);
     font-weight: 800;
-    letter-spacing: 3px;
-    font-size: 0.7rem;
+    letter-spacing: 2px;
+    font-size: 0.6rem;
     text-transform: uppercase;
     font-family: 'Montserrat', sans-serif;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -777,7 +777,7 @@ body>* {
 }
 
 .booklet-details h2 {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
     color: var(--navy-dark);
     margin-bottom: 15px;
     font-family: 'Playfair Display', serif;
@@ -786,7 +786,7 @@ body>* {
 }
 
 .booklet-details p {
-    font-size: clamp(1rem, 2vw, 1.15rem);
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
     color: var(--text-dark);
     margin-bottom: 30px;
     line-height: 1.7;
