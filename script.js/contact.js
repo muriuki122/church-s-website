@@ -171,7 +171,7 @@ langOptions.forEach(opt => {
 
 // Mobile Menu handled by global.js
 
-// Form Submission via local API
+// Form Submission via FormSubmit.co (zero-backend, reliable email delivery)
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -179,36 +179,51 @@ if (contactForm) {
         const btn = contactForm.querySelector('.btn-submit');
         const originalText = btn.innerHTML;
 
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData.entries());
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value.trim();
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('https://formsubmit.co/ajax/jcommunityofelohim@gmail.com', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message,
+                    _subject: 'New Contact Message from ' + name,
+                    _template: 'table',
+                    _captcha: 'false'
+                })
             });
 
             const result = await response.json();
 
-            if (response.ok && result.success) {
-                showNotification(currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
-                    currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :
-                        'Message sent! Elohim bless you.');
+            if (result.success === 'true' || result.success === true) {
+                showNotification(
+                    currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
+                        currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :
+                            'Message sent! Elohim bless you.'
+                );
                 contactForm.reset();
             } else {
-                throw new Error(result.error || 'Submission failed');
+                throw new Error('Delivery failed. Please try again.');
             }
         } catch (error) {
             console.error('Submission error:', error);
-            showNotification(currentLang === 'sw' ? 'Hitilafu ilitokea: ' + error.message :
-                currentLang === 'rw' ? 'Byanze: ' + error.message :
-                    'Error occurred: ' + error.message);
+            showNotification(
+                currentLang === 'sw' ? 'Hitilafu ilitokea. Jaribu tena au piga simu moja kwa moja.' :
+                    currentLang === 'rw' ? 'Byanze. Gerageza nanone cyangwa duhamagare.' :
+                        'Error sending. Please try again or call us directly: +254737522522'
+            );
         } finally {
             btn.disabled = false;
             btn.innerHTML = originalText;

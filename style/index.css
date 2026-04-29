@@ -100,31 +100,22 @@ body>* {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
-    background: white;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: relative;
-    /* Changed from sticky to remove scrolling style */
+    padding: 10px 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--navy-dark) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 3px solid var(--secondary-color);
+    box-shadow: 0 4px 25px rgba(37, 99, 235, 0.25);
+    position: sticky;
     top: 0;
     z-index: 1000;
     transition: var(--transition);
 }
 
-.header h1,
-.header p,
-.header .church-name,
-.header .church-motto {
-    color: var(--primary-color) !important;
+.header.scrolled {
+    padding: 5px 40px;
+    background: var(--navy-dark);
 }
-
-@media (max-width: 768px) {
-    .header {
-        justify-content: center;
-        padding: 10px 15px;
-    }
-}
-
 
 .logo-container {
     display: flex;
@@ -473,7 +464,7 @@ body>* {
 
 /* Upcoming Events */
 .upcoming-events {
-    padding: 60px 0 50px;
+    padding: 40px 0 30px;
     text-align: center;
     background: linear-gradient(135deg, var(--bg-cream) 0%, #f0e6d8 100%);
     position: relative;
@@ -509,13 +500,18 @@ body>* {
 }
 
 .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
     gap: 30px;
-    margin-bottom: 40px;
 }
 
 .event-card {
+    flex: 1 1 300px;
+    max-width: 400px;
     background: linear-gradient(to bottom, #ffffff 0%, #fefefe 100%);
     border-radius: 15px;
     overflow: hidden;
@@ -608,53 +604,159 @@ body>* {
     margin-top: 20px;
 }
 
-/* Featured Publication (Compact & Organized) */
+/* Featured Publication (Premium 3D Book) */
 .featured-publication {
-    padding: 30px 0 60px;
-    /* Reduced top padding */
-    background: #f8fafc;
+    padding: 50px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-top: 1px solid rgba(255, 215, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.booklets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
 }
 
 .booklet-card {
-    max-width: 850px;
-    margin: 20px auto;
+    flex: 1 1 450px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0;
     background: #ffffff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 16px;
     display: flex;
     align-items: center;
-    gap: 35px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-    border: 1px solid #f0f0f0;
+    flex-direction: row;
+    gap: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    transition: var(--transition);
 }
 
-@media (max-width: 768px) {
-    .booklet-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 30px 20px;
-        gap: 25px;
-    }
+.booklet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 70px rgba(26, 43, 109, 0.1);
 }
 
-.booklet-mini-cover {
-    flex: 0 0 160px;
-    height: 230px;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+/* 3D Book Structure */
+.book-container {
+    perspective: 1500px;
+    flex: 0 0 100px;
+    width: 100px;
+    filter: drop-shadow(15px 20px 25px rgba(0, 0, 0, 0.2));
 }
 
-.booklet-img {
+.book-main {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: rotateY(-30deg) rotateX(5deg);
+}
+
+.booklet-card:hover .book-main {
+    transform: rotateY(0deg) rotateX(0deg) translateZ(20px);
+}
+
+.book-front,
+.book-back,
+.book-pages {
+    position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
+    top: 0;
+    left: 0;
+    border-radius: 2px 8px 8px 2px;
 }
 
-.booklet-card:hover .booklet-img {
-    transform: scale(1.05);
+.book-front {
+    background: linear-gradient(135deg, #1e40af 0%, #172554 100%);
+    z-index: 5;
+    transform: translateZ(12px);
+    display: flex;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.book-pages {
+    background: #ffffff;
+    z-index: 3;
+    width: 96%;
+    left: 2%;
+    transform: translateZ(0px);
+    background-image:
+        repeating-linear-gradient(to bottom,
+            transparent,
+            transparent 1px,
+            #e2e8f0 1px,
+            #e2e8f0 2px);
+}
+
+.book-back {
+    background: #172554;
+    z-index: 1;
+    transform: translateZ(-12px);
+}
+
+.book-spine-effect {
+    width: 20px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.book-cover-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.book-cover-content i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.booklet-vol {
+    color: var(--secondary-color);
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Shine Animation */
+.book-front::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
+    transform: skewX(-20deg);
+    transition: 0.8s;
+}
+
+.booklet-card:hover .book-front::after {
+    left: 150%;
 }
 
 .booklet-details {
@@ -662,30 +764,52 @@ body>* {
 }
 
 .booklet-details .badge {
-    background: #eff6ff;
-    color: #1e40af;
-    padding: 5px 14px;
-    border-radius: 4px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    color: var(--navy-dark);
+    padding: 6px 18px;
+    border-radius: 50px;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: inline-block;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2);
 }
 
 .booklet-details h2 {
-    font-size: 1.75rem;
-    color: #1a202c;
-    margin-bottom: 12px;
-    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--navy-dark);
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .booklet-details p {
-    font-size: 1rem;
-    color: #4a5568;
-    margin-bottom: 25px;
-    line-height: 1.6;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: var(--text-dark);
+    margin-bottom: 30px;
+    line-height: 1.7;
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .booklet-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .book-container {
+        flex: 0 0 100px;
+        width: 100px;
+        margin: 0;
+    }
+
+    .book-main {
+        transform: rotateY(-20deg) rotateX(5deg);
+    }
 }
 
 /* Lite PDF Modal */
@@ -1111,22 +1235,12 @@ body>* {
 }
 
 @media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: flex;
-        order: 1;
-        /* Firmly on the right */
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .logo-container {
-        order: 0;
-    }
-
     .header {
         padding: 15px 20px;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
     }
 
     .nav-links {

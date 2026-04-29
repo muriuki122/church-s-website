@@ -537,9 +537,7 @@
     gap: 8px;
 }
 
-.pdf-nav-btn,
-.pdf-zoom-btn,
-.pdf-action-btn {
+.pdf-nav-btn, .pdf-zoom-btn, .pdf-action-btn {
     padding: 6px 14px;
     border-radius: 4px;
     border: 1px solid #cbd5e0;
@@ -554,8 +552,8 @@
     gap: 6px;
 }
 
-.pdf-nav-btn:hover:not(:disabled),
-.pdf-zoom-btn:hover,
+.pdf-nav-btn:hover:not(:disabled), 
+.pdf-zoom-btn:hover, 
 .pdf-action-btn:hover {
     background: #1a2b6d;
     color: white;
@@ -567,8 +565,7 @@
     cursor: not-allowed;
 }
 
-.pdf-page-badge,
-.pdf-zoom-badge {
+.pdf-page-badge, .pdf-zoom-badge {
     font-size: 0.8rem;
     font-weight: 700;
     color: #1a2b6d;
@@ -590,104 +587,4 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     background: white;
     max-width: 100%;
-}
-
-/* Header Override for Blog - Deep Navy (Non-White) */
-.header {
-    background: #0f172a !important;
-    /* Static Deep Navy - No Purple */
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1000 !important;
-    border-bottom: 2px solid #d4af37 !important;
-    /* Gold border */
-}
-
-.church-name,
-.church-motto {
-    color: white !important;
-}
-
-.logo-container {
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
-}
-
-.nav-links a {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.nav-links a.active,
-.nav-links a:hover {
-    color: white !important;
-    background: rgba(212, 175, 55, 0.1) !important;
-}
-
-.mobile-menu-btn {
-    color: white !important;
-    background: #1a2b6d !important;
-    border-radius: 4px !important;
-}
-
-/* Mobile Menu Drawer - Deep Navy */
-@media (max-width: 768px) {
-    .nav-links {
-        background: #0f172a !important;
-        /* Deep Navy Drawer */
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
-        padding-top: 100px !important;
-        border-left: 2px solid #d4af37 !important;
-    }
-
-    .nav-links li {
-        width: 100% !important;
-    }
-
-    .nav-links a {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-        padding: 18px 25px !important;
-        color: white !important;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-        background: rgba(212, 175, 55, 0.1) !important;
-        color: #d4af37 !important;
-        /* Gold accent */
-    }
-}
-
-/* Sorting and Layout Refinements */
-.blog-posts-container {
-    margin-top: 30px;
-    border-top: 6px solid #0f172a;
-    background: #ffffff !important;
-    border-radius: 12px;
-}
-
-.post-title {
-    color: #1e3a8a !important;
-    /* Dark Blue */
-}
-
-.view-btn {
-    background-color: #0f172a !important;
-    border: none;
-    color: white !important;
-}
-
-.view-btn:hover {
-    background-color: #1a2b6d !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
-}
-
-.pdf-modal {
-    background: rgba(15, 23, 42, 0.92) !important;
-    /* Deep Navy Overlay */
-}
-
-.modal-header h4 {
-    color: #0f172a !important;
-}
+}

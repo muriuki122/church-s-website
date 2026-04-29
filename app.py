@@ -83,13 +83,10 @@ AUTHORIZED_ADMINS = {
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    email = data.get('email', '').strip().lower()
+    email = data.get('email')
     password = data.get('password')
 
-    # Case-insensitive email check
-    authorized_admins_lower = {k.lower(): v for k, v in AUTHORIZED_ADMINS.items()}
-
-    if email in authorized_admins_lower and authorized_admins_lower[email] == password:
+    if email in AUTHORIZED_ADMINS and AUTHORIZED_ADMINS[email] == password:
         session['user'] = email
         return jsonify({'success': True, 'user': {'email': email}})
     return jsonify({'success': False, 'message': 'Invalid credentials'}), 401

@@ -510,6 +510,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const header = document.querySelector('.header');
     const revealElements = document.querySelectorAll('.reveal');
 
+    // Sticky Header Logic
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
 
     // Intersection Observer for Scroll Reveal
     const revealObserver = new IntersectionObserver((entries) => {

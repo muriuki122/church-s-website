@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
             publishDate: "2026-02-15",
             content: "We are pleased to highlight 'Babylon Mystery Religion' by Ralph Woodrow as a featured study in our archive. This book provides a deep dive into historical religious traditions and their biblical context. You can read the full text in our Archives section.",
             status: 'published',
-            isStatic: true
+            isStatic: true,
+            pdfUrl: "pdfs/Babylon-Mystery-Religion-by-Ralph-Woodrow-1981.pdf"
         },
         {
             id: 'static-2',
@@ -21,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
             publishDate: "2026-02-14",
             content: "Dive into the resilience of faith with Dugger and Dodd's monumental work. This history book traces the journey of the faithful through the centuries. Available now for full preview in our digital library.",
             status: 'published',
-            isStatic: true
+            isStatic: true,
+            pdfUrl: "pdfs/A-History-of-the-True-Church-Dugger-and-Dodd.pdf"
         },
         {
             id: 'static-3',
@@ -31,7 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
             publishDate: "2026-02-13",
             content: "Looking for family study material? 'The Bible Home Instructor' offers practical biblical guidance for every household. Discover this treasure in our Archives today.",
             status: 'published',
-            isStatic: true
+            isStatic: true,
+            pdfUrl: "pdfs/THE-BIBLE-HOME-INSTRUCTOR.pdf"
         },
         {
             id: 'static-4',
@@ -41,48 +44,94 @@ document.addEventListener('DOMContentLoaded', function () {
             publishDate: "2026-02-12",
             content: "Alexander Hislop's classic research is a cornerstone of our historical collection. We've made it easier than ever to access this research directly through our mobile-optimized archive viewer.",
             status: 'published',
-            isStatic: true
+            isStatic: true,
+            pdfUrl: "pdfs/The-Two-Babylons.pdf"
+        },
+        {
+            id: 'static-5',
+            title: "Judah Bulletin November 1960",
+            category: "archive",
+            author: "Church Media",
+            publishDate: "2026-04-30",
+            content: "A historical issue of the Judah bulletin providing insights and teachings from November 1960. View directly inline on our website.",
+            status: 'published',
+            isStatic: true,
+            pdfUrl: "judah/Judah-1960-Bul-November.pdf"
+        },
+        {
+            id: 'static-6',
+            title: "Judah Nov/Dec Volume 82",
+            category: "archive",
+            author: "Church Media",
+            publishDate: "2026-04-30",
+            content: "Historical perspective and teachings from the Judah Nov/Dec Volume 82.",
+            status: 'published',
+            isStatic: true,
+            pdfUrl: "judah/Judah-82-NovDec.pdf"
+        },
+        {
+            id: 'static-7',
+            title: "Judah August Volume 86",
+            category: "archive",
+            author: "Church Media",
+            publishDate: "2026-04-30",
+            content: "Explore the teachings from Judah August Volume 86 in our digital viewer.",
+            status: 'published',
+            isStatic: true,
+            pdfUrl: "judah/Judah-86Aug.pdf"
+        },
+        {
+            id: 'static-8',
+            title: "Judah Volume 90",
+            category: "archive",
+            author: "Church Media",
+            publishDate: "2026-04-29",
+            content: "Access the full text of Judah Volume 90 in this exclusive digital archive release.",
+            status: 'published',
+            isStatic: true,
+            pdfUrl: "judah/Judah-90.pdf"
+        },
+        {
+            id: 'static-9',
+            title: "Judah Volume 91",
+            category: "archive",
+            author: "Church Media",
+            publishDate: "2026-04-29",
+            content: "Read the historical teachings and community messages in Judah Volume 91.",
+            status: 'published',
+            isStatic: true,
+            pdfUrl: "judah/Judah-91.pdf"
         }
     ];
 
     // --- 2. REST API SYNC ---
     async function fetchPosts() {
         console.log("Fetching blog posts from Python API...");
-        const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
-        let success = false;
+        try {
+            const response = await fetch('http://localhost:5000/api/posts');
+            const dynamicPosts = await response.json();
 
-        for (const path of paths) {
-            try {
-                const response = await fetch(path);
-                const text = await response.text();
-                if (!text) continue;
+            console.log(`Received ${dynamicPosts.length} posts from API.`);
 
-                const dynamicPosts = JSON.parse(text);
-                console.log(`Received ${dynamicPosts.length} posts from ${path}.`);
+            // Combine and sort (static posts act as baseline)
+            const allPosts = [...dynamicPosts, ...staticPosts].sort((a, b) =>
+                new Date(b.publishDate) - new Date(a.publishDate)
+            );
 
-                // Combine and sort (static posts act as baseline)
-                const allPosts = [...dynamicPosts, ...staticPosts].sort((a, b) =>
-                    new Date(b.publishDate) - new Date(a.publishDate)
-                );
-
-                postsList.innerHTML = '';
-                if (allPosts.length === 0) {
-                    postsList.innerHTML = '<div class="empty-state"><p>No messages have been published yet.</p></div>';
-                } else {
-                    allPosts.forEach((post) => {
-                        addNewPostToList(post, post.id);
-                    });
-                }
-                success = true;
-                break;
-            } catch (error) {
-                console.warn(`Fetch posts failed on ${path}:`, error.message);
+            postsList.innerHTML = '';
+            if (allPosts.length === 0) {
+                postsList.innerHTML = '<div class="empty-state"><p>No messages have been published yet.</p></div>';
+                return;
             }
-        }
 
-        if (!success) {
-            console.error("API ERROR: All fetch attempts failed.");
+            allPosts.forEach((post) => {
+                addNewPostToList(post, post.id);
+            });
+        } catch (error) {
+            console.error("API ERROR during fetchPosts:", error);
             showToast('Sync Error', 'Could not connect to the church server. Showing offline content.', 'error');
+
+            // Fallback to static if error
             postsList.innerHTML = '';
             staticPosts.forEach(post => addNewPostToList(post, post.id));
         }
@@ -90,37 +139,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Save post to Python API
     async function savePostToFirestore(postData) {
-        const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
-        let success = false;
-
-        for (const path of paths) {
-            try {
-                const response = await fetch(path, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(postData)
-                });
-                const text = await response.text();
-                if (!text) continue;
-
-                const result = JSON.parse(text);
-                if (result.success) {
-                    showToast('Post Published', 'Your blog post has been shared with the community.', 'success');
-                    if (blogForm) blogForm.reset();
-                    const today = new Date().toISOString().split('T')[0];
-                    const publishDateInput = document.getElementById('publishDate');
-                    if (publishDateInput) publishDateInput.value = today;
-                    fetchPosts();
-                    success = true;
-                    break;
-                }
-            } catch (error) {
-                console.warn(`Post failed on ${path}:`, error.message);
+        try {
+            const response = await fetch('http://localhost:5000/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(postData)
+            });
+            const result = await response.json();
+            if (result.success) {
+                showToast('Post Published', 'Your blog post has been shared with the community.', 'success');
+                if (blogForm) blogForm.reset();
+                const today = new Date().toISOString().split('T')[0];
+                const publishDateInput = document.getElementById('publishDate');
+                if (publishDateInput) publishDateInput.value = today;
+                fetchPosts(); // Refresh list
+            } else {
+                throw new Error(result.message || 'Failed to save post');
             }
-        }
-
-        if (!success) {
-            showToast('Error', 'Could not save post to server. Please try again.', 'error');
+        } catch (error) {
+            showToast('Error', error.message, 'error');
         }
     }
 
@@ -135,17 +172,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 category: document.getElementById('blogCategory').value,
                 tags: document.getElementById('blogTags').value || '',
                 content: document.getElementById('blogContent').value,
-                image: document.getElementById('blogImage') ? document.getElementById('blogImage').value : '',
+                image: document.getElementById('blogImage').value,
                 publishDate: document.getElementById('publishDate').value,
-                author: (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser.email : 'Church Admin'
+                author: auth.currentUser ? auth.currentUser.email : 'Church Admin'
             };
 
             savePostToFirestore(postData);
         });
     }
-
-    // Start fetching
-    fetchPosts();
 
     // --- 3. UI RENDERING ---
     let allPostsCache = [];
@@ -193,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <i class="fas fa-download"></i>
                 </button>
                 ${postData.isStatic ?
-                `<a href="archives.html" class="post-action-btn view-btn"><i class="fas fa-archive"></i> View in Archive</a>` :
+                `<button class="post-action-btn view-btn" onclick="viewPostAsPDF('${postId}')"><i class="fas fa-archive"></i> View in Archive</button>` :
                 (auth.currentUser ? `<button class="post-action-btn delete-btn" onclick="deletePost('${postId}')"><i class="fas fa-trash"></i> Delete</button>` : '')
             }
             </div>
@@ -233,6 +267,10 @@ document.addEventListener('DOMContentLoaded', function () {
         modalClose.addEventListener('click', () => {
             pdfModal.style.display = 'none';
             if (blogPDFViewer) blogPDFViewer.clear();
+            let container = document.getElementById('pdf-viewer-container');
+            let toolbar = document.getElementById('pdf-toolbar');
+            if (container) container.innerHTML = '';
+            if (toolbar) toolbar.style.display = '';
             if (currentBlobUrl) {
                 URL.revokeObjectURL(currentBlobUrl);
                 currentBlobUrl = null;
@@ -243,6 +281,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (e.target === pdfModal) {
                 pdfModal.style.display = 'none';
                 if (blogPDFViewer) blogPDFViewer.clear();
+                let container = document.getElementById('pdf-viewer-container');
+                let toolbar = document.getElementById('pdf-toolbar');
+                if (container) container.innerHTML = '';
+                if (toolbar) toolbar.style.display = '';
                 if (currentBlobUrl) {
                     URL.revokeObjectURL(currentBlobUrl);
                     currentBlobUrl = null;
@@ -264,6 +306,38 @@ document.addEventListener('DOMContentLoaded', function () {
             year: 'numeric', month: 'long', day: 'numeric'
         });
 
+        // Setup the modal first
+        pdfModal.style.display = 'flex';
+        document.getElementById('modal-title').textContent = post.title;
+
+        // If the post has a direct PDF URL associated (static archive posts)
+        if (post.pdfUrl) {
+            showToast('Loading', 'Loading document from archive...', 'success');
+
+            // Use iframe to bypass local file CORS restrictions
+            let container = document.getElementById('pdf-viewer-container');
+            let toolbar = document.getElementById('pdf-toolbar');
+            if (toolbar) toolbar.style.display = 'none';
+            if (container) {
+                container.innerHTML = `<iframe src="${post.pdfUrl}" style="width:100%; height:100%; border:none;"></iframe>`;
+            }
+
+            // Setup download button in modal
+            const downloadBtn = document.getElementById('downloadPdfBtn');
+            if (downloadBtn) {
+                downloadBtn.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = post.pdfUrl;
+                    a.download = post.pdfUrl.split('/').pop() || `${post.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+            }
+            return; // Skip generation logic
+        }
+
+        // Generate PDF on the fly for regular blog posts
         // Create temporary template for conversion
         const element = document.createElement('div');
         element.style.padding = '40px';
@@ -273,11 +347,10 @@ document.addEventListener('DOMContentLoaded', function () {
         element.style.width = '800px'; // Standard A4-ish width for conversion
 
         element.innerHTML = `
-            <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #0f172a; padding-bottom: 20px;">
-                <img src="images/minorah%20image.jpg" style="height: 90px; border-radius: 50%; margin-bottom: 15px; border: 2px solid #d4af37;">
-                <h1 style="color: #0f172a; margin: 0; font-family: 'Playfair Display', serif; font-size: 26px;">Kaloleni Seventh Day Church</h1>
-                <p style="color: #d4af37; font-weight: 700; margin: 8px 0; text-transform: uppercase; letter-spacing: 1.5px; font-size: 14px;">Official Church Message</p>
-                <p style="color: #64748b; font-style: italic; margin: 5px 0; font-size: 12px;">Growing in faith, serving with love</p>
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 20px;">
+                <img src="images/minorah%20image.jpg" style="height: 80px; border-radius: 50%; margin-bottom: 15px;">
+                <h1 style="color: #1a2b6d; margin: 0; font-family: 'Playfair Display', serif;">Kaloleni Seventh Day Church</h1>
+                <p style="color: #d4af37; font-weight: 600; margin: 5px 0;">Growing in faith, serving with love</p>
             </div>
             <div style="margin-bottom: 20px;">
                 <h2 style="font-size: 24px; color: #1a2b6d; margin-bottom: 10px;">${post.title}</h2>
@@ -308,9 +381,6 @@ document.addEventListener('DOMContentLoaded', function () {
         html2pdf().set(opt).from(element).output('blob').then(function (blob) {
             if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
             currentBlobUrl = URL.createObjectURL(blob);
-
-            pdfModal.style.display = 'flex';
-            document.getElementById('modal-title').textContent = post.title;
 
             if (blogPDFViewer) {
                 blogPDFViewer.loadPDF(currentBlobUrl);

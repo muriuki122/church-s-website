@@ -216,8 +216,17 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         4: { // Q4 (October - December)
             title: "Fourth Quarter 2026",
-            available: false,
-            lessons: []
+            available: true,
+            lessons: [
+                {
+                    id: "q4-1",
+                    title: "Fourth Quarter Lesson 2026",
+                    date: "October - December 2026",
+                    description: "Quarterly Bible study lessons for spiritual growth and understanding.",
+                    memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
+                    pdfUrl: "lessons/Bible Lesson 4th Q 2026 final.pdf"
+                }
+            ]
         }
     };
 
@@ -646,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const adminPanel = document.getElementById('adminFormContainer');
         const closeAdminBtn = document.getElementById('closeAdminForm');
         const addDocForm = document.getElementById('addDocForm');
+        const addLessonForm = document.getElementById('addLessonForm');
         const addBlogForm = document.getElementById('addBlogForm');
         const tabDocBtn = document.getElementById('tabDocBtn');
         const tabLessonBtn = document.getElementById('tabLessonBtn');
@@ -1514,6 +1524,40 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(notificationStyles);
 
+    function setupHamburgerMenu() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                navLinks.classList.toggle('active');
+                const isActive = navLinks.classList.contains('active');
+
+                mobileMenuBtn.innerHTML = isActive
+                    ? '<i class="fas fa-times"></i>'
+                    : '<i class="fas fa-bars"></i>';
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('nav.main-nav') && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+
+            // Close menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+        }
+    }
 
     // --- 14. LOAD PREFERENCES AND START APP ---
     function loadPreferences() {
@@ -1546,189 +1590,116 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 13. ADMIN MANAGEMENT API SYNC ---
+    // --- 15. ADMIN FUNCTIONS FOR UPDATING LESSONS ---
+    // These functions can be called from an admin interface to update lessons
+    window.updateBibleLesson = function (quarter, lessonId, lessonData) {
+        if (!bibleLessons[quarter]) {
+            console.error(`Invalid quarter: ${quarter}`);
+            return false;
+        }
 
-    // Fetch dynamic content from Python API
-    async function fetchArchiveData() {
-        const basePath = '';
-        const fallbackPath = 'http://localhost:5000';
-        const endpoints = [
-            { key: 'documents', url: '/api/documents', target: staticDocuments, callback: handleMainFilterChange },
-            { key: 'lessons', url: '/api/lessons', target: null, callback: handleLessonFilterChange }
-        ];
+        // Find the lesson by ID
+        const lessonIndex = bibleLessons[quarter].lessons.findIndex(lesson => lesson.id === lessonId);
 
-        for (const endpoint of endpoints) {
-            let success = false;
-            const paths = [endpoint.url, fallbackPath + endpoint.url];
+        if (lessonIndex !== -1) {
+            // Update existing lesson
+            bibleLessons[quarter].lessons[lessonIndex] = { ...bibleLessons[quarter].lessons[lessonIndex], ...lessonData };
+        } else {
+            // Add new lesson
+            bibleLessons[quarter].lessons.push({ id: lessonId, ...lessonData });
+        }
 
-            for (const path of paths) {
+        // Mark the quarter as available
+        bibleLessons[quarter].available = true;
+
+        // Refresh the lessons sidebar if this quarter is currently selected
+        if (currentQuarter === quarter) {
+            handleLessonFilterChange();
+        }
+
+        // Save to localStorage for persistence
+        localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
+
+        return true;
+    };
+
+    window.addBibleLesson = function (quarter, lessonData) {
+        if (!bibleLessons[quarter]) {
+            console.error(`Invalid quarter: ${quarter}`);
+            return false;
+        }
+
+        // Generate a unique ID if not provided
+        if (!lessonData.id) {
+            const existingIds = bibleLessons[quarter].lessons.map(lesson => lesson.id);
+            let newId = `q${quarter}-${bibleLessons[quarter].lessons.length + 1}`;
+            while (existingIds.includes(newId)) {
+                newId = `q${quarter}-${parseInt(newId.split('-')[1]) + 1}`;
+            }
+            lessonData.id = newId;
+        }
+
+        // Add the lesson
+        bibleLessons[quarter].lessons.push(lessonData);
+
+        // Mark the quarter as available
+        bibleLessons[quarter].available = true;
+
+        // Refresh the lessons sidebar if this quarter is currently selected
+        if (currentQuarter === quarter) {
+            handleLessonFilterChange();
+        }
+
+        // Save to localStorage for persistence
+        localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
+
+        return lessonData.id;
+    };
+
+    window.removeBibleLesson = function (quarter, lessonId) {
+        if (!bibleLessons[quarter]) {
+            console.error(`Invalid quarter: ${quarter}`);
+            return false;
+        }
+
+        // Find and remove the lesson
+        const lessonIndex = bibleLessons[quarter].lessons.findIndex(lesson => lesson.id === lessonId);
+
+        if (lessonIndex !== -1) {
+            bibleLessons[quarter].lessons.splice(lessonIndex, 1);
+
+            // Refresh the lessons sidebar if this quarter is currently selected
+            if (currentQuarter === quarter) {
+                handleLessonFilterChange();
+            }
+
+            // Save to localStorage for persistence
+            localStorage.setItem(`bibleLessons_${quarter}`, JSON.stringify(bibleLessons[quarter]));
+
+            return true;
+        }
+
+        return false;
+    };
+
+    // Load saved lessons from localStorage
+    function loadSavedLessons() {
+        for (let quarter = 1; quarter <= 4; quarter++) {
+            const savedLessons = localStorage.getItem(`bibleLessons_${quarter}`);
+            if (savedLessons) {
                 try {
-                    const response = await fetch(path);
-                    const text = await response.text();
-                    if (!text) continue;
-
-                    const data = JSON.parse(text);
-                    if (endpoint.key === 'documents') {
-                        const existingIds = staticDocuments.map(d => d.id);
-                        data.forEach(doc => {
-                            if (!existingIds.includes(doc.id)) staticDocuments.push(doc);
-                        });
-                    } else if (endpoint.key === 'lessons') {
-                        data.forEach(lesson => {
-                            const q = lesson.quarter;
-                            if (bibleLessons[q]) {
-                                const exists = bibleLessons[q].lessons.find(l => l.id === lesson.id);
-                                if (!exists) {
-                                    bibleLessons[q].lessons.push(lesson);
-                                    bibleLessons[q].available = true;
-                                }
-                            }
-                        });
-                    }
-                    if (endpoint.callback) endpoint.callback();
-                    success = true;
-                    break;
+                    const parsed = JSON.parse(savedLessons);
+                    bibleLessons[quarter] = { ...bibleLessons[quarter], ...parsed };
                 } catch (e) {
-                    console.warn(`Fetch ${endpoint.key} failed on ${path}:`, e.message);
+                    console.error(`Error loading saved lessons for quarter ${quarter}:`, e);
                 }
             }
         }
     }
 
-    // Connect Management Forms to API
-    function setupAdminLogic() {
-        // 1. Add Document Form
-        const addDocForm = document.getElementById('addDocForm');
-        if (addDocForm) {
-            addDocForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const docData = {
-                    title: document.getElementById('docTitle').value,
-                    category: document.getElementById('docCategory').value,
-                    fileName: document.getElementById('docPath').value
-                };
-
-                const paths = ['/api/documents', 'http://localhost:5000/api/documents'];
-                let success = false;
-
-                for (const path of paths) {
-                    try {
-                        const res = await fetch(path, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(docData)
-                        });
-                        const text = await res.text();
-                        if (!text) continue;
-
-                        const result = JSON.parse(text);
-                        if (result.success) {
-                            showNotification('Document Added Successfully', 'success');
-                            addDocForm.reset();
-                            fetchArchiveData();
-                            success = true;
-                            break;
-                        }
-                    } catch (err) {
-                        console.warn(`Doc add failed on ${path}`);
-                    }
-                }
-                if (!success) showNotification('Failed to add document', 'error');
-            });
-        }
-
-        // 2. Add Lesson Form
-        const addLessonForm = document.getElementById('addLessonForm');
-        if (addLessonForm) {
-            addLessonForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const quarter = parseInt(document.getElementById('lessonQuarter').value);
-                const lessonData = {
-                    id: document.getElementById('lessonId').value,
-                    title: document.getElementById('lessonTitle').value,
-                    date: document.getElementById('lessonDate').value,
-                    memoryVerse: document.getElementById('lessonMemory').value,
-                    pdfUrl: document.getElementById('lessonPdf').value,
-                    quarter: quarter
-                };
-
-                const paths = ['/api/lessons', 'http://localhost:5000/api/lessons'];
-                let success = false;
-
-                for (const path of paths) {
-                    try {
-                        const res = await fetch(path, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(lessonData)
-                        });
-                        const text = await res.text();
-                        if (!text) continue;
-
-                        const result = JSON.parse(text);
-                        if (result.success) {
-                            showNotification('Lesson Saved Successfully', 'success');
-                            addLessonForm.reset();
-                            fetchArchiveData();
-                            success = true;
-                            break;
-                        }
-                    } catch (err) {
-                        console.warn(`Lesson save failed on ${path}`);
-                    }
-                }
-                if (!success) showNotification('Failed to save lesson', 'error');
-            });
-        }
-
-        // 3. Add Blog Form (Shortcut)
-        const addBlogForm = document.getElementById('addBlogForm');
-        if (addBlogForm) {
-            addBlogForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const blogData = {
-                    title: document.getElementById('blogTitle').value,
-                    content: document.getElementById('blogContent').value,
-                    category: document.getElementById('blogCategory').value,
-                    publishDate: document.getElementById('blogDate').value,
-                    image: document.getElementById('blogImage') ? document.getElementById('blogImage').value : '',
-                    author: (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser.email : 'Admin'
-                };
-
-                const paths = ['/api/posts', 'http://localhost:5000/api/posts'];
-                let success = false;
-
-                for (const path of paths) {
-                    try {
-                        const res = await fetch(path, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(blogData)
-                        });
-                        const text = await res.text();
-                        if (!text) continue;
-
-                        const result = JSON.parse(text);
-                        if (result.success) {
-                            showNotification('Blog Published Successfully', 'success');
-                            addBlogForm.reset();
-                            success = true;
-                            break;
-                        }
-                    } catch (err) {
-                        console.warn(`Blog shortcut failed on ${path}`);
-                    }
-                }
-
-                if (!success) showNotification('Failed to publish blog', 'error');
-            });
-        }
-    }
-
-    // Initialize application
+    // Start the application
     loadPreferences();
-    fetchArchiveData();
-    setupAdminLogic();
+    loadSavedLessons();
     init();
 });
 
@@ -1745,36 +1716,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-});
-
-// Mobile Tab Logic
-document.addEventListener('DOMContentLoaded', function () {
-    const tabs = document.querySelectorAll('.mobile-tab');
-    const librarySection = document.querySelector('.main-archive-content');
-    const lessonsSection = document.querySelector('.lessons-sidebar');
-
-    if (tabs.length && librarySection && lessonsSection) {
-        if (window.innerWidth <= 992) {
-            librarySection.classList.add('active');
-        }
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.dataset.target;
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                if (target === 'library') {
-                    librarySection.classList.add('active');
-                    lessonsSection.classList.remove('active');
-                } else {
-                    lessonsSection.classList.add('active');
-                    librarySection.classList.remove('active');
-                }
-                window.scrollTo({ top: document.querySelector('.hero').offsetHeight + 50, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
     }

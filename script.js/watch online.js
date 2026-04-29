@@ -302,44 +302,50 @@ function onPlayerReady(event) {
     updateMuteUI();
 }
 
+// Volume Slider Logic
+const volumeSlider = document.getElementById('volume-slider');
+
 function updateMuteUI() {
     if (!player || !muteToggleBtn) return;
     const isMuted = player.isMuted();
+    const currentVolume = player.getVolume();
+
     const icon = muteToggleBtn.querySelector('i');
-    if (isMuted) {
+    if (isMuted || currentVolume === 0) {
         icon.className = 'fas fa-volume-mute';
         muteText.textContent = 'Unmute';
+        if (volumeSlider) volumeSlider.value = 0;
     } else {
         icon.className = 'fas fa-volume-up';
         muteText.textContent = 'Mute';
+        if (volumeSlider) volumeSlider.value = currentVolume;
     }
 }
 
 if (muteToggleBtn) {
     muteToggleBtn.addEventListener('click', () => {
-        if (!player) {
-            // Fallback: reload without mute param
-            const currentSrc = videoPlayerFrame.src;
-            if (currentSrc.includes('mute=1')) {
-                videoPlayerFrame.src = currentSrc.replace('mute=1', 'mute=0');
-                if (muteText) muteText.textContent = 'Mute';
-            }
-            return;
+        if (!player) return;
+        if (player.isMuted()) {
+            player.unMute();
+            if (player.getVolume() === 0) player.setVolume(50);
+        } else {
+            player.mute();
         }
+        updateMuteUI();
+    });
+}
 
-        try {
-            if (player.isMuted()) {
-                player.unMute();
-                player.setVolume(100);
-            } else {
-                player.mute();
-            }
-            updateMuteUI();
-        } catch (e) {
-            console.error("Unmute failed");
-            const currentSrc = videoPlayerFrame.src;
-            videoPlayerFrame.src = currentSrc.includes('mute=1') ? currentSrc.replace('mute=1', 'mute=0') : currentSrc;
+if (volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+        if (!player) return;
+        const vol = parseInt(e.target.value);
+        player.setVolume(vol);
+        if (vol > 0 && player.isMuted()) {
+            player.unMute();
+        } else if (vol === 0 && !player.isMuted()) {
+            player.mute();
         }
+        updateMuteUI();
     });
 }
 
@@ -480,33 +486,40 @@ if (notifyToggleBtn && notifyFormInline) {
 }
 
 if (notifySubmitBtn) {
-    notifySubmitBtn.addEventListener('click', async () => {
-        const contactLine = notifyContactInput.value.trim();
+    notifySubmitBtn.addEventListener('click', () => {
+        const contact = notifyContactInput.value.trim();
         const duration = document.getElementById('notify-duration').value;
+        const churchPhone = "+254721218834";
+        const churchEmail = "jcommunityofelohim@gmail.com";
 
-        if (contactLine) {
-            // FIRM SYSTEM: Browser Notification 
-            if ("Notification" in window) {
-                const permission = await Notification.requestPermission();
-                if (permission === "granted") {
-                    new Notification("Kaloleni Church", {
-                        body: "Notification Alert Active! You will be notified.",
-                        icon: "images/minorah image.jpg"
-                    });
-                }
-            }
-            showToast("Success! You are now subscribed for: " + duration);
-
-            // Reset UI
-            notifyFormInline.style.display = 'none';
-            notifyToggleBtn.style.display = 'inline-block';
-            notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Subscribed';
-            notifyToggleBtn.style.backgroundColor = '#10b981';
-            notifyToggleBtn.style.color = '#ffffff';
-            notifyToggleBtn.disabled = true;
-        } else {
-            showToast("Please enter an email or WhatsApp number");
+        if (!contact) {
+            showToast("Please enter an email or WhatsApp number", "error");
+            return;
         }
+
+        const isEmail = contact.includes('@');
+        const isPhone = /^\+?[\d\s-]{8,}$/.test(contact);
+
+        if (isEmail) {
+            const subject = encodeURIComponent("Live Stream Notification Subscription");
+            const body = encodeURIComponent(`I would like to subscribe to live notifications.\n\nContact: ${contact}\nDuration: ${duration}`);
+            window.location.href = `mailto:${churchEmail}?subject=${subject}&body=${body}`;
+            showToast("Opening Email client...");
+        } else if (isPhone || contact.toLowerCase().includes('whatsapp')) {
+            const message = encodeURIComponent(`I would like to subscribe to live notifications.\n\nContact: ${contact}\nDuration: ${duration}`);
+            window.open(`https://wa.me/${churchPhone}?text=${message}`, '_blank');
+            showToast("Opening WhatsApp...");
+        } else {
+            // General fallback
+            showToast("Notification request recorded!");
+        }
+
+        // Reset to button state
+        notifyFormInline.style.display = 'none';
+        notifyToggleBtn.style.display = 'inline-block';
+        notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Requested';
+        notifyToggleBtn.style.backgroundColor = '#10b981';
+        notifyToggleBtn.style.color = '#ffffff';
     });
 }
 

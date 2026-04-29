@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Title will be set by JavaScript -->
     <title id="site-title">PDF Archive</title>
 
@@ -141,6 +141,98 @@
         </div>
     </div>
 
+    <!-- Mobile Nav Overlay Styles -->
+    <style>
+        .arch-hamburger {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(26, 43, 109, 0.1);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            color: #1a2b6d;
+            cursor: pointer;
+            z-index: 5000;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .arch-hamburger {
+                display: flex !important;
+            }
+
+            .arch-nav-drawer {
+                position: fixed !important;
+                top: 0 !important;
+                right: -100% !important;
+                width: 78% !important;
+                max-width: 310px !important;
+                height: 100vh !important;
+                background: #fff !important;
+                z-index: 4999 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 80px 24px 40px !important;
+                box-shadow: -6px 0 24px rgba(0, 0, 0, 0.18) !important;
+                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                list-style: none !important;
+                margin: 0 !important;
+                gap: 0 !important;
+            }
+
+            .arch-nav-drawer.open {
+                right: 0 !important;
+            }
+
+            .arch-nav-drawer li {
+                border-bottom: 1px solid #f1f5f9 !important;
+            }
+
+            .arch-nav-drawer a {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                padding: 16px 8px !important;
+                color: #1a2b6d !important;
+                text-decoration: none !important;
+                font-size: 1.05rem !important;
+                font-weight: 600 !important;
+                width: 100% !important;
+            }
+
+            .arch-nav-drawer a:hover {
+                background: #f8fafc !important;
+            }
+
+            .arch-nav-overlay {
+                position: fixed !important;
+                inset: 0 !important;
+                background: rgba(0, 0, 0, 0.45) !important;
+                z-index: 4998 !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transition: opacity 0.3s !important;
+            }
+
+            .arch-nav-overlay.open {
+                opacity: 1 !important;
+                pointer-events: all !important;
+            }
+
+            /* Hide the original nav-links on mobile */
+            .main-nav .nav-links {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <!-- Backdrop overlay -->
+    <div class="arch-nav-overlay" id="archOverlay"></div>
+
     <!-- Main Header -->
     <header>
         <div class="container">
@@ -155,30 +247,34 @@
                 <ul class="nav-links">
                     <li><a href="index.html" id="nav-home"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="watch online.html" id="nav-watch"><i class="fas fa-video"></i> Watch online</a></li>
-                    <li><a href="about us.html" id="nav-about"><i class="fas fa-info-circle"></i> about us</a></li>
+                    <li><a href="about us.html" id="nav-about"><i class="fas fa-info-circle"></i> About us</a></li>
                     <li><a href="blog.html" id="nav-blog"><i class="fas fa-blog"></i> Blog</a></li>
                     <li><a href="archives.html" class="active" id="nav-archive"><i class="fas fa-archive"></i>
                             Archives</a></li>
                     <li><a href="contact.html" id="nav-contact"><i class="fas fa-envelope"></i> Contact</a></li>
                 </ul>
-                <div class="mobile-menu-btn">
+                <button class="arch-hamburger" id="archHamburger" aria-label="Open navigation">
                     <i class="fas fa-bars"></i>
-                </div>
+                </button>
             </nav>
         </div>
     </header>
+
+    <!-- Mobile-only drawer nav -->
+    <ul class="arch-nav-drawer" id="archDrawer">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="watch online.html"><i class="fas fa-video"></i> Watch Online</a></li>
+        <li><a href="about us.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+        <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+        <li><a href="archives.html"><i class="fas fa-archive"></i> Archives</a></li>
+        <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+    </ul>
 
     <!-- Hero Section -->
     <section class="hero container">
         <h2 id="hero-title" data-key="heroTitle">Explore Our Document Collection</h2>
         <p id="hero-subtitle" data-key="heroSubtitle">Browse, preview, and download from our extensive library.</p>
     </section>
-
-    <!-- Mobile Tab Switcher -->
-    <div class="mobile-archive-tabs">
-        <button class="mobile-tab active" data-target="library">Library</button>
-        <button class="mobile-tab" data-target="lessons">Bible Lessons</button>
-    </div>
 
     <!-- Main Content Area -->
     <main class="container">
@@ -266,8 +362,6 @@
                     <li><a href="about us.html">About Us</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                     <li><a href="archives.html">Archives</a></li>
-                    <li><a href="javascript:void(0)" id="adminLoginBtn" class="footer-admin-link"><i
-                                class="fas fa-user-shield"></i> Admin Portal</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -497,8 +591,7 @@
         </div>
     </div>
 
-    <!-- Church Admin API & Auth -->
-    <script src="script.js/auth.js"></script>
+
 
     <!-- PDF.js (Core Library) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -520,6 +613,47 @@
                 if (modal) modal.style.display = 'flex';
             }
         });
+    </script>
+
+    <!-- Mobile Drawer Script -->
+    <script>
+        (function () {
+            function initDrawer() {
+                var btn = document.getElementById('archHamburger');
+                var drawer = document.getElementById('archDrawer');
+                var overlay = document.getElementById('archOverlay');
+                if (!btn || !drawer || !overlay) return;
+
+                function openMenu() {
+                    drawer.classList.add('open');
+                    overlay.classList.add('open');
+                    btn.innerHTML = '<i class="fas fa-times"></i>';
+                }
+
+                function closeMenu() {
+                    drawer.classList.remove('open');
+                    overlay.classList.remove('open');
+                    btn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    drawer.classList.contains('open') ? closeMenu() : openMenu();
+                });
+
+                overlay.addEventListener('click', closeMenu);
+
+                drawer.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', closeMenu);
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initDrawer);
+            } else {
+                initDrawer();
+            }
+        })();
     </script>
     <button id="backToTop" class="back-to-top">
         <i class="fas fa-arrow-up"></i>

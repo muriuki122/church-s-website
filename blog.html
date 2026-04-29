@@ -3,9 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Kaloleni Seventh Day Church</title>
     <link rel="icon" type="image/jpeg" href="images/minorah%20image.jpg">
+    <link rel="stylesheet" href="style/global.css">
     <link rel="stylesheet" href="style/index.css">
     <link rel="stylesheet" href="style/blog.css">
     <link rel="stylesheet" href="style/admin.css">
@@ -44,97 +45,7 @@
     <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
         <!-- Blog Tab Content -->
         <div id="blog" class="tab-content">
-            <!-- Hidden by default, shown only to admins -->
-            <div id="adminFormContainer" class="blog-form-container" style="display: none;">
-                <div class="form-header">
-                    <h2 class="form-title">Create New Blog Post</h2>
-                    <p class="form-description">Share messages, events, and inspirations with our church community.</p>
-                </div>
-
-                <div id="aiSuggestion" class="ai-suggestion">
-                    <div class="ai-suggestion-header">
-                        <div class="ai-suggestion-title">
-                            <i class="fas fa-lightbulb"></i>
-                            Writing Suggestion
-                            <span class="ai-badge">AI</span>
-                        </div>
-                        <button class="ai-button ai-reject" id="dismissSuggestion">Dismiss</button>
-                    </div>
-                    <div class="ai-suggestion-text" id="suggestionText">
-                        Consider adding a relevant Bible verse to strengthen your message.
-                    </div>
-                    <div class="ai-actions">
-                        <button class="ai-button ai-accept" id="acceptSuggestion">Apply Suggestion</button>
-                        <button class="ai-button ai-reject" id="regenerateSuggestion">New Suggestion</button>
-                    </div>
-                </div>
-
-                <form id="blogForm">
-                    <div class="form-group">
-                        <label for="blogTitle" class="form-label">Post Title</label>
-                        <input type="text" id="blogTitle" class="form-input" placeholder="Enter a title for your post">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="blogCategory" class="form-label">Category</label>
-                            <select id="blogCategory" class="form-select">
-                                <option value="">Select a category</option>
-                                <option value="sermon">Sermon Notes</option>
-                                <option value="devotional">Daily Devotional</option>
-                                <option value="event">Church Event</option>
-                                <option value="testimony">Testimony</option>
-                                <option value="outreach">Outreach</option>
-                                <option value="news">Church News</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="blogTags" class="form-label">Tags</label>
-                            <input type="text" id="blogTags" class="form-input"
-                                placeholder="e.g., faith, prayer, community">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="blogContent" class="form-label">Message Content</label>
-                        <textarea id="blogContent" class="form-textarea"
-                            placeholder="Write your message here..."></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="blogImage" class="form-label">Featured Image URL</label>
-                            <input type="text" id="blogImage" class="form-input"
-                                placeholder="https://example.com/image.jpg">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="publishDate" class="form-label">Publish Date</label>
-                            <input type="date" id="publishDate" class="form-input">
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <div>
-                            <button type="button" class="btn btn-secondary" id="saveDraft">
-                                <i class="fas fa-save"></i> Save Draft
-                            </button>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-ai" id="aiAssist">
-                                <i class="fas fa-lightbulb"></i> Get Suggestions
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="previewPdf">
-                                <i class="fas fa-eye"></i> Preview as PDF
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="publishPost">
-                                <i class="fas fa-paper-plane"></i> Publish Post
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <!-- Admin content successfully removed per user request -->
 
             <div class="blog-posts-container">
                 <div class="posts-header">
@@ -183,8 +94,6 @@
                     <li><a href="blog.html">Blog</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                     <li><a href="archives.html">Archives</a></li>
-                    <li><a href="javascript:void(0)" id="adminLoginBtn" class="footer-admin-link"><i
-                                class="fas fa-user-shield"></i> Admin Portal</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -219,30 +128,7 @@
         </button>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content admin-login-modal">
-            <div class="modal-header">
-                <h3>Admin Access</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="adminLoginForm">
-                    <div class="form-group">
-                        <label for="adminEmail">Email</label>
-                        <input type="email" id="adminEmail" class="form-input" required placeholder="admin@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="adminPassword">Password</label>
-                        <input type="password" id="adminPassword" class="form-input" required placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Church Admin API & Auth -->
+    <!-- Church Admin API Removed -->
     <!-- PDF Preview Modal -->
     <div id="pdf-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content" style="max-width: 900px; width: 95%;">
@@ -270,7 +156,6 @@
     <script src="script.js/pdf-viewer.js"></script>
     <script src="script.js/global.js"></script>
     <script src="script.js/index.js"></script>
-    <script src="script.js/auth.js"></script>
     <script src="script.js/blog.js"></script>
 </body>
 

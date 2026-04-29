@@ -7,54 +7,35 @@ const AUTHORIZED_ADMINS = [
 // Global Auth State
 window.auth = {
     currentUser: JSON.parse(localStorage.getItem('church_admin')) || null,
-    onAuthStateChanged: function (callback) {
+    onAuthStateChanged: function(callback) {
         // Simple observer pattern
         this._callback = callback;
         callback(this.currentUser);
     },
-    signIn: async function (email, password) {
+    signIn: async function(email, password) {
         try {
-            // Try relative first, then absolute fallback
-            const paths = ['/api/login', 'http://localhost:5000/api/login'];
-            let lastError = "Could not connect to server";
-
-            for (const path of paths) {
-                try {
-                    const response = await fetch(path, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
-
-                    const text = await response.text();
-                    if (!text) continue; // Try next path if empty
-
-                    const data = JSON.parse(text);
-                    if (data.success) {
-                        this.currentUser = data.user;
-                        localStorage.setItem('church_admin', JSON.stringify(data.user));
-                        if (this._callback) this._callback(this.currentUser);
-                        // FIRM SYSTEM: Standard sync event for all management pages
-                        window.dispatchEvent(new CustomEvent('church-auth-sync', { detail: this.currentUser }));
-                        return { success: true };
-                    } else {
-                        return { success: false, message: data.message || 'Invalid credentials' };
-                    }
-                } catch (e) {
-                    lastError = e.message;
-                    console.warn(`Auth failed on ${path}:`, e.message);
-                }
+            const response = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            if (data.success) {
+                this.currentUser = data.user;
+                localStorage.setItem('church_admin', JSON.stringify(data.user));
+                if (this._callback) this._callback(this.currentUser);
+                return { success: true };
+            } else {
+                throw new Error(data.message || 'Login failed');
             }
-            return { success: false, message: lastError };
         } catch (err) {
             return { success: false, message: err.message };
         }
     },
-    signOut: async function () {
+    signOut: async function() {
         this.currentUser = null;
         localStorage.removeItem('church_admin');
         if (this._callback) this._callback(null);
-        window.dispatchEvent(new CustomEvent('church-auth-update', { detail: null }));
         return Promise.resolve();
     }
 };
