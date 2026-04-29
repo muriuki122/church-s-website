@@ -255,9 +255,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Initialize the viewer immediately
-    if (document.getElementById('pdf-viewer-container')) {
-        blogPDFViewer = new PDFViewer('pdf-viewer-container', 'pdf-toolbar');
+    // Initialize bypass variables for native iframe
+    let pdfContainerElement = document.getElementById('pdf-viewer-container');
+    if (pdfContainerElement) {
+        // Native viewer handles UI internally
+        const pdfToolbar = document.getElementById('pdf-toolbar');
+        if (pdfToolbar) pdfToolbar.style.display = 'none';
     }
 
     // Modal Closing Logic
@@ -266,7 +269,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalClose && pdfModal) {
         modalClose.addEventListener('click', () => {
             pdfModal.style.display = 'none';
-            if (blogPDFViewer) blogPDFViewer.clear();
+            pdfContainerElement = document.getElementById('pdf-viewer-container');
+            if (pdfContainerElement) pdfContainerElement.innerHTML = '';
             if (currentBlobUrl) {
                 URL.revokeObjectURL(currentBlobUrl);
                 currentBlobUrl = null;
@@ -276,7 +280,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('click', (e) => {
             if (e.target === pdfModal) {
                 pdfModal.style.display = 'none';
-                if (blogPDFViewer) blogPDFViewer.clear();
+                pdfContainerElement = document.getElementById('pdf-viewer-container');
+                if (pdfContainerElement) pdfContainerElement.innerHTML = '';
                 if (currentBlobUrl) {
                     URL.revokeObjectURL(currentBlobUrl);
                     currentBlobUrl = null;
@@ -306,8 +311,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (post.pdfUrl) {
             showToast('Loading', 'Loading document from archive...', 'success');
 
-            if (blogPDFViewer) {
-                blogPDFViewer.loadPDF(post.pdfUrl);
+            pdfContainerElement = document.getElementById('pdf-viewer-container');
+            if (pdfContainerElement) {
+                pdfContainerElement.innerHTML = `<iframe src="${post.pdfUrl}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
             }
 
             // Setup download button in modal
@@ -370,8 +376,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
             currentBlobUrl = URL.createObjectURL(blob);
 
-            if (blogPDFViewer) {
-                blogPDFViewer.loadPDF(currentBlobUrl);
+            pdfContainerElement = document.getElementById('pdf-viewer-container');
+            if (pdfContainerElement) {
+                pdfContainerElement.innerHTML = `<iframe src="${currentBlobUrl}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
             }
 
             // Setup download button in modal
