@@ -1164,15 +1164,17 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
         const pdfPath = getDocumentPath(doc);
 
-        // Initialize PDF viewer if not already done
-        if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
-        }
+        // Initialize using extremely fast native Iframe instead of slow canvas
+        const viewerContainer = document.getElementById('pdf-viewer');
+        const toolbar = document.getElementById('pdf-toolbar');
 
         modalTitle.textContent = doc.title;
 
-        // Load the PDF using the new viewer
-        pdfViewerInstance.loadPDF(pdfPath);
+        // Hide custom toolbar to prioritize native viewer
+        if (toolbar) toolbar.style.display = 'none';
+
+        // Load the PDF instantly using native browser PDF engine
+        viewerContainer.innerHTML = `<iframe src="${pdfPath}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
 
         // Set download links
         modalDownload.href = pdfPath;
@@ -1200,15 +1202,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(lessonDoc);
 
-        // Initialize PDF viewer if not already done
-        if (!pdfViewerInstance) {
-            pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
-        }
+        // Use fast native browser iframe
+        const viewerContainer = document.getElementById('pdf-viewer');
+        const toolbar = document.getElementById('pdf-toolbar');
 
         modalTitle.textContent = lesson.title;
 
-        // Load the PDF using the new viewer
-        pdfViewerInstance.loadPDF(pdfPath);
+        if (toolbar) toolbar.style.display = 'none';
+
+        // Load naturally
+        viewerContainer.innerHTML = `<iframe src="${pdfPath}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
 
         // Set download links
         modalDownload.href = pdfPath;
@@ -1226,11 +1229,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal() {
         modal.classList.remove('visible');
 
-        // Clean up PDF viewer to free memory
-        if (pdfViewerInstance) {
-            pdfViewerInstance.destroy();
-            pdfViewerInstance = null;
-        }
+        // Clear native iframe to stop background tasks
+        const viewerContainer = document.getElementById('pdf-viewer');
+        if (viewerContainer) viewerContainer.innerHTML = '';
 
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
