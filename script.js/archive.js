@@ -27,23 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mainFilteredDocuments = [...allDocuments];
         filterDocuments();
 
-        // 4. Background sync with backend
-        try {
-            const response = await fetch(`${API_BASE_URL}/documents`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    allDocuments = data;
-                    localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
-                    mainFilteredDocuments = [...allDocuments];
-                    populateCategories();
-                    renderPage(1);
-                    console.log('Backend sync successful');
-                }
-            }
-        } catch (error) {
-            console.warn('Backend sync bypassed (offline)');
-        }
+        // 4. Background sync fire-and-forget (to keep init fast)
+        fetchArchiveData();
     }
     let mainFilteredDocuments = [];
     let lessonFilteredDocuments = [];
@@ -585,26 +570,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DATA INITIALIZATION & SYNC ---
     async function fetchArchiveData() {
         try {
-            console.log("Syncing documents with backend...");
-            const docResponse = await fetch(`${API_BASE_URL}/documents`);
-            if (docResponse.ok) {
-                const data = await docResponse.json();
+            console.log("Syncing documents with backend (Parallel Processing Mode)...");
 
-                // DEFENSIVE SYNC: Only accept data if it contains the full library (at least 140 docs)
-                // This prevents a bad backend seed from overwriting your full local list.
+            // Fetch both in parallel for maximum speed
+            const [docRes, lessonRes] = await Promise.all([
+                fetch(`${API_BASE_URL}/documents`).catch(() => null),
+                fetch(`${API_BASE_URL}/lessons`).catch(() => null)
+            ]);
+
+            // Handle Documents
+            if (docRes && docRes.ok) {
+                const data = await docRes.json();
                 if (data && data.length >= 140) {
                     allDocuments = data;
                     localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
                     console.log(`Sync successful: ${data.length} documents loaded.`);
-                } else if (data && data.length > 0) {
-                    console.warn(`Sync Warning: Backend returned only ${data.length} documents. Keeping local list of 142 to prevent data loss.`);
                 }
             }
 
-            // Load Bible Lessons
-            const lessonResponse = await fetch(`${API_BASE_URL}/lessons`);
-            if (lessonResponse.ok) {
-                const dynamicLessons = await lessonResponse.json();
+            // Handle Lessons
+            if (lessonRes && lessonRes.ok) {
+                const dynamicLessons = await lessonRes.json();
                 dynamicLessons.forEach(lesson => {
                     const q = lesson.quarter;
                     if (bibleLessons[q]) {
