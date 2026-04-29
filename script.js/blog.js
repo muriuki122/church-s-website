@@ -267,10 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modalClose.addEventListener('click', () => {
             pdfModal.style.display = 'none';
             if (blogPDFViewer) blogPDFViewer.clear();
-            let container = document.getElementById('pdf-viewer-container');
-            let toolbar = document.getElementById('pdf-toolbar');
-            if (container) container.innerHTML = '';
-            if (toolbar) toolbar.style.display = '';
             if (currentBlobUrl) {
                 URL.revokeObjectURL(currentBlobUrl);
                 currentBlobUrl = null;
@@ -281,10 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (e.target === pdfModal) {
                 pdfModal.style.display = 'none';
                 if (blogPDFViewer) blogPDFViewer.clear();
-                let container = document.getElementById('pdf-viewer-container');
-                let toolbar = document.getElementById('pdf-toolbar');
-                if (container) container.innerHTML = '';
-                if (toolbar) toolbar.style.display = '';
                 if (currentBlobUrl) {
                     URL.revokeObjectURL(currentBlobUrl);
                     currentBlobUrl = null;
@@ -314,12 +306,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (post.pdfUrl) {
             showToast('Loading', 'Loading document from archive...', 'success');
 
-            // Use iframe to bypass local file CORS restrictions
-            let container = document.getElementById('pdf-viewer-container');
-            let toolbar = document.getElementById('pdf-toolbar');
-            if (toolbar) toolbar.style.display = 'none';
-            if (container) {
-                container.innerHTML = `<iframe src="${post.pdfUrl}" style="width:100%; height:100%; border:none;"></iframe>`;
+            if (blogPDFViewer) {
+                blogPDFViewer.loadPDF(post.pdfUrl);
             }
 
             // Setup download button in modal
