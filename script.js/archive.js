@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ITEMS_PER_PAGE = 9;
     let allDocuments = [];
     async function initializeDocuments() {
-        console.log("ANTIGRAVITY SYSTEM: Initializing 142-Document Library...");
 
         // 1. Try to load from cache
         const cached = localStorage.getItem('church_docs_cache');
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterDocuments();
 
         // 4. Background sync fire-and-forget (to keep init fast)
-        fetchArchiveData();
+        setTimeout(fetchArchiveData, 1000);
     }
     let mainFilteredDocuments = [];
     let lessonFilteredDocuments = [];
@@ -408,24 +407,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 8. INITIALIZATION ---
     async function init() {
-        // Load static data
-        await initializeDocuments();
-
-        // Sync with Python API (Admin Management System)
-        await fetchArchiveData();
-
-        // Setup UI
+        // Setup UI basics
         populateCategories();
         setupEventListeners();
         setupHamburgerMenu();
-
-        // Activate Admin Panel Logic
         setupAdminLogic();
-
-        // Initial render
-        filterDocuments();
-        handleLessonFilterChange();
         updateLanguage();
+
+        // Load and render documents
+        await initializeDocuments();
+
+        // Optional sidebar init
+        handleLessonFilterChange();
     }
 
     // --- 9. EVENT LISTENERS ---
