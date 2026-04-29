@@ -953,7 +953,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPage(page, append = false) {
         currentPage = page;
-        const LIMIT = 12;
+        const LIMIT = 5000; // Load everything at once without limit
 
         if (!append) {
             documentList.innerHTML = '';
