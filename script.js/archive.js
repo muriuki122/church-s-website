@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuarter = '1';
     let pdfViewerInstance = null;
     let API_BASE_URL = 'http://localhost:5000/api';
-    let isUsingBackend = true;
+    let isUsingBackend = false; // Set to false to disable mandatory backend sync messages
 
     // --- DEBOUNCE UTILITY ---
     function debounce(func, wait) {
@@ -602,14 +602,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Refresh UI
+            // Silent Sync - No notifications anymore as requested
             handleMainFilterChange();
             handleLessonFilterChange();
             populateCategories();
-
-            if (allDocuments.length >= 140) {
-                showGlobalNotification('Archive synchronized!', 'success');
-            }
         } catch (error) {
             console.error('Fetch error:', error);
             if (typeof showGlobalNotification === 'function') {
