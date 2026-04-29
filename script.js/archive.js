@@ -5,21 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initializeDocuments() {
         console.log("ANTIGRAVITY SYSTEM: Initializing 142-Document Library...");
 
-        // VISIBLE DIAGNOSTIC: Create a badge on the screen to prove the count
-        const badge = document.createElement('div');
-        badge.id = 'system-audit-badge';
-        badge.style.cssText = 'position:fixed; bottom:20px; left:20px; background:#ffeb3b; color:#000; padding:10px 15px; border-radius:30px; font-weight:bold; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,0.2); border:2px solid #fbc02d; font-size:12px;';
-        document.body.appendChild(badge);
-
-        // FORCE RECOVERY: Purge cache every load if it is low
+        // 1. Try to load from cache
         const cached = localStorage.getItem('church_docs_cache');
         if (cached) {
             try {
                 const parsed = JSON.parse(cached);
-                if (parsed.length < 140) {
-                    console.warn("Purging incomplete cache...");
-                    localStorage.removeItem('church_docs_cache');
-                } else {
+                if (parsed && parsed.length >= 140) {
                     allDocuments = parsed;
                 }
             } catch (e) {
@@ -27,34 +18,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 2. If no cache, use local defaults temporarily
+        // 2. Fallback to defaults if no cache or invalid cache
         if (allDocuments.length === 0) {
             allDocuments = getDocumentData();
-            mainFilteredDocuments = [...allDocuments];
-            renderPage(1);
         }
 
-        // 3. Fetch fresh data in the background
+        // 3. Initial local render (Immediate)
+        mainFilteredDocuments = [...allDocuments];
+        filterDocuments();
+
+        // 4. Background sync with backend
         try {
             const response = await fetch(`${API_BASE_URL}/documents`);
             if (response.ok) {
                 const data = await response.json();
                 if (data && data.length > 0) {
-                    // Update allDocuments: merge backend data with locally defined ones if needed
-                    // or replace if backend is source of truth. 
-                    // Let's replace if backend has data, but keep static defaults if it is empty.
                     allDocuments = data;
                     localStorage.setItem('church_docs_cache', JSON.stringify(allDocuments));
                     mainFilteredDocuments = [...allDocuments];
                     populateCategories();
                     renderPage(1);
-                    console.log('Backend data synced');
-                } else {
-                    console.log('Backend sync check: No new documents in DB, using static defaults.');
+                    console.log('Backend sync successful');
                 }
             }
         } catch (error) {
-            console.warn('Backend connection failed or sync error:', error);
+            console.warn('Backend sync bypassed (offline)');
         }
     }
     let mainFilteredDocuments = [];
@@ -450,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAdminLogic();
 
         // Initial render
-        // handleMainFilterChange(); // Called by initializeDocuments
+        filterDocuments();
         handleLessonFilterChange();
         updateLanguage();
     }
@@ -947,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderPage(page, append = false) {
         currentPage = page;
-        const LIMIT = 5000; // Load everything at once without limit
+        const LIMIT = 12; // Standard view limit per page as requested
 
         if (!append) {
             documentList.innerHTML = '';
