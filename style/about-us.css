@@ -22,7 +22,7 @@
     --shadow-deep: 0 20px 40px rgba(0, 0, 0, 0.15);
     --glass-bg: rgba(255, 255, 255, 0.15);
     --glass-border: rgba(255, 255, 255, 0.2);
-    --section-padding: 100px 0;
+    --section-padding: 60px 0;
 }
 
 html {
@@ -261,7 +261,7 @@ body {
 
 .section-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 35px;
 }
 
 .section-header h2 {
@@ -281,8 +281,8 @@ body {
 /* Hero Section Redesign */
 .page-hero {
     position: relative;
-    height: 80vh;
-    min-height: 500px;
+    height: 65vh;
+    min-height: 400px;
     background: url('https://images.unsplash.com/photo-1424109499814-dd5b372892be?w=1600') center/cover no-repeat fixed;
     display: flex;
     align-items: center;
@@ -399,7 +399,7 @@ body {
 
 /* Section Styles */
 section {
-    padding: 80px 0;
+    padding: 60px 0;
 }
 
 @media (max-width: 768px) {
@@ -451,7 +451,7 @@ section {
 .history-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
+    gap: 30px;
     align-items: center;
 }
 
@@ -570,7 +570,7 @@ section {
 
 .schedule-tabs {
     display: flex;
-    background: rgba(26, 43, 109, 0.05);
+    background: transparent;
     padding: 10px;
     gap: 10px;
 }
@@ -954,9 +954,8 @@ section {
 
 .music-groups {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: minmax(100px, auto);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
 }
 
 .music-group {
@@ -978,41 +977,19 @@ section {
 }
 
 /* Mosaic Positioning */
-.music-group:nth-child(1) {
-    grid-column: span 5;
-    grid-row: span 4;
+
+/* Paired layout for desktop and tablet */
+.music-group {
+    grid-column: span 1;
+    grid-row: auto;
 }
 
-.music-group:nth-child(2) {
-    grid-column: span 7;
-    grid-row: span 3;
-}
-
-.music-group:nth-child(3) {
-    grid-column: span 4;
-    grid-row: span 4;
-}
-
-.music-group:nth-child(4) {
-    grid-column: span 3;
-    grid-row: span 5;
-}
-
-.music-group:nth-child(5) {
-    grid-column: span 5;
-    grid-row: span 4;
+.music-group:last-child:nth-child(odd) {
+    grid-column: span 2;
 }
 
 @media (max-width: 992px) {
-    .music-groups {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: auto;
-    }
-
-    .music-group {
-        grid-column: span 1 !important;
-        grid-row: span 1 !important;
-    }
+    /* Grid already handled by default 2-column layout */
 }
 
 @media (max-width: 600px) {
@@ -1090,11 +1067,6 @@ section {
     justify-content: center;
     position: relative;
     overflow: hidden;
-}
-
-.music-group:nth-child(1) .group-image,
-.music-group:nth-child(4) .group-image {
-    height: 250px;
 }
 
 .group-image i {
@@ -1186,7 +1158,7 @@ section {
 .reminder-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 50px;
+    gap: 30px;
     align-items: center;
 }
 
@@ -1334,7 +1306,7 @@ section {
 .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1.5fr;
-    gap: 50px;
+    gap: 30px;
     padding-bottom: 60px;
 }
 
@@ -1650,8 +1622,11 @@ section {
         font-size: 0.9rem;
     }
 
-    /* Single column on small phones */
-    .music-groups,
+    .music-groups {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+
     .ceremonies-grid,
     .leaders-grid {
         grid-template-columns: 1fr !important;
@@ -1659,9 +1634,20 @@ section {
         margin-bottom: 25px !important;
     }
 
-    .music-group,
+    .music-group {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 20px 15px !important;
+        gap: 10px !important;
+    }
+
+    .music-group:last-child:nth-child(odd) {
+        grid-column: span 2 !important;
+    }
+
     .ceremony-card,
     .leader-card {
+        grid-column: span 1 !important;
         padding: 12px 15px !important;
         display: flex !important;
         flex-direction: row !important;
