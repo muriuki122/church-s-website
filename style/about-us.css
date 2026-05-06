@@ -1427,13 +1427,12 @@ section {
 
     /* Redundant nav styles removed - handled by global.css */
 
-    /* More compact Grid layout fixes for mobile */
+    /* Single column layout on mobile to prevent sagging */
     .music-groups,
     .ceremonies-grid,
     .leaders-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        /* 2 columns for compact look */
-        gap: 15px !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
         margin-bottom: 25px !important;
     }
 
@@ -1492,10 +1491,12 @@ section {
     .ceremony-card h3,
     .leader-details h3,
     .group-content h3 {
-        font-size: 0.95rem !important;
+        font-size: 0.9rem !important;
         margin: 0 0 3px 0 !important;
         font-weight: 700 !important;
         line-height: 1.2 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
     .ceremony-info,
@@ -1519,15 +1520,17 @@ section {
     .group-content p,
     .leader-details p {
         display: block !important;
-        /* Ensure no text clipping for Judah & Tracts */
         -webkit-line-clamp: initial !important;
         line-clamp: initial !important;
         overflow: visible !important;
-        font-size: 0.75rem !important;
-        line-height: 1.3 !important;
+        font-size: 0.78rem !important;
+        line-height: 1.4 !important;
         color: var(--gray) !important;
         margin-top: 4px !important;
         margin-bottom: 5px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
     }
 
     .btn-study {
@@ -1583,12 +1586,12 @@ section {
         font-size: 0.9rem;
     }
 
-    /* Handled above in 768px query but kept here for specificity if needed */
+    /* Single column on small phones */
     .music-groups,
     .ceremonies-grid,
     .leaders-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
     }
 
     .leader-image {

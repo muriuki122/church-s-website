@@ -178,8 +178,22 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         2: { // Q2 (April - June)
             title: "Second Quarter 2026",
-            available: false,
-            lessons: []
+            available: true,
+            lessons: [{
+                id: "q2-1",
+                title: "Second Quarter Lesson 2026 (English)",
+                date: "April - June 2026",
+                description: "Quarterly Bible study lessons for spiritual growth and understanding.",
+                memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
+                pdfUrl: "lessons/2nd Quarter lessons  english version.pdf"
+            }, {
+                id: "q2-2",
+                title: "Robo ya Pili 2026 (Kiswahili)",
+                date: "April - June 2026",
+                description: "Masomo ya Biblia ya robo ya pili kwa ukuaji wa kiroho na ufahamu.",
+                memoryVerse: "Jitahidi kujionyesha kuwa umekubaliwa na Elohim - 2 Timotheo 2:15",
+                pdfUrl: "lessons/Robo ya pili  2026 final.pdf"
+            }]
         },
         3: { // Q3 (July - September)
             title: "Third Quarter 2026",
@@ -410,7 +424,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Setup UI basics
         populateCategories();
         setupEventListeners();
-        setupHamburgerMenu();
         setupAdminLogic();
         updateLanguage();
 
@@ -1118,8 +1131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const doc = allDocuments.find(d => d.id === docId);
         if (!doc) return;
 
-        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
         const pdfPath = getDocumentPath(doc);
+
+        currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
 
         // Initialize using extremely fast native Iframe instead of slow canvas
         const viewerContainer = document.getElementById('pdf-viewer');
@@ -1153,11 +1167,11 @@ document.addEventListener('DOMContentLoaded', () => {
             pdfUrl: lesson.pdfUrl
         };
 
-        // Set the current preview index to -1 to disable navigation
-        currentPreviewIndex = -1;
-
         // Use the helper function to get the correct path
         const pdfPath = getDocumentPath(lessonDoc);
+
+        // Set the current preview index to -1 to disable navigation
+        currentPreviewIndex = -1;
 
         // Use fast native browser iframe
         const viewerContainer = document.getElementById('pdf-viewer');

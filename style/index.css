@@ -96,118 +96,13 @@ body>* {
 }
 
 /* Header Styles */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 40px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--navy-dark) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 3px solid var(--secondary-color);
-    box-shadow: 0 4px 25px rgba(37, 99, 235, 0.25);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: var(--transition);
-}
-
-.header.scrolled {
-    padding: 5px 40px;
-    background: var(--navy-dark);
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    width: 50px;
-    height: 50px;
-    border: 2px solid var(--secondary-color);
-    border-radius: 50%;
-    margin-right: 15px;
-    object-fit: cover;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-}
-
-.church-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    margin-bottom: 2px;
-    color: var(--text-light);
-    letter-spacing: 0.5px;
-}
-
-.church-motto {
-    font-style: italic;
-    font-size: 0.85rem;
-    color: var(--secondary-color);
-    opacity: 0.9;
-}
+/* Header styles moved to global.css */
 
 /* Navigation Styles */
-.main-nav {
-    position: relative;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 20px;
-}
-
-.nav-links a {
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    position: relative;
-}
-
-.nav-links a i {
-    margin-right: 8px;
-    font-size: 0.95rem;
-    color: var(--secondary-color);
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-    background: var(--secondary-color);
-    color: var(--primary-color);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-.nav-links a:hover i,
-.nav-links a.active i {
-    color: var(--primary-color);
-}
+/* Navigation styles moved to global.css */
 
 /* Mobile Toggle - Standardized */
-.mobile-menu-btn {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2001;
-    padding: 10px;
-    width: 44px;
-    height: 44px;
-    cursor: pointer;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-}
+/* Mobile toggle moved to global.css */
 
 /* Hero Section */
 .hero {

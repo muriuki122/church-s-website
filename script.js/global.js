@@ -82,6 +82,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // 4. Sticky Header Logic
+    const header = document.querySelector('.header');
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
 });
 
 // Global Notification Helper

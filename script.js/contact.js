@@ -188,7 +188,7 @@ if (contactForm) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            const response = await fetch('https://formsubmit.co/ajax/jcommunityofelohim@gmail.com', {
+            const response = await fetch('https://formsubmit.co/ajax/stephen49km@gmail.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,7 +199,8 @@ if (contactForm) {
                     email: email,
                     subject: subject,
                     message: message,
-                    _subject: 'New Contact Message from ' + name,
+                    _cc: 'muriukic522@gmail.com',
+                    _subject: 'kaloleni web messages',
                     _template: 'table',
                     _captcha: 'false'
                 })
