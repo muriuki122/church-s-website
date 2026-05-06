@@ -142,7 +142,7 @@ body {
 
 .logo-text h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-size: var(--fs-logo);
     color: var(--primary);
 }
 
@@ -218,7 +218,7 @@ body {
 
 .page-hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 10vw, 3.5rem);
+    font-size: var(--fs-h1);
     color: var(--primary);
     margin-bottom: 15px;
 }
@@ -358,7 +358,7 @@ body {
 .form-header h2 {
     font-family: 'Playfair Display', serif;
     color: var(--primary);
-    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-size: var(--fs-h2);
 }
 
 .form-header p {

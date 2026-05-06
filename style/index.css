@@ -134,12 +134,12 @@ body>* {
     }
 
     .hero-content h2 {
-        font-size: 2rem;
+        font-size: var(--fs-h2);
         margin-bottom: 15px;
     }
 
     .hero-content p {
-        font-size: 1rem;
+        font-size: clamp(0.95rem, 3vw, 1.1rem);
         margin-bottom: 30px;
     }
 
@@ -221,7 +221,7 @@ body>* {
 
 .hero-content h2 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 8vw, 4rem);
+    font-size: var(--fs-h1);
     line-height: 1.1;
     margin-bottom: clamp(15px, 3vh, 25px);
     color: var(--text-light);
@@ -379,7 +379,7 @@ body>* {
 
 .upcoming-events h2 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-size: var(--fs-h2);
     margin-bottom: 40px;
     position: relative;
     color: #333333;

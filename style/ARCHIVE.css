@@ -33,6 +33,10 @@
     --border-radius: 8px;
     --border-radius-sm: 4px;
     --transition: all 0.2s ease;
+
+    /* Re-import fluid variables from global (optional, but good for local safety) */
+    --fs-h1: clamp(2rem, 8vw, 4rem);
+    --fs-h2: clamp(1.8rem, 6vw, 2.8rem);
 }
 
 body {
@@ -501,7 +505,7 @@ body {
 }
 
 .hero h2 {
-    font-size: 2.5rem;
+    font-size: var(--fs-h2);
     font-weight: 800;
     margin-bottom: 0.75rem;
     font-family: 'Playfair Display', serif;
