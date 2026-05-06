@@ -32,9 +32,20 @@ html {
 body {
     font-family: var(--font-main);
     line-height: 1.6;
-    color: var(--dark);
+    color: var(--primary);
+    /* Use high-contrast primary for text */
     background: url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
     overflow-x: hidden;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 /* Button UI Components */
@@ -289,38 +300,44 @@ body {
     overflow: hidden;
 }
 
-/* Common Section Frosting */
-section .container {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 30px;
-    padding: clamp(30px, 6vw, 60px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-}
-
-/* Adjustments for specific hero/header sections */
-.page-hero .hero-content {
-    background: rgba(255, 255, 255, 0.15);
-    /* Keep hero more transparent for impact */
-    backdrop-filter: blur(25px);
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none !important;
+    /* Remove hero fog */
+    z-index: 1;
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: 60px 40px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-deep);
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
     animation: fadeInUp 1s ease-out;
+}
+
+/* Pure Background Layout - Transparent Containers */
+section,
+section .container,
+.origin-book-container,
+.schedule-container,
+.music-section,
+.ceremonies-section,
+.youtube-reminder {
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+header {
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 @keyframes fadeInUp {
@@ -565,43 +582,34 @@ section {
 }
 
 /* Schedule Section Redesign - Glassmorphism */
-.schedule-container {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: var(--shadow-deep);
-    overflow: hidden;
+/* Transparent Containers for all sections */
+.origin-book-container,
+.schedule-container,
+.music-group,
+.ceremony-card {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.timeline-content {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 .schedule-tabs {
-    display: flex;
-    background: rgba(26, 43, 109, 0.05);
-    padding: 10px;
-    gap: 10px;
-}
-
-.schedule-tab {
-    flex: 1;
-    padding: 18px 25px;
-    background: transparent;
-    border: none;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--primary);
-    cursor: pointer;
-    transition: var(--transition);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 50px !important;
+    padding: 5px !important;
+    max-width: fit-content;
+    margin: 0 auto 30px;
 }
 
 .schedule-tab.active {
-    background: white;
-    color: var(--primary);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    background: var(--primary) !important;
+    color: white !important;
 }
 
 .schedule-tab i {
