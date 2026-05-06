@@ -181,34 +181,39 @@ if (contactForm) {
 
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
-        const subject = document.getElementById('subject').value;
-        const message = document.getElementById('message').value.trim();
+        const formData = new FormData(contactForm);
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            const response = await fetch('https://formsubmit.co/ajax/stephen49km@gmail.com', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    subject: subject,
-                    message: message,
-                    _cc: 'muriukic522@gmail.com',
-                    _subject: 'kaloleni web messages',
-                    _template: 'table',
-                    _captcha: 'false'
+            const endpoints = [
+                'stephen49km@gmail.com',
+                'muriukic522@gmail.com'
+            ];
+
+            const sendPromises = endpoints.map(email =>
+                fetch(`https://formsubmit.co/ajax/${email}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        subject: formData.get('subject') || 'kaloleni web messages',
+                        message: formData.get('message'),
+                        _subject: 'kaloleni web messages',
+                        _template: 'table',
+                        _captcha: 'false'
+                    })
                 })
-            });
+            );
 
-            const result = await response.json();
+            const results = await Promise.all(sendPromises);
 
-            if (result.success === 'true' || result.success === true) {
+            if (results.some(res => res.ok)) {
                 showNotification(
                     currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
                         currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :

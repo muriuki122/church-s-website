@@ -505,23 +505,31 @@ if (notifySubmitBtn) {
         notifySubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
         try {
-            const response = await fetch('https://formsubmit.co/ajax/stephen49km@gmail.com', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    contact: contact,
-                    duration: duration,
-                    _cc: 'muriukic522@gmail.com',
-                    _subject: 'Live Stream Notification Request - Kaloleni Church',
-                    _template: 'table',
-                    _captcha: 'false'
-                })
-            });
+            const endpoints = [
+                'stephen49km@gmail.com',
+                'muriukic522@gmail.com'
+            ];
 
-            if (response.ok) {
+            const sendPromises = endpoints.map(targetEmail =>
+                fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contact: contact,
+                        duration: duration,
+                        _subject: 'Live Stream Notification Request - Kaloleni Church',
+                        _template: 'table',
+                        _captcha: 'false'
+                    })
+                })
+            );
+
+            const results = await Promise.all(sendPromises);
+
+            if (results.some(res => res.ok)) {
                 showToast("Notification request recorded!");
                 // Reset to button state
                 notifyFormInline.style.display = 'none';
