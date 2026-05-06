@@ -1514,34 +1514,9 @@ section {
 
     /* Redundant nav styles removed - handled by global.css */
 
-    /* Single column layout on mobile to prevent sagging */
-    .music-groups,
-    .ceremonies-grid,
-    .leaders-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-        margin-bottom: 25px !important;
-    }
+    /* Single column layout moved to 600px */
 
-    .music-group,
-    .ceremony-card,
-    .leader-card {
-        padding: 12px 15px !important;
-        display: flex !important;
-        flex-direction: row !important;
-        /* Horizontal layout for compact tabs */
-        align-items: center !important;
-        text-align: left !important;
-        gap: 15px !important;
-        min-height: auto !important;
-        height: auto !important;
-        /* Prevent sagging */
-        background: rgba(255, 255, 255, 0.7) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-    }
+    /* Horizontal card layout moved to 600px */
 
     /* Target the visual headers/icons on the left */
     .group-image.symbolic-header,
@@ -1680,19 +1655,28 @@ section {
     .ceremonies-grid,
     .leaders-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        gap: 12px !important;
+        margin-bottom: 25px !important;
     }
 
-    .leader-image {
-        width: 40px !important;
-        height: 40px !important;
-        margin-right: 10px !important;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
+    .music-group,
+    .ceremony-card,
+    .leader-card {
+        padding: 12px 15px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        /* Horizontal layout for compact tabs */
+        align-items: center !important;
+        text-align: left !important;
+        gap: 15px !important;
+        min-height: auto !important;
+        height: auto !important;
+        /* Prevent sagging */
+        background: rgba(255, 255, 255, 0.7) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     }
 
     .social-links {
