@@ -187,33 +187,29 @@ if (contactForm) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            const endpoints = [
-                'stephen49km@gmail.com',
-                'muriukic522@gmail.com'
-            ];
+            const primaryEmail = 'muriukic522@gmail.com';
+            const secondaryEmail = 'stephen49km@gmail.com';
 
-            const sendPromises = endpoints.map(email =>
-                fetch(`https://formsubmit.co/ajax/${email}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: formData.get('name'),
-                        email: formData.get('email'),
-                        subject: formData.get('subject') || 'kaloleni web messages',
-                        message: formData.get('message'),
-                        _subject: 'kaloleni web messages',
-                        _template: 'table',
-                        _captcha: 'false'
-                    })
+            const response = await fetch(`https://formsubmit.co/ajax/${primaryEmail}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    subject: formData.get('subject') || 'General Inquiry',
+                    message: formData.get('message'),
+                    _subject: `Church Ministry Message from ${name}`,
+                    _cc: secondaryEmail,
+                    _template: 'table',
+                    _captcha: 'false',
+                    _autoresponse: `Shalom ${name},\n\nThank you for reaching out to the Kaloleni Seventh day Church of Elohim. We have received your message and our ministry team will review it shortly.\n\n"The Lord is near to all who call on him, to all who call on him in truth." - Psalm 145:18\n\nBlessings,\nKaloleni Church of Elohim`
                 })
-            );
+            });
 
-            const results = await Promise.all(sendPromises);
-
-            if (results.some(res => res.ok)) {
+            if (response.ok) {
                 showNotification(
                     currentLang === 'sw' ? 'Ujumbe umetumwa! Elohim akubariki.' :
                         currentLang === 'rw' ? 'Ubutumwa bwoherejwe! Elohim iguhe umugisha.' :

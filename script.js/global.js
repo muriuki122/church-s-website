@@ -74,30 +74,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
                 try {
-                    const endpoints = [
-                        'stephen49km@gmail.com',
-                        'muriukic522@gmail.com'
-                    ];
+                    const primaryEmail = 'muriukic522@gmail.com';
+                    const secondaryEmail = 'stephen49km@gmail.com';
 
-                    const sendPromises = endpoints.map(targetEmail =>
-                        fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                email: email,
-                                _subject: 'Newsletter Subscription - Kaloleni Church',
-                                _template: 'table',
-                                _captcha: 'false'
-                            })
+                    const response = await fetch(`https://formsubmit.co/ajax/${primaryEmail}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            _subject: 'Newsletter Subscription - Kaloleni Church',
+                            _cc: secondaryEmail,
+                            _template: 'table',
+                            _captcha: 'false',
+                            _autoresponse: `Shalom,\n\nBlessings for joining our newsletter. You will now receive weekly highlights, sermon updates, and ministry news from the Kaloleni Seventh day Church of Elohim.\n\n"The Lord bless thee, and keep thee." - Numbers 6:24\n\nIn His Service,\nKaloleni Church of Elohim`
                         })
-                    );
+                    });
 
-                    const results = await Promise.all(sendPromises);
-
-                    if (results.some(res => res.ok)) {
+                    if (response.ok) {
                         showGlobalNotification('Subscribed successfully!', 'success');
                         if (emailInput) emailInput.value = '';
                     } else {
