@@ -41,10 +41,12 @@
 
 body {
     font-family: var(--font-family);
-    background: var(--bg-color) !important;
-    background-image: none !important;
-
-    /* Force removal of any inherited images */
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
 .modal-content {
