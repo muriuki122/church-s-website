@@ -1,5 +1,17 @@
 /* ===== GLOBAL JAVASCRIPT ===== */
 document.addEventListener('DOMContentLoaded', function () {
+    // Scroll Reveal Logic
+    const revealElements = document.querySelectorAll('[data-reveal]');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
     // 1. Mobile Menu Toggling
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
