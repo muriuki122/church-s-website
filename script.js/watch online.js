@@ -486,7 +486,7 @@ if (notifyToggleBtn && notifyFormInline) {
 }
 
 if (notifySubmitBtn) {
-    notifySubmitBtn.addEventListener('click', () => {
+    notifySubmitBtn.addEventListener('click', async () => {
         const contact = notifyContactInput.value.trim();
         const duration = document.getElementById('notify-duration').value;
         const churchPhone = "+254721218834";
@@ -500,26 +500,43 @@ if (notifySubmitBtn) {
         const isEmail = contact.includes('@');
         const isPhone = /^\+?[\d\s-]{8,}$/.test(contact);
 
-        if (isEmail) {
-            const subject = encodeURIComponent("Live Stream Notification Subscription");
-            const body = encodeURIComponent(`I would like to subscribe to live notifications.\n\nContact: ${contact}\nDuration: ${duration}`);
-            window.location.href = `mailto:${churchEmail}?subject=${subject}&body=${body}`;
-            showToast("Opening Email client...");
-        } else if (isPhone || contact.toLowerCase().includes('whatsapp')) {
-            const message = encodeURIComponent(`I would like to subscribe to live notifications.\n\nContact: ${contact}\nDuration: ${duration}`);
-            window.open(`https://wa.me/${churchPhone}?text=${message}`, '_blank');
-            showToast("Opening WhatsApp...");
-        } else {
-            // General fallback
-            showToast("Notification request recorded!");
-        }
+        const originalText = notifySubmitBtn.innerHTML;
+        notifySubmitBtn.disabled = true;
+        notifySubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-        // Reset to button state
-        notifyFormInline.style.display = 'none';
-        notifyToggleBtn.style.display = 'inline-block';
-        notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Requested';
-        notifyToggleBtn.style.backgroundColor = '#10b981';
-        notifyToggleBtn.style.color = '#ffffff';
+        try {
+            const response = await fetch('https://formsubmit.co/ajax/stephen49km@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    contact: contact,
+                    duration: duration,
+                    _cc: 'muriukic522@gmail.com',
+                    _subject: 'Live Stream Notification Request - Kaloleni Church',
+                    _template: 'table',
+                    _captcha: 'false'
+                })
+            });
+
+            if (response.ok) {
+                showToast("Notification request recorded!");
+                // Reset to button state
+                notifyFormInline.style.display = 'none';
+                notifyToggleBtn.style.display = 'inline-block';
+                notifyToggleBtn.innerHTML = '<i class="fas fa-check"></i> Requested';
+                notifyToggleBtn.style.backgroundColor = '#10b981';
+                notifyToggleBtn.style.color = '#ffffff';
+            } else {
+                throw new Error('Failed to send request');
+            }
+        } catch (error) {
+            showToast("Error recording request. Please try again.", "error");
+            notifySubmitBtn.disabled = false;
+            notifySubmitBtn.innerHTML = originalText;
+        }
     });
 }
 

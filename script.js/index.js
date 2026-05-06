@@ -449,60 +449,10 @@ function initLiteViewer() {
     });
 }
 
-// Newsletter form handling
+// Newsletter functionality moved to global.js
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize Compact Viewer
     initLiteViewer();
-
-    const newsletterForm = document.querySelector('.newsletter-form');
-
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const emailInput = this.querySelector('input[type="email"]');
-            const email = emailInput.value.trim();
-
-            if (email && isValidEmail(email)) {
-                try {
-                    const response = await fetch('/api/newsletter', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email })
-                    });
-
-                    if (response.ok) {
-                        showNotification('Thank you for subscribing!', 'success');
-                        emailInput.value = '';
-                    } else {
-                        throw new Error('Subscription failed');
-                    }
-                } catch (error) {
-                    showNotification('Error: ' + error.message, 'error');
-                }
-            } else {
-                showNotification('Please enter a valid email address', 'error');
-            }
-        });
-    }
-
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function showNotification(message, type) {
-        // Create toast notification
-        const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
-        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
 });
 
 // Sticky Header and Scroll Reveal Initialization

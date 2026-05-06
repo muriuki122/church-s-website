@@ -62,10 +62,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
                 try {
-                    const response = await fetch('/api/newsletter', {
+                    const response = await fetch('https://formsubmit.co/ajax/stephen49km@gmail.com', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email })
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            _cc: 'muriukic522@gmail.com',
+                            _subject: 'Newsletter Subscription - Kaloleni Church',
+                            _template: 'table',
+                            _captcha: 'false'
+                        })
                     });
                     if (response.ok) {
                         showGlobalNotification('Subscribed successfully!', 'success');
