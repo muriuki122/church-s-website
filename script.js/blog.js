@@ -108,7 +108,8 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchPosts() {
         console.log("Fetching blog posts from Python API...");
         try {
-            const response = await fetch('http://localhost:5000/api/posts');
+            const API_BASE_URL = '/api';
+            const response = await fetch(`${API_BASE_URL}/posts`);
             const dynamicPosts = await response.json();
 
             console.log(`Received ${dynamicPosts.length} posts from API.`);
@@ -140,7 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Save post to Python API
     async function savePostToFirestore(postData) {
         try {
-            const response = await fetch('http://localhost:5000/api/posts', {
+            const API_BASE_URL = '/api';
+            const response = await fetch(`${API_BASE_URL}/posts`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(postData)

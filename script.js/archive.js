@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPreviewIndex = 0;
     let currentQuarter = '1';
     let pdfViewerInstance = null;
-    let API_BASE_URL = 'http://localhost:5000/api';
+    let API_BASE_URL = '/api';
     let isUsingBackend = false; // Set to false to disable mandatory backend sync messages
 
     // --- DEBOUNCE UTILITY ---
@@ -682,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    const response = await fetch('http://localhost:5000/api/documents', {
+                    const response = await fetch(`${API_BASE_URL}/documents`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(docData)
@@ -716,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    const response = await fetch('http://localhost:5000/api/lessons', {
+                    const response = await fetch(`${API_BASE_URL}/lessons`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(lessonData)
@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    const response = await fetch('http://localhost:5000/api/posts', {
+                    const response = await fetch(`${API_BASE_URL}/posts`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(blogData)
