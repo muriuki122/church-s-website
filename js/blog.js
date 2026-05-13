@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         element.innerHTML = `
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 20px;">
-                <img src="images/minorah%20image.jpg" style="height: 80px; border-radius: 50%; margin-bottom: 15px;">
+                <img src="images/minorah-image.jpg" style="height: 80px; border-radius: 50%; margin-bottom: 15px;">
                 <h1 style="color: #1a2b6d; margin: 0; font-family: 'Playfair Display', serif;">Kaloleni Seventh Day Church</h1>
                 <p style="color: #d4af37; font-weight: 600; margin: 5px 0;">Growing in faith, serving with love</p>
             </div>

@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     date: "January - March 2026",
                     description: "Quarterly Bible study lessons for spiritual growth and understanding.",
                     memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
-                    pdfUrl: "lessons/Lesson 1st quarter 2026- FINAL.pdf"
+                    pdfUrl: "lessons/Lesson-1st-quarter-2026-FINAL.pdf"
                 }
             ]
         },
@@ -185,14 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: "April - June 2026",
                 description: "Quarterly Bible study lessons for spiritual growth and understanding.",
                 memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
-                pdfUrl: "lessons/2nd Quarter lessons  english version.pdf"
+                pdfUrl: "lessons/2nd-Quarter-lessons-english-version.pdf"
             }, {
                 id: "q2-2",
                 title: "Robo ya Pili 2026 (Kiswahili)",
                 date: "April - June 2026",
                 description: "Masomo ya Biblia ya robo ya pili kwa ukuaji wa kiroho na ufahamu.",
                 memoryVerse: "Jitahidi kujionyesha kuwa umekubaliwa na Elohim - 2 Timotheo 2:15",
-                pdfUrl: "lessons/Robo ya pili  2026 final.pdf"
+                pdfUrl: "lessons/Robo-ya-pili-2026-final.pdf"
             }]
         },
         3: { // Q3 (July - September)
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     date: "October - December 2026",
                     description: "Quarterly Bible study lessons for spiritual growth and understanding.",
                     memoryVerse: "Study to shew thyself approved unto Elohim - 2 Timothy 2:15",
-                    pdfUrl: "lessons/Bible Lesson 4th Q 2026 final.pdf"
+                    pdfUrl: "lessons/Bible-Lesson-4th-Q-2026-final.pdf"
                 }
             ]
         }
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 59, title: "Why Not Talk to Elohim About Sabbath", category: "Tracts", fileName: "tracks/Why-not-talk-to-God-about-Sabbath.pdf" },
             { id: 60, title: "Has Our Messiah Come", category: "Tracts", fileName: "tracks/has-our-messiah-come-better.pdf" },
             { id: 61, title: "Why Israel is Here to Stay", category: "Tracts", fileName: "tracks/why-israel-is-here-to-stay-potrait.pdf" },
-            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year%20of%20deception.pdf" },
+            { id: 62, title: "Year of Deception", category: "Tracts", fileName: "tracks/year-of-deception.pdf" },
 
             // JUDAH - PDFs in the judah folder
             { id: 63, title: "Judah/72-sebat", category: "Judah", fileName: "judah/72-Sebat.pdf" },
@@ -414,8 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 7. NAVIGATION ELEMENTS ---
     const navHome = document.querySelector('a[href="index.html"]');
-    const navWatchOnline = document.querySelector('a[href="watch online.html"]');
-    const navAboutUs = document.querySelector('a[href="about us.html"]');
+    const navWatchOnline = document.querySelector('a[href="watch-online.html"]');
+    const navAboutUs = document.querySelector('a[href="about-us.html"]');
     const navArchives = document.querySelector('a[href="archives.html"]');
     const navContact = document.querySelector('a[href="contact.html"]');
 

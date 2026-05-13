@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // If we are on index.html and clicking Watch Online, scroll instead of redirect
             if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-                if (href === 'watch online.html') {
+                if (href === 'watch-online.html') {
                     e.preventDefault();
                     const targetElement = document.getElementById('watch-online-section');
                     if (targetElement) {
