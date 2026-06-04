@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
         element.innerHTML = `
             <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2563eb; padding-bottom: 20px;">
                 <img src="images/minorah-image.jpg" style="height: 80px; border-radius: 50%; margin-bottom: 15px;">
-                <h1 style="color: #1a2b6d; margin: 0; font-family: 'Playfair Display', serif;">Kaloleni Seventh Day Church</h1>
+                <h1 style="color: #1a2b6d; margin: 0; font-family: 'Playfair Display', serif;">Church of Elohim, 7th day</h1>
                 <p style="color: #d4af37; font-weight: 600; margin: 5px 0;">Growing in faith, serving with love</p>
             </div>
             <div style="margin-bottom: 20px;">
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ${post.content}
             </div>
             <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8; text-align: center;">
-                &copy; 2026 Kaloleni Church of Elohim. All Rights Reserved.
+                &copy; 2026 Church of Elohim, 7th day. All Rights Reserved.
             </div>
         `;
 

@@ -1,0 +1,42 @@
+/* _breakpoints.css – responsive utilities */
+
+/* Base breakpoints */
+:root {
+  --bp-sm: 600px;   /* phones */
+  --bp-md: 768px;   /* tablets (iPad Air, Surface Pro) */
+  --bp-lg: 1024px;  /* small laptops */
+  --bp-xl: 1440px;  /* large screens */
+}
+
+/* Helper classes */
+.hide-on-mobile {
+  display: block;
+}
+@media (max-width: var(--bp-md)) {
+  .hide-on-mobile { display: none; }
+}
+
+.show-on-mobile {
+  display: none;
+}
+@media (max-width: var(--bp-md)) {
+  .show-on-mobile { display: block; }
+}
+
+/* Fluid typography */
+html { font-size: clamp(14px, 1.2vw, 18px); }
+
+/* Grid helpers */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Adjust hero section on tablets */
+@media (max-width: var(--bp-md)) {
+  .hero.container {
+    flex-direction: column;
+    text-align: center;
+  }
+}

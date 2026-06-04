@@ -436,14 +436,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 9. EVENT LISTENERS ---
     function setupEventListeners() {
-        languageSelect.addEventListener('change', (e) => {
-            currentLanguage = e.target.value;
-            localStorage.setItem('preferredLanguage', currentLanguage);
-            updateLanguage();
-            renderPage(currentPage);
-            renderLessonsSidebar();
-            populateCategories();
-        });
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                localStorage.setItem('preferredLanguage', currentLanguage);
+                updateLanguage();
+                renderPage(currentPage);
+                renderLessonsSidebar();
+                populateCategories();
+            });
+        }
+
+        const langButtons = document.querySelectorAll('.language-dropdown li');
+        if (langButtons.length > 0) {
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentLanguage = e.target.getAttribute('data-lang');
+                    localStorage.setItem('preferredLanguage', currentLanguage);
+                    
+                    langButtons.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    updateLanguage();
+                    renderPage(currentPage);
+                    renderLessonsSidebar();
+                    populateCategories();
+                });
+            });
+        }
 
         mainSearchInput.addEventListener('input', debounce(filterDocuments, 300));
         categoryFilter.addEventListener('change', filterDocuments);
@@ -1536,7 +1556,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedLanguage = localStorage.getItem('preferredLanguage');
         if (savedLanguage && ['en', 'sw', 'rw'].includes(savedLanguage)) {
             currentLanguage = savedLanguage;
-            languageSelect.value = currentLanguage;
+            if (languageSelect) {
+                languageSelect.value = currentLanguage;
+            }
+            
+            // Update UI for new language dropdown format
+            const langButtons = document.querySelectorAll('.language-dropdown li');
+            langButtons.forEach(b => {
+                if(b.getAttribute('data-lang') === currentLanguage) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
         }
 
         // Set current quarter based on current date

@@ -33,10 +33,12 @@ body {
     font-family: var(--font-main);
     line-height: 1.6;
     color: var(--dark);
-    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+    background: #ffffff;
     overflow-x: hidden;
+    position: relative;
 }
+
+
 
 /* Button UI Components */
 .btn {
@@ -79,44 +81,50 @@ body {
 }
 
 /* Header Styles */
-.main-header {
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 2000;
+    background: linear-gradient(135deg, rgba(10, 18, 50, 0.95), rgba(26, 43, 109, 0.98));
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(12px);
+    padding: 0 20px;
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 0;
+.header-container,
+.header {
+    width: 100%;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .logo img {
-    height: 50px;
+    height: 55px;
     width: auto;
     border-radius: 50%;
-    margin-right: 15px;
 }
 
-.logo-text h1 {
+.church-name {
     font-family: var(--font-heading);
-    font-size: var(--fs-logo);
-    color: var(--primary);
-    margin-bottom: 2px;
+    font-size: 1.25rem;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 4px;
 }
 
-.logo-text p {
-    font-size: 0.9rem;
-    color: var(--secondary);
-    font-weight: 500;
+.church-motto {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
 }
 
 .header-right {
@@ -125,9 +133,127 @@ body {
     gap: 20px;
 }
 
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: transparent;
+}
+
+.nav-links a {
+    color: #fff;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.nav-links a.active::after {
+    background-color: var(--secondary);
+}
+
+@media (max-width: 992px) {
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0;
+    }
+
+    .logo-container {
+        justify-content: space-between;
+        width: 100%;
+        padding: 14px 16px;
+    }
+
+    .main-nav {
+        width: 100%;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 320px;
+        height: 100vh;
+        background: rgba(10, 18, 50, 0.98);
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 100px;
+        transition: right 0.35s ease;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+        z-index: 2001;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links a {
+        width: 100%;
+        padding: 15px 22px;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+    }
+
+    .old-language-switcher {
+        justify-content: center;
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .old-language-switcher {
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        flex-wrap: wrap;
+    }
+}
+
 /* Language Switcher */
-.language-switcher {
+.old-language-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
     position: relative;
+    padding: 10px 16px;
+    background: rgba(26, 43, 109, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 2000;
+}
+
+.old-lang-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.old-lang-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.old-lang-btn.active {
+    background: #ffffff;
+    color: var(--primary-dark);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .language-toggle {
@@ -147,7 +273,7 @@ body {
     background: #dee2e6;
 }
 
-.language-dropdown {
+.old-language-dropdown {
     position: absolute;
     top: 100%;
     right: 0;
@@ -160,7 +286,7 @@ body {
     z-index: 10;
 }
 
-.language-dropdown.show {
+.old-language-dropdown.show {
     display: block;
 }
 
@@ -203,8 +329,8 @@ body {
 
 /* Navigation - Standardized */
 .main-nav {
-    background-color: var(--primary);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    box-shadow: none;
     position: relative;
     z-index: 1000;
 }
@@ -281,35 +407,26 @@ body {
 /* Hero Section Redesign */
 .page-hero {
     position: relative;
-    height: 65vh;
-    min-height: 400px;
+    height: 80vh;
     background: url('https://images.unsplash.com/photo-1424109499814-dd5b372892be?w=1600') center/cover no-repeat fixed;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: white;
     overflow: hidden;
+    margin-top: 0;
+    padding-top: 180px; /* increased spacing to lift content lower on large screens */
 }
 
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(15, 27, 109, 0.6) 0%, rgba(212, 175, 55, 0.1) 100%);
-    z-index: 1;
+    display: block;
+    background: transparent; /* keep image clear behind text */
+    backdrop-filter: none;
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: 60px 40px;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-deep);
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
@@ -330,17 +447,48 @@ body {
 
 @media (max-width: 768px) {
     .page-hero {
-        height: 60vh;
-        min-height: 300px;
+        height: auto;
+        min-height: 320px;
+        padding: 150px 0 40px;
     }
 
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        line-height: 1.1;
+        padding: 0 1.2rem;
+        word-break: break-word;
     }
 
     .hero-content p {
         font-size: 1rem;
+        padding: 0 1.2rem;
+    }
+
+    .old-language-switcher {
+        justify-content: center;
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-content h1 {
+        font-size: 1.95rem;
         padding: 0 1rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-links a {
+        padding: 10px 12px;
+        font-size: 0.95rem;
     }
 }
 
@@ -351,17 +499,19 @@ body {
 }
 
 .hero-content h1 {
-    font-family: var(--font-heading);
-    font-size: var(--fs-h1);
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .hero-content p {
-    font-size: clamp(0.95rem, 3vw, 1.2rem);
-    max-width: 600px;
-    margin: 0 auto 30px;
-    opacity: 0.9;
+    font-size: 1.4rem;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 1;
 }
 
 .scroll-indicator {
@@ -811,12 +961,11 @@ section {
     border-radius: 24px;
     overflow: hidden;
     box-shadow: var(--shadow-deep);
-    transform: rotate(2deg);
     transition: var(--transition);
 }
 
 .history-image:hover {
-    transform: rotate(0deg) scale(1.02);
+    transform: scale(1.02);
 }
 
 .origin-pdf-btn {
@@ -871,6 +1020,12 @@ section {
 }
 
 /* Judah and Tracts - Archival Scroll Aesthetic */
+.ceremonies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
 .ceremony-card {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(15px);
@@ -956,6 +1111,20 @@ section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
+}
+
+/* Make music group cards look distinct with subtle borders on mobile/desktop */
+.music-group {
+    border: 1px solid rgba(26, 43, 109, 0.06);
+    border-radius: 10px;
+    padding: 14px;
+    background: rgba(255,255,255,0.98);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.music-group:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(26, 43, 109, 0.06);
 }
 
 .music-group {

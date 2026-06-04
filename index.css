@@ -72,7 +72,7 @@ body>* {
 .language-switcher {
     display: flex;
     justify-content: flex-end;
-    padding: 10px 20px;
+    padding: 5px 20px;
     background: rgba(0, 0, 0, 0.1);
 }
 
@@ -80,7 +80,8 @@ body>* {
     background: transparent;
     border: 1px solid rgba(0, 0, 0, 0.3);
     color: #333333;
-    padding: 5px 10px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
     margin: 0 5px;
     border-radius: 4px;
     cursor: pointer;
@@ -101,7 +102,7 @@ body>* {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 40px;
+    padding: 8px 40px;
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -114,7 +115,7 @@ body>* {
 }
 
 .header.scrolled {
-    padding: 10px 40px;
+    padding: 5px 40px;
     box-shadow: var(--shadow-md);
     background: rgba(255, 255, 255, 0.95);
 }
@@ -125,8 +126,8 @@ body>* {
 }
 
 .logo {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: 15px;
     object-fit: cover;
@@ -134,8 +135,8 @@ body>* {
 
 .church-name {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    margin-bottom: 5px;
+    font-size: 1.3rem;
+    margin-bottom: 2px;
     color: #333333;
 }
 
@@ -166,10 +167,10 @@ body>* {
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 8px 16px;
+    padding: 5px 12px;
     border-radius: 50px;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     transition: var(--transition);
     position: relative;
 }

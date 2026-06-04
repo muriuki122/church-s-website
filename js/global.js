@@ -85,11 +85,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         body: JSON.stringify({
                             email: email,
-                            _subject: 'Newsletter Subscription - Kaloleni Church',
+                            _subject: 'Newsletter Subscription - Church of Elohim, 7th day',
                             _cc: secondaryEmail,
                             _template: 'table',
                             _captcha: 'false',
-                            _autoresponse: `Shalom,\n\nBlessings for joining our newsletter. You will now receive weekly highlights, sermon updates, and ministry news from the Kaloleni Seventh day Church of Elohim.\n\n"The Lord bless thee, and keep thee." - Numbers 6:24\n\nIn His Service,\nKaloleni Church of Elohim`
+                            _autoresponse: `Shalom,\n\nBlessings for joining our newsletter. You will now receive weekly highlights, sermon updates, and ministry news from the Church of Elohim, 7th day.\n\n"The Lord bless thee, and keep thee." - Numbers 6:24\n\nIn His Service,\nChurch of Elohim, 7th day`
                         })
                     });
 

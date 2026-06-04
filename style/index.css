@@ -27,8 +27,8 @@
 }
 
 body {
-    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
-        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+    background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+    background-blend-mode: lighten;
     color: var(--text-dark);
     min-height: 100vh;
     line-height: 1.6;
@@ -63,35 +63,37 @@ body>* {
     padding: 0 clamp(1rem, 5vw, 2.5rem);
 }
 
-/* Language Switcher */
-.language-switcher {
+
+/* Language Switcher - compact and professional */
+.old-language-switcher {
     display: flex;
     justify-content: flex-end;
-    padding: 5px 40px;
+    padding: 5px 18px;
     background: var(--navy-dark);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.lang-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.old-lang-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--text-light);
-    padding: 3px 12px;
-    margin: 0 5px;
-    border-radius: 4px;
+    padding: 6px 10px;
+    margin: 0 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    min-width: 68px;
 }
 
-.lang-btn.active {
+.old-lang-btn.active {
     background: var(--secondary-color);
     color: var(--primary-color);
     border-color: var(--secondary-color);
     font-weight: 700;
 }
 
-.lang-btn:hover:not(.active) {
+.old-lang-btn:hover:not(.active) {
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -625,13 +627,13 @@ body>* {
 }
 
 .booklet-vol {
-    color: var(--secondary-color);
-    font-weight: 800;
-    letter-spacing: 2px;
-    font-size: 0.6rem;
-    text-transform: uppercase;
+    color: inherit;
+    font-weight: 600;
+    letter-spacing: normal;
+    font-size: 1rem;
+    text-transform: none;
     font-family: 'Montserrat', sans-serif;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
 }
 
 /* Shine Animation */
@@ -1544,7 +1546,7 @@ section {
 /* Ensure all interactive elements have proper cursor */
 button,
 a,
-.lang-btn,
+.old-lang-btn,
 .nav-links a,
 .play-btn,
 .youtube-link {
@@ -1591,7 +1593,7 @@ input:focus {
 }
 
 /* Language Switcher Enhancements */
-.language-switcher {
+.old-language-switcher {
     display: flex;
     justify-content: flex-end;
     padding: 10px 20px;
@@ -1599,7 +1601,7 @@ input:focus {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.lang-btn {
+.old-lang-btn {
     background: transparent;
     border: 1px solid rgba(0, 0, 0, 0.3);
     color: #333333;
@@ -1611,13 +1613,13 @@ input:focus {
     font-size: 0.8rem;
 }
 
-.lang-btn.active {
+.old-lang-btn.active {
     background: #2c5aa0;
     color: white;
     border-color: #2c5aa0;
 }
 
-.lang-btn:hover {
+.old-lang-btn:hover {
     background: rgba(44, 90, 160, 0.1);
 }
 

@@ -4,7 +4,7 @@ let currentLanguage = 'en';
 const translations = {
     en: {
         // Site and Navigation
-        siteTitle: "Kaloleni Church",
+        siteTitle: "Church of Elohim, 7th day",
         navHome: "Home",
         navWatchOnline: "Watch online",
         navAboutUs: "About us",
@@ -72,12 +72,12 @@ const translations = {
         toastSubscriptionSuccess: "Successfully subscribed:",
         toastSearching: "Searching for:",
         toastShowingVideos: "Showing all church videos",
-        toastLoading: "Loading Kaloleni"
+        toastLoading: "Loading Church of Elohim, 7th day"
     },
 
     sw: {
         // Site and Navigation
-        siteTitle: "Kanisa la Kaloleni",
+        siteTitle: "Kanisa la Church of Elohim, 7th day",
         navHome: "Nyumbani",
         navWatchOnline: "Tazama mtandaoni",
         navAboutUs: "Kuhusu sisi",
@@ -145,12 +145,12 @@ const translations = {
         toastSubscriptionSuccess: "Umejiandikisha kwa mafanikio:",
         toastSearching: "Kutafuta:",
         toastShowingVideos: "Kuonyesha video zote za kanisa",
-        toastLoading: "Inapakia Kaloleni"
+        toastLoading: "Inapakia Church of Elohim, 7th day"
     },
 
     rw: {
         // Site and Navigation
-        siteTitle: "Itorero rya Kaloleni",
+        siteTitle: "Itorero rya Church of Elohim, 7th day",
         navHome: "Ahabanza",
         navWatchOnline: "Reba kuri interineti",
         navAboutUs: "Twebwe",
@@ -218,7 +218,7 @@ const translations = {
         toastSubscriptionSuccess: "Wiyandikishije neza:",
         toastSearching: "Gushakisha:",
         toastShowingVideos: "Kwerekana amashusho yose y'itorero",
-        toastLoading: "Gupakira Kaloleni"
+        toastLoading: "Gupakira Church of Elohim, 7th day"
     }
 };
 
@@ -258,6 +258,15 @@ function loadLanguagePreference() {
         if (languageSelect) {
             languageSelect.value = currentLanguage;
         }
+
+        const languageButtons = document.querySelectorAll('.language-dropdown li');
+        languageButtons.forEach(b => {
+            if(b.getAttribute('data-lang') === currentLanguage) {
+                b.classList.add('active');
+            } else {
+                b.classList.remove('active');
+            }
+        });
     }
 }
 
@@ -270,7 +279,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (languageSelect) {
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
+            localStorage.setItem('preferredLanguage', currentLanguage);
             updateLanguage();
+        });
+    }
+
+    const languageButtons = document.querySelectorAll('.language-dropdown li');
+    if (languageButtons.length > 0) {
+        languageButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                currentLanguage = e.target.getAttribute('data-lang');
+                localStorage.setItem('preferredLanguage', currentLanguage);
+                
+                languageButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                updateLanguage();
+            });
         });
     }
 });
@@ -380,6 +405,8 @@ const sermonData = [
     }
 ];
 
+let currentSermonIndex = 0;
+
 function createSermonCard(sermon) {
     return `
         <div class="sermon-card reveal-item" data-video-id="${sermon.id}">
@@ -404,6 +431,9 @@ window.playSermon = function (videoId) {
     if (player && player.loadVideoById) {
         player.loadVideoById(videoId);
         document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
+        // update current index for cycling
+        const idx = sermonData.findIndex(s => s.id === videoId);
+        if (idx >= 0) currentSermonIndex = idx;
         showToast("Playing: " + videoId);
     } else if (videoPlayerFrame) {
         videoPlayerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
@@ -436,7 +466,7 @@ if (youtubeSearchBtn && youtubeSearchInput && videoPlayerFrame) {
         const query = youtubeSearchInput.value.trim();
         const t = translations[currentLanguage];
         if (query) {
-            const searchQuery = encodeURIComponent('Kaloleni Church ' + query);
+            const searchQuery = encodeURIComponent('Church of Elohim, 7th day ' + query);
             videoPlayerFrame.src = `https://www.youtube.com/embed?listType=search&list=${searchQuery}&autoplay=1`;
             showToast(t.toastSearching + ' ' + query);
         } else {
@@ -520,7 +550,7 @@ if (notifySubmitBtn) {
                     body: JSON.stringify({
                         contact: contact,
                         duration: duration,
-                        _subject: 'Live Stream Notification Request - Kaloleni Church',
+                        _subject: 'Live Stream Notification Request - Church of Elohim, 7th day',
                         _template: 'table',
                         _captcha: 'false'
                     })
@@ -555,20 +585,34 @@ if (checkLiveBtn) {
         const t = translations[currentLanguage];
         const originalContent = checkLiveBtn.innerHTML;
         checkLiveBtn.innerHTML = '<i class="fas fa-sync fa-spin"></i> ' + t.checkLiveBtn;
+        // Determine whether it's live time locally, otherwise cycle to next sermon
+        const now = new Date();
+        const day = now.getDay();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        const timeInDecimal = hour + (minute / 60);
 
-        // Immediately update stream player to the channel's live URL format
         const videoPlayerFrame = document.querySelector('.stream-player iframe');
-        if (videoPlayerFrame) {
-            videoPlayerFrame.src = `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
+        if ((day === 5 && timeInDecimal >= 18.5) || (day === 6 && timeInDecimal >= 9 && timeInDecimal < 16)) {
+            // If it's live time, switch to live stream
+            if (videoPlayerFrame) {
+                videoPlayerFrame.src = `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
+            }
+        } else {
+            // Not live - cycle to the next sermon in the list
+            const nextIndex = (currentSermonIndex + 1) % sermonData.length;
+            const next = sermonData[nextIndex];
+            if (next) {
+                playSermon(next.id);
+            }
         }
 
-        // Also run the general update stream status function to check day/time
+        // Update status and restore button
         updateStreamStatus();
-
         setTimeout(() => {
             checkLiveBtn.innerHTML = originalContent;
             showToast(t.toastChecked);
-        }, 1500);
+        }, 900);
     });
 }
 
@@ -577,8 +621,11 @@ const subscribeBtn = document.getElementById('btn-subscribe-live');
 if (subscribeBtn) {
     subscribeBtn.addEventListener('click', () => {
         const t = translations[currentLanguage];
+        // Open the channel in a new tab so the user can subscribe on YouTube
+        const channelUrl = 'https://youtube.com/@churchofelohimkaloleni';
+        window.open(channelUrl, '_blank');
         subscribeBtn.innerHTML = '<i class="fas fa-check"></i> ' + t.subscribeBtn;
-        subscribeBtn.style.opacity = '0.8';
+        subscribeBtn.style.opacity = '0.9';
         showToast(t.toastSubscribed);
         subscribeBtn.disabled = true;
     });

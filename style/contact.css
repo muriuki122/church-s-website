@@ -21,8 +21,7 @@
 }
 
 body {
-    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
-        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+    background: linear-gradient(rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.97));
     color: var(--dark);
     line-height: 1.6;
     overflow-x: hidden;
@@ -57,60 +56,53 @@ body {
     margin-right: 5px;
 }
 
-/* Language Switcher */
-.language-switcher {
-    position: relative;
-    cursor: pointer;
-}
-
-.current-lang {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-weight: 600;
+/* Language Switcher - Inline List */
+.old-language-switcher {
     display: flex;
     align-items: center;
-    gap: 5px;
 }
 
-.current-lang::after {
-    content: '\f107';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-}
-
-.language-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--white);
-    color: var(--dark);
+.old-language-dropdown {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     list-style: none;
-    width: 150px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-lg);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
+    margin: 0;
+    padding: 0;
+}
+
+.old-language-dropdown li {
+    padding: 4px 10px;
     transition: var(--transition);
-    z-index: 1000;
-    overflow: hidden;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 0.75rem; /* Reduced font size */
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05); /* Subtle background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.language-switcher:hover .language-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(5px);
+.old-language-dropdown li:hover {
+    color: var(--secondary);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
-.language-dropdown li {
-    padding: 10px 15px;
-    transition: var(--transition);
+.old-language-dropdown li.active {
+    color: var(--secondary);
+    background: rgba(212, 175, 55, 0.15); /* Soft secondary background */
+    border-color: var(--secondary);
 }
 
-.language-dropdown li:hover {
-    background: var(--light);
-    color: var(--primary);
+@media (max-width: 768px) {
+    .old-language-dropdown {
+        gap: 5px;
+    }
+    .old-language-dropdown li {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
 }
 
 /* Header */
@@ -598,6 +590,21 @@ body {
     padding: 30px 0;
     text-align: center;
     color: #a0aec0;
+}
+
+/* Contact form notification styling */
+#notification-success.notification-toast {
+    background: rgba(255, 255, 255, 0.96);
+    color: #111;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+#notification-success.notification-toast .toast-content {
+    color: #111;
+}
+
+#notification-success.notification-toast i {
+    color: #1a2b45;
 }
 
 /* Notification and Mobile styles handled by global.css */

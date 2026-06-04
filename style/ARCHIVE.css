@@ -41,8 +41,7 @@
 
 body {
     font-family: var(--font-family);
-    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
-        url('../images/divine-bird-bg.png') center/cover fixed no-repeat;
+        background: linear-gradient(rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.97));
     color: var(--text-primary);
     min-height: 100vh;
     line-height: 1.6;
@@ -230,13 +229,13 @@ body {
     gap: 8px;
 }
 
-.language-switcher {
+.old-language-switcher {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.language-switcher select {
+.old-language-switcher select {
     background: transparent;
     border: none;
     color: white;
@@ -245,7 +244,7 @@ body {
     outline: none;
 }
 
-.language-switcher select option {
+.old-language-switcher select option {
     background: #0f1b3d;
     color: white;
 }

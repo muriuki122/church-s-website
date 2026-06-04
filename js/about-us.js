@@ -4,7 +4,7 @@ let currentLanguage = 'en';
 const translations = {
     en: {
         // Site Title
-        siteTitle: "Kaloleni Seventh day Church of Elohim",
+        siteTitle: "Church of Elohim, 7th day",
         ofElohim: "Of Elohim",
 
         // Navigation
@@ -15,7 +15,7 @@ const translations = {
         navContact: "Contact",
 
         // Hero Section
-        heroTitle: "About Kaloleni Seventh day Church of Elohim",
+        heroTitle: "About Church of Elohim, 7th day",
         heroSubtitle: "Learn about our community, worship schedule, and traditions",
         scrollDown: "Scroll Down",
 
@@ -23,7 +23,7 @@ const translations = {
         ourStory: "Our Story",
         readOurStory: "Read Our Story (PDF Book)",
         theBeginning: "The Beginning",
-        beginningText: "Kaloleni Church was established with a vision to create a vibrant community of believers dedicated to serving Elohim and spreading His message of love and salvation.",
+        beginningText: "Church of Elohim, 7th day was established with a vision to create a vibrant community of believers dedicated to serving Elohim and spreading His message of love and salvation.",
         growthExpansion: "Growth & Expansion",
         growthText: "Over the years, we have grown into a diverse congregation that welcomes people from all walks of life, united in our faith and commitment to messianic values.",
         digitalMinistry: "Digital Ministry",
@@ -130,7 +130,7 @@ const translations = {
 
     sw: {
         // Site Title
-        siteTitle: "Kanisa la Kaloleni",
+        siteTitle: "Kanisa la Church of Elohim, 7th day",
         ofElohim: "La Elohim",
 
         // Navigation
@@ -141,7 +141,7 @@ const translations = {
         navContact: "Wasiliana",
 
         // Hero Section
-        heroTitle: "Kuhusu Kanisa la Kaloleni",
+        heroTitle: "Kuhusu Kanisa la Church of Elohim, 7th day",
         heroSubtitle: "Jifunze kuhusu jamii yetu, ratiba ya ibada, na mila zetu",
         scrollDown: "Sogeza Chini",
 
@@ -149,7 +149,7 @@ const translations = {
         ourStory: "Hadithi Yetu",
         readOurStory: "Soma Hadithi Yetu (Kitabu cha PDF)",
         theBeginning: "Mwanzo",
-        beginningText: "Kanisa la Kaloleni lilianzishwa kwa maono ya kuunda jamii yenye nguvu ya waumini waliojitolea kutumikia Mungu na kueneza ujumbe wake wa upendo na wokovu.",
+        beginningText: "Kanisa la Church of Elohim, 7th day lilianzishwa kwa maono ya kuunda jamii yenye nguvu ya waumini waliojitolea kutumikia Mungu na kueneza ujumbe wake wa upendo na wokovu.",
         growthExpansion: "Ukuaji na Upanuzi",
         growthText: "Kwa miaka, tumefikia kuwa mkusanyiko wa watu mbalimbali ambao wanakaribisha watu kutoka kila mahali, wameungana katika imani yetu na kujitolea kwa maadili ya Kikristo.",
         digitalMinistry: "Huduma ya Kidijitali",
@@ -256,7 +256,7 @@ const translations = {
 
     rw: {
         // Site Title
-        siteTitle: "Itorero rya Kaloleni",
+        siteTitle: "Itorero rya Church of Elohim, 7th day",
         ofElohim: "Rya Elohim",
 
         // Navigation
@@ -267,7 +267,7 @@ const translations = {
         navContact: "Twandikire",
 
         // Hero Section
-        heroTitle: "Kuri Itorero rya Kaloleni",
+        heroTitle: "Kuri Itorero rya Church of Elohim, 7th day",
         heroSubtitle: "Wige kuri sosiyete yacu, gahunda y'isengesho, n'imigenzo yacu",
         scrollDown: "Manura Hasi",
 
@@ -275,7 +275,7 @@ const translations = {
         ourStory: "Inkuru Yacu",
         readOurStory: "Soma Inkuru Yacu (Ibitabo bya PDF)",
         theBeginning: "Intangiriro",
-        beginningText: "Itorero rya Kaloleni ryashinzwe rifite icyerekezo cyo gushinga umuryango ukomeye w'abizera biyemeje gukorera Imana no gukwirakwiza ubutumwa bwayo bw'urukundo n'agakiza.",
+        beginningText: "Itorero rya Church of Elohim, 7th day ryashinzwe rifite icyerekezo cyo gushinga umuryango ukomeye w'abizera biyemeje gukorera Imana no gukwirakwiza ubutumwa bwayo bw'urukundo n'agakiza.",
         growthExpansion: "Iterambere n'Ubwaguke",
         growthText: "Mu myaka, twakuze duhinduka itorero ry'abantu batandukanye ryakira abantu baturutse ahantu hatandukanye, bumwe mu kwizera kwacu no kwiyemeza indangagaciro z'ubukristo.",
         digitalMinistry: "Ubutumwa bwa Digitale",
@@ -407,6 +407,12 @@ function updateLanguage() {
     // Save language preference
     localStorage.setItem('preferredLanguage', currentLanguage);
 }
+   
+function setActiveLanguageButton(lang) {
+    document.querySelectorAll('.language-dropdown li').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+}
 
 // Load saved language preference
 function loadLanguagePreference() {
@@ -424,6 +430,7 @@ function loadLanguagePreference() {
 document.addEventListener('DOMContentLoaded', function () {
     loadLanguagePreference();
     updateLanguage();
+    setActiveLanguageButton(currentLanguage);
     initializeApp();
     initPDFViewer();
 });
@@ -435,9 +442,26 @@ function initializeApp() {
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
             updateLanguage();
+            setActiveLanguageButton(currentLanguage);
             const t = translations[currentLanguage];
             showNotification(`${t.languageChanged} ${e.target.options[e.target.selectedIndex].text}`);
         });
+    }
+
+    const languageButtons = document.querySelectorAll('.language-dropdown li');
+    if (languageButtons.length > 0) {
+        languageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selectedLang = btn.getAttribute('data-lang');
+                if (!selectedLang || currentLanguage === selectedLang) return;
+                currentLanguage = selectedLang;
+                updateLanguage();
+                setActiveLanguageButton(currentLanguage);
+                const t = translations[currentLanguage];
+                showNotification(`${t.languageChanged} ${btn.textContent}`);
+            });
+        });
+        setActiveLanguageButton(currentLanguage);
     }
 
     // Mobile Navigation Toggle handled by global.js

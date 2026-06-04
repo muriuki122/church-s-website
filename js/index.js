@@ -10,7 +10,7 @@ const translations = {
         "contact": "Contact",
 
         // Hero Section
-        "welcome": "Welcome to Kaloleni Seventh day Church of Elohim",
+        "welcome": "Welcome to Church of Elohim, 7th day",
         "hero-text": "Join us as we worship, learn, and grow together in Yahshuah",
         "join": "Join Our Service",
         "learn": "Learn More",
@@ -23,12 +23,12 @@ const translations = {
         "community-title": "Community",
         "community-desc": "Find a place to belong. We have various ministries for all ages to grow in faith together.",
         "visit-title": "Visit Us",
-        "visit-desc": "Join us in person at Kaloleni Estate. We have a seat saved for you every Shabbat morning.",
+        "visit-desc": "Join us in person at Church of Elohim, 7th day Estate. We have a seat saved for you every Shabbat morning.",
 
         // Featured Booklet
         "booklet-title": "New Publication",
-        "booklet-heading": "Knessiah Print Media Booklet Vol 1",
-        "booklet-desc": "Explore our latest publication detailing the mission, faith, and community of the Kaloleni Church of Elohim.",
+        "booklet-heading": "Print Media Booklet Vol 1",
+        "booklet-desc": "Explore our latest publication detailing the mission, faith, and community of the Church of Elohim, 7th day.",
         "booklet-btn": "Read the Booklet",
 
         // Upcoming Events
@@ -78,7 +78,7 @@ const translations = {
         "contact": "Wasiliana",
 
         // Hero Section
-        "welcome": "Karibu Kanisa la Kaloleni la Siku ya Saba la Elohim",
+        "welcome": "Karibu Kanisa la Church of Elohim, 7th day la Siku ya Saba la Elohim",
         "hero-text": "Jiunge nasi tunapoabudu, kujifunza, na kukua pamoja katika Yahshuah",
         "join": "Jiunge na Ibada Yetu",
         "learn": "Jifunze Zaidi",
@@ -91,12 +91,12 @@ const translations = {
         "community-title": "Jamii",
         "community-desc": "Pata mahali pa kuwa. Tuna huduma mbalimbali kwa rika zote kukua katika imani pamoja.",
         "visit-title": "Tutembelee",
-        "visit-desc": "Jiunge nasi ana kwa ana katika Kaloleni Estate. Tumekuwekea kiti kila asubuhi ya Sabato.",
+        "visit-desc": "Jiunge nasi ana kwa ana katika Church of Elohim, 7th day Estate. Tumekuwekea kiti kila asubuhi ya Sabato.",
 
         // Featured Booklet
         "booklet-title": "Toleo Jipya",
-        "booklet-heading": "Kitabu cha Knessiah Print Media Vol 1",
-        "booklet-desc": "Gundua toleo letu jipya linaloelezea dhumuni, imani, na jamii ya Kanisa la Kaloleni la Elohim.",
+        "booklet-heading": "Kitabu cha Print Media Vol 1",
+        "booklet-desc": "Gundua toleo letu jipya linaloelezea dhumuni, imani, na jamii ya Kanisa la Church of Elohim, 7th day la Elohim.",
         "booklet-btn": "Soma Kitabu",
 
         // Upcoming Events
@@ -146,7 +146,7 @@ const translations = {
         "contact": "Twandikire",
 
         // Hero Section
-        "welcome": "Murakaza neza mu Kilisiya ya Kaloleni ya ku minsi irindwi ya Elohim",
+        "welcome": "Murakaza neza mu Kilisiya ya Church of Elohim, 7th day ya ku minsi irindwi ya Elohim",
         "hero-text": "Duhagarire mu gusenga, kwiga, no kukura hamwe muri Yahshuah",
         "join": "Duhagarire mu gusenga",
         "learn": "Menya Ibindi",
@@ -159,7 +159,7 @@ const translations = {
         "community-title": "Umuryango",
         "community-desc": "Shaka aho kuba. Dufite minisiteri zitandukanye z'ingeri zose zo gukurira mu kwizera hamwe.",
         "visit-title": "Dusura",
-        "visit-desc": "Fatanya natwe imbonankubone i Kaloleni Estate. Dufite umwanya twabateguriye buri gitondo cy'Isabato.",
+        "visit-desc": "Fatanya natwe imbonankubone i Church of Elohim, 7th day Estate. Dufite umwanya twabateguriye buri gitondo cy'Isabato.",
 
         // Upcoming Events
         "upcoming": "Ibizaba",
@@ -201,7 +201,7 @@ const translations = {
 
 // Language switching functionality
 document.addEventListener('DOMContentLoaded', function () {
-    const langButtons = document.querySelectorAll('.lang-btn');
+    const langButtons = document.querySelectorAll('.language-dropdown li');
     const currentLang = localStorage.getItem('selectedLang') || 'en';
 
     // Set initial language
@@ -252,9 +252,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update page title based on language
     function updatePageTitle(lang) {
         const titles = {
-            'en': 'Kaloleni Seventh Day Church',
-            'sw': 'Kanisa la Kaloleni la Siku ya Saba',
-            'rw': 'Kilisiya ya Kaloleni ya ku minsi irindwi'
+            'en': 'Church of Elohim, 7th day',
+            'sw': 'Kanisa la Church of Elohim, 7th day la Siku ya Saba',
+            'rw': 'Kilisiya ya Church of Elohim, 7th day ya ku minsi irindwi'
         };
         if (titles[lang]) {
             document.title = titles[lang];
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const footerRights = document.querySelector('.footer-bottom p');
         if (footerRights && translations[lang] && translations[lang]['rights']) {
             const year = new Date().getFullYear();
-            footerRights.innerHTML = `&copy; ${year} Kaloleni Church of Elohim. ${translations[lang]['rights']}`;
+            footerRights.innerHTML = `&copy; ${year} Church of Elohim, 7th day. ${translations[lang]['rights']}`;
         }
 
         // Update section headings that might not use data-i18n

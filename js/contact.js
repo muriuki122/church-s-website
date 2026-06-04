@@ -1,7 +1,7 @@
 // Translation data
 const translations = {
     en: {
-        "site-name": "Kaloleni Church",
+        "site-name": "Church of Elohim, 7th day",
         "site-tagline": "Of Elohim",
         "nav-home": "Home",
         "nav-watch": "Watch Online",
@@ -11,7 +11,7 @@ const translations = {
         "hero-title": "Get In Touch",
         "hero-subtitle": "We are here to pray with you and answer any questions you may have about our ministry.",
         "card-location": "Our Location",
-        "card-address": "Kaloleni, Nairobi, Kenya",
+        "card-address": "Church of Elohim, 7th day, Nairobi, Kenya",
         "card-phone": "Call Us",
         "card-email": "Email Us",
         "card-sabbath": "Sabbath Hours",
@@ -27,20 +27,20 @@ const translations = {
         "opt-visit": "Planning a Visit",
         "opt-other": "Other",
         "btn-send": "Send Message",
-        "map-title": "Find Us in Kaloleni",
+        "map-title": "Find Us at Church of Elohim, 7th day",
         "map-subtitle": "Join us for the Sabbath service this weekend!",
         "btn-directions": "Get Directions",
-        "footer-church-name": "Kaloleni Church",
+        "footer-church-name": "Church of Elohim, 7th day",
         "footer-desc": "A spiritual home dedicated to worshiping Elohim and serving our community with love and grace.",
         "footer-quick-links": "Quick Links",
         "footer-newsletter": "Newsletter",
         "footer-newsletter-p": "Subscribe to get weekly sermon highlights.",
-        "footer-copy": "© 2026 Kaloleni Church of Elohim. All Rights Reserved.",
+        "footer-copy": "© 2026 Church of Elohim, 7th day. All Rights Reserved.",
         "bible-verse": "\"The Lord is near to all who call on him, to all who call on him in truth.\"",
         "bible-ref": "Psalm 145:18"
     },
     sw: {
-        "site-name": "Kanisa la Kaloleni",
+        "site-name": "Kanisa la Church of Elohim, 7th day",
         "site-tagline": "La Elohim",
         "nav-home": "Mwanzo",
         "nav-watch": "Tazama Mtandaoni",
@@ -50,7 +50,7 @@ const translations = {
         "hero-title": "Wasiliana Nasi",
         "hero-subtitle": "Tuko hapa kuomba nawe na kujibu maswali yoyote uliyo nayo kuhusu huduma yetu.",
         "card-location": "Mahali Petu",
-        "card-address": "Kaloleni, Nairobi, Kenya",
+        "card-address": "Church of Elohim, 7th day, Nairobi, Kenya",
         "card-phone": "Tupigie",
         "card-email": "Tutumie Barua Pepe",
         "card-sabbath": "Saa za Sabato",
@@ -66,20 +66,20 @@ const translations = {
         "opt-visit": "Kupanga Ziara",
         "opt-other": "Mengineyo",
         "btn-send": "Tuma Ujumbe",
-        "map-title": "Tupate Kaloleni",
+        "map-title": "Tupate Church of Elohim, 7th day",
         "map-subtitle": "Jiunge nasi kwa ibada ya Sabato wiki hii!",
         "btn-directions": "Pata Maelekezo",
-        "footer-church-name": "Kanisa la Kaloleni",
+        "footer-church-name": "Kanisa la Church of Elohim, 7th day",
         "footer-desc": "Nyumba ya kiroho iliyojitolea kumwabudu Elohim na kuitumikia jamii yetu kwa upendo na neema.",
         "footer-quick-links": "Viungo vya Haraka",
         "footer-newsletter": "Jarida",
         "footer-newsletter-p": "Jiandikishe kupata muhtasari wa mahubiri kila wiki.",
-        "footer-copy": "© 2026 Kanisa la Kaloleni la Elohim. Haki Zote Zimehifadhiwa.",
+        "footer-copy": "© 2026 Kanisa la Church of Elohim, 7th day la Elohim. Haki Zote Zimehifadhiwa.",
         "bible-verse": "\"Bwana yu karibu na wote wamwitao, wote wamwitao kwa uaminifu.\"",
         "bible-ref": "Zaburi 145:18"
     },
     rw: {
-        "site-name": "Itorero rya Kaloleni",
+        "site-name": "Itorero rya Church of Elohim, 7th day",
         "site-tagline": "Rya Elohim",
         "nav-home": "Ahabanza",
         "nav-watch": "Reba kuri Interineti",
@@ -89,7 +89,7 @@ const translations = {
         "hero-title": "Twandikire",
         "hero-subtitle": "Turi hano kugira ngo dusengane nawe kandi dusubize ibibazo waba ufite byose ku murimo wacu.",
         "card-location": "Aho Turerekeza",
-        "card-address": "Kaloleni, Nairobi, Kenya",
+        "card-address": "Church of Elohim, 7th day, Nairobi, Kenya",
         "card-phone": "Duhamagare",
         "card-email": "Twandikire Ibaruwa",
         "card-sabbath": "Amasaha y'Isabato",
@@ -105,15 +105,15 @@ const translations = {
         "opt-visit": "Kupanga Gusura",
         "opt-other": "Ibindi",
         "btn-send": "Ohereza Ubutumwa",
-        "map-title": "Tusange i Kaloleni",
+        "map-title": "Tusange i Church of Elohim, 7th day",
         "map-subtitle": "Fatanya natwe mu materaniro y'Isabato kuri iyi wikendi!",
         "btn-directions": "Shaka Icyerekezo",
-        "footer-church-name": "Itorero rya Kaloleni",
+        "footer-church-name": "Itorero rya Church of Elohim, 7th day",
         "footer-desc": "Urugo rw'umwuka rwiyeguriye kuramya Elohim no gukorera umuryango wacu mu rukundo n'Ubuntu.",
         "footer-quick-links": "Ihuza Rikoreshwa Cyane",
         "footer-newsletter": "Amakuru",
         "footer-newsletter-p": "Iyandikishe kugira ngo ubone incamake z'inyigisho buri cyumweru.",
-        "footer-copy": "© 2026 Itorero rya Kaloleni rya Elohim. Uburenganzira bwose burasubitswe.",
+        "footer-copy": "© 2026 Itorero rya Church of Elohim, 7th day rya Elohim. Uburenganzira bwose burasubitswe.",
         "bible-verse": "\"Uwiteka ari hafi y’abantu bose bamwambaza, abamwambaza bose mu kuri.\"",
         "bible-ref": "Zaburi 145:18"
     }
@@ -157,7 +157,16 @@ function updatePageContent(lang) {
         messageInput.placeholder = "How can we help you?";
     }
 
-    currentLangDisplay.textContent = lang.toUpperCase();
+    // Update active class on language options
+    const langOptions = document.querySelectorAll('.language-dropdown li');
+    langOptions.forEach(opt => {
+        if (opt.getAttribute('data-lang') === lang) {
+            opt.classList.add('active');
+        } else {
+            opt.classList.remove('active');
+        }
+    });
+
     localStorage.setItem('kaloleni_lang', lang);
 }
 
@@ -190,23 +199,26 @@ if (contactForm) {
             const primaryEmail = 'muriukic522@gmail.com';
             const secondaryEmail = 'stephen49km@gmail.com';
 
+            const payload = new URLSearchParams();
+            payload.append('_honey', formData.get('_honey') || '');
+            payload.append('name', name);
+            payload.append('email', email);
+            payload.append('subject', formData.get('subject') || 'General Inquiry');
+            payload.append('message', formData.get('message') || '');
+            payload.append('_replyto', email);
+            payload.append('_cc', secondaryEmail);
+            payload.append('_bcc', secondaryEmail);
+            payload.append('_subject', `Church Ministry Message from ${name}`);
+            payload.append('_template', 'table');
+            payload.append('_captcha', 'false');
+            payload.append('_autoresponse', `Shalom ${name},\n\nThank you for reaching out to the Church of Elohim, 7th day. We have received your message and our ministry team will review it shortly.\n\n"The Lord is near to all who call on him, to all who call on him in truth." - Psalm 145:18\n\nBlessings,\nChurch of Elohim, 7th day`);
+
             const response = await fetch(`https://formsubmit.co/ajax/${primaryEmail}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    subject: formData.get('subject') || 'General Inquiry',
-                    message: formData.get('message'),
-                    _subject: `Church Ministry Message from ${name}`,
-                    _cc: secondaryEmail,
-                    _template: 'table',
-                    _captcha: 'false',
-                    _autoresponse: `Shalom ${name},\n\nThank you for reaching out to the Kaloleni Seventh day Church of Elohim. We have received your message and our ministry team will review it shortly.\n\n"The Lord is near to all who call on him, to all who call on him in truth." - Psalm 145:18\n\nBlessings,\nKaloleni Church of Elohim`
-                })
+                body: payload
             });
 
             if (response.ok) {
