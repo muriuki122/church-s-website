@@ -206,6 +206,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Set initial language
     setLanguage(currentLang);
+// Sync translations with any manual HTML edits for the current language
+const syncElements = document.querySelectorAll('[data-i18n]');
+syncElements.forEach(el => {
+  const key = el.getAttribute('data-i18n');
+  if (translations[currentLang] && translations[currentLang][key]) {
+    const htmlText = el.textContent.trim();
+    if (htmlText && htmlText !== translations[currentLang][key]) {
+      translations[currentLang][key] = htmlText;
+    }
+  }
+});
 
     // Add click event listeners to language buttons
     langButtons.forEach(button => {
@@ -230,24 +241,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Apply language translations
     function setLanguage(lang) {
-        // Update all elements with data-i18n attribute
-        const elements = document.querySelectorAll('[data-i18n]');
-        elements.forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                element.textContent = translations[lang][key];
-            }
-        });
-
-        // Update page title based on language
-        updatePageTitle(lang);
-
-        // Update any placeholder texts
-        updatePlaceholders(lang);
-
-        // Update any other dynamic content
-        updateDynamicContent(lang);
-    }
+    // Language translation disabled to preserve manual HTML edits
+    // Keep the active language button highlighted
+    setActiveLanguageButton(lang);
+}
 
     // Update page title based on language
     function updatePageTitle(lang) {
