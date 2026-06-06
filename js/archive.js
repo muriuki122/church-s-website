@@ -217,23 +217,24 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
-    function getDocumentPath(doc) {
-    // Return the appropriate PDF path, ensuring it's absolute for both local and live environments
-    let path = '';
+function getDocumentPath(doc) {
+    // Return explicit URL if provided
     if (doc.pdfUrl) {
-        path = doc.pdfUrl;
-    } else if (doc.fileName) {
-        path = doc.fileName;
-    } else {
-        // Fallback to a PDF named after the title
-        path = `pdfs/${doc.title}.pdf`;
+        return doc.pdfUrl;
     }
-    // Ensure the path starts with a slash (relative to domain root) unless it's a full URL
-    if (!path.startsWith('http') && !path.startsWith('/')) {
-        path = '/' + path;
+
+    // If fileName is provided, use it; ensure it is a relative path
+    if (doc.fileName) {
+        // If the fileName already contains a folder, use as is; otherwise prepend pdfs/
+        return doc.fileName.includes('/') ? doc.fileName : `pdfs/${doc.fileName}`;
     }
-    return path;
-}
+
+    // Fallback: construct a filename from the title, sanitizing for URLs
+    const sanitizedTitle = doc.title
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zA-Z0-9\-\.]/g, '');
+    return `pdfs/${sanitizedTitle}.pdf`;
+};
 
     // --- 5. YOUR REAL DOCUMENT DATA ---
     function getDocumentData() {
@@ -418,19 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navContact = document.querySelector('a[href="contact.html"]');
 
     // --- 8. INITIALIZATION ---
-    async function init() {
-        // Setup UI basics
-        populateCategories();
-        setupEventListeners();
-        setupAdminLogic();
-        updateLanguage();
-
-        // Load and render documents
-        await initializeDocuments();
-
-        // Optional sidebar init
-        handleLessonFilterChange();
-    }
+    
 
     // --- 9. EVENT LISTENERS ---
     function setupEventListeners() {
@@ -518,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mainSearchInput || !categoryFilter) return;
 
         const query = (mainSearchInput.value || '').toLowerCase().trim();
-        const category = categoryFilter.value;
+        const category = (categoryFilter.value || 'all').toLowerCase().trim();
 
         // Perform fast local filtering first
         mainFilteredDocuments = allDocuments.filter(doc => {
@@ -1699,7 +1688,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Start the application
+    // Initialize the application
+    async function init() {
+        // Setup UI basics
+        populateCategories();
+        setupEventListeners();
+        setupAdminLogic();
+        updateLanguage();
+
+        // Load and render documents
+        await initializeDocuments();
+        renderPage(1);
+
+        // Optional sidebar init
+        handleLessonFilterChange();
+    }
     loadPreferences();
     loadSavedLessons();
     init();
