@@ -218,24 +218,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
     function getDocumentPath(doc) {
-        // If it's a lesson with pdfUrl
-        if (doc.pdfUrl) {
-            // Already includes folder path in most cases
-            return doc.pdfUrl;
-        }
-
-        if (doc.fileName) {
-            // Check if the fileName already includes a folder path (tracks/ or judah/)
-            if (doc.fileName.includes('/')) {
-                return doc.fileName;
-            }
-            // Fallback to pdfs/ for books
-            return `pdfs/${doc.fileName}`;
-        }
-
-        // Fallback or full path
-        return doc.path || `pdfs/${doc.title}.pdf`;
+    // Return the appropriate PDF path, ensuring it's absolute for both local and live environments
+    let path = '';
+    if (doc.pdfUrl) {
+        path = doc.pdfUrl;
+    } else if (doc.fileName) {
+        path = doc.fileName;
+    } else {
+        // Fallback to a PDF named after the title
+        path = `pdfs/${doc.title}.pdf`;
     }
+    // Ensure the path starts with a slash (relative to domain root) unless it's a full URL
+    if (!path.startsWith('http') && !path.startsWith('/')) {
+        path = '/' + path;
+    }
+    return path;
+}
 
     // --- 5. YOUR REAL DOCUMENT DATA ---
     function getDocumentData() {

@@ -239,9 +239,19 @@ syncElements.forEach(el => {
         });
     }
 
-    // Apply language translations
     function setLanguage(lang) {
-    // Language translation disabled to preserve manual HTML edits
+    // Apply translations to elements with data-i18n
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            el.textContent = translations[lang][key];
+        }
+    });
+    // Update page title, placeholders, and other dynamic content
+    updatePageTitle(lang);
+    updatePlaceholders(lang);
+    updateDynamicContent(lang);
     // Keep the active language button highlighted
     setActiveLanguageButton(lang);
 }
