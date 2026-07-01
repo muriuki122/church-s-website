@@ -19,11 +19,11 @@ const translations = {
         "new-here-title": "New Here?",
         "new-here-desc": "We'd love to welcome you to our community. Here's what you can expect.",
         "mission-title": "Our Mission",
-        "mission-desc": "To share the love of Elohim and the message of Yahshuah with our community through service and truth.",
+        "mission-desc": "To share the love of Elohim and the message of Yahshuah within our community through service and truth.",
         "community-title": "Community",
         "community-desc": "Find a place to belong. We have various ministries for all ages to grow in faith together.",
         "visit-title": "Visit Us",
-        "visit-desc": "Join us in person at Church of Elohim, 7th day Estate. We have a seat saved for you every Shabbat morning.",
+        "visit-desc": "Join us in person at Church of Elohim, 7th day Church. We have a seat saved for you every Shabbat morning.",
 
         // Featured Booklet
         "booklet-title": "New Publication",
@@ -38,7 +38,6 @@ const translations = {
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Saturday, 9:00 AM - 4:00 PM",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
-
 
         "view-all": "View All Events",
 
@@ -79,7 +78,7 @@ const translations = {
 
         // Hero Section
         "welcome": "Karibu Kanisa la Church of Elohim, 7th day la Siku ya Saba la Elohim",
-        "hero-text": "Jiunge nasi tunapoabudu, kujifunza, na kukua pamoja katika Yahshuah",
+        "hero-text": "Jiunge nasi tunaapoabudu, kujifunza, na kukua pamoja katika Yahshuah",
         "join": "Jiunge na Ibada Yetu",
         "learn": "Jifunze Zaidi",
 
@@ -91,7 +90,7 @@ const translations = {
         "community-title": "Jamii",
         "community-desc": "Pata mahali pa kuwa. Tuna huduma mbalimbali kwa rika zote kukua katika imani pamoja.",
         "visit-title": "Tutembelee",
-        "visit-desc": "Jiunge nasi ana kwa ana katika Church of Elohim, 7th day Estate. Tumekuwekea kiti kila asubuhi ya Sabato.",
+        "visit-desc": "Jiunge nasi ana kwa ana katika Church of Elohim, 7th day. Tumekuwekea kiti kila asubuhi ya Sabato.",
 
         // Featured Booklet
         "booklet-title": "Toleo Jipya",
@@ -106,7 +105,6 @@ const translations = {
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Jumamosi, saa 3:00 asubuhi - saa 10:00 jioni",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
-
 
         "view-all": "Tazama Matukio Yote",
 
@@ -147,7 +145,7 @@ const translations = {
 
         // Hero Section
         "welcome": "Murakaza neza mu Kilisiya ya Church of Elohim, 7th day ya ku minsi irindwi ya Elohim",
-        "hero-text": "Duhagarire mu gusenga, kwiga, no kukura hamwe muri Yahshuah",
+        "hero-text": "Duhagarire mu gusenga, kwiga, no gukura hamwe muri Yahshuah",
         "join": "Duhagarire mu gusenga",
         "learn": "Menya Ibindi",
 
@@ -159,7 +157,7 @@ const translations = {
         "community-title": "Umuryango",
         "community-desc": "Shaka aho kuba. Dufite minisiteri zitandukanye z'ingeri zose zo gukurira mu kwizera hamwe.",
         "visit-title": "Dusura",
-        "visit-desc": "Fatanya natwe imbonankubone i Church of Elohim, 7th day Estate. Dufite umwanya twabateguriye buri gitondo cy'Isabato.",
+        "visit-desc": "Fatanya natwe imbonankubone i Church of Elohim, 7th day. Dufite umwanya twabateguriye buri gitondo cy'Isabato.",
 
         // Upcoming Events
         "upcoming": "Ibizaba",
@@ -168,7 +166,6 @@ const translations = {
         "event1-title": "Rest, spiritual renewal, and memorial of creation",
         "event1-time": "Kuwa gatandatu, saa 3:00 z'umutaga - saa 10:00 z'umugoroba",
         "event1-desc": "The Bible, the whole Bible, and nothing but the Bible.",
-
 
         "view-all": "Reba Ibizaba Byose",
 
@@ -204,31 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const langButtons = document.querySelectorAll('.language-dropdown li');
     const currentLang = localStorage.getItem('selectedLang') || 'en';
 
-    // Set initial language
-    setLanguage(currentLang);
-// Sync translations with any manual HTML edits for the current language
-const syncElements = document.querySelectorAll('[data-i18n]');
-syncElements.forEach(el => {
-  const key = el.getAttribute('data-i18n');
-  if (translations[currentLang] && translations[currentLang][key]) {
-    const htmlText = el.textContent.trim();
-    if (htmlText && htmlText !== translations[currentLang][key]) {
-      translations[currentLang][key] = htmlText;
-    }
-  }
-});
-
-    // Add click event listeners to language buttons
-    langButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const selectedLang = this.getAttribute('data-lang');
-            setLanguage(selectedLang);
-            setActiveLanguageButton(selectedLang);
-            localStorage.setItem('selectedLang', selectedLang);
-        });
-    });
-
-    // Set active language button
+    // Define setActiveLanguageButton function BEFORE it's used
     function setActiveLanguageButton(lang) {
         langButtons.forEach(button => {
             if (button.getAttribute('data-lang') === lang) {
@@ -239,22 +212,47 @@ syncElements.forEach(el => {
         });
     }
 
+    // Define setLanguage function
     function setLanguage(lang) {
-    // Apply translations to elements with data-i18n
-    const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(el => {
+        // Apply translations to elements with data-i18n
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                el.textContent = translations[lang][key];
+            }
+        });
+        // Update page title, placeholders, and other dynamic content
+        updatePageTitle(lang);
+        updatePlaceholders(lang);
+        updateDynamicContent(lang);
+        // Keep the active language button highlighted
+        setActiveLanguageButton(lang);
+    }
+
+    // Set initial language
+    setLanguage(currentLang);
+    
+    // Sync translations with any manual HTML edits for the current language
+    const syncElements = document.querySelectorAll('[data-i18n]');
+    syncElements.forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) {
-            el.textContent = translations[lang][key];
+        if (translations[currentLang] && translations[currentLang][key]) {
+            const htmlText = el.textContent.trim();
+            if (htmlText && htmlText !== translations[currentLang][key]) {
+                translations[currentLang][key] = htmlText;
+            }
         }
     });
-    // Update page title, placeholders, and other dynamic content
-    updatePageTitle(lang);
-    updatePlaceholders(lang);
-    updateDynamicContent(lang);
-    // Keep the active language button highlighted
-    setActiveLanguageButton(lang);
-}
+
+    // Add click event listeners to language buttons
+    langButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const selectedLang = this.getAttribute('data-lang');
+            setLanguage(selectedLang);
+            localStorage.setItem('selectedLang', selectedLang);
+        });
+    });
 
     // Update page title based on language
     function updatePageTitle(lang) {
@@ -315,6 +313,9 @@ syncElements.forEach(el => {
 
 // Smooth scrolling for anchor links
 document.addEventListener('DOMContentLoaded', function () {
+    // Define anchorLinks properly
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    
     anchorLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -325,7 +326,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     e.preventDefault();
                     const targetElement = document.getElementById('watch-online-section');
                     if (targetElement) {
-                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const header = document.querySelector('.header');
+                        const headerHeight = header ? header.offsetHeight : 0;
                         const targetPosition = targetElement.offsetTop - headerHeight - 20;
 
                         window.scrollTo({
@@ -352,7 +354,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const header = document.querySelector('.header');
+                    const headerHeight = header ? header.offsetHeight : 0;
                     const targetPosition = targetElement.offsetTop - headerHeight - 20;
 
                     window.scrollTo({
