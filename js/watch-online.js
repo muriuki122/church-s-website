@@ -306,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let player;
 const youtubeSearchInput = document.getElementById('youtube-search-input');
 const youtubeSearchBtn = document.getElementById('youtube-search-btn');
-const videoPlayerFrame = document.querySelector('.stream-player iframe');
 const muteToggleBtn = document.getElementById('btn-mute-toggle');
 const muteText = document.getElementById('mute-text');
 
@@ -315,9 +314,21 @@ const UPLOADS_PLAYLIST_ID = 'UURlkkd6Koyi5biTO8W7eRaQ';
 
 // YouTube IFrame API initialization
 window.onYouTubeIframeAPIReady = function () {
-    player = new YT.Player(videoPlayerFrame, {
+    player = new YT.Player('yt-player', {
+        width: '100%',
+        height: '100%',
+        playerVars: {
+            listType: 'playlist',
+            list: UPLOADS_PLAYLIST_ID,
+            autoplay: 1,
+            mute: 1,
+            rel: 0,
+            modestbranding: 1,
+            origin: window.location.origin
+        },
         events: {
-            'onReady': onPlayerReady
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
         }
     });
 };
@@ -327,29 +338,42 @@ function onPlayerReady(event) {
     updateMuteUI();
 }
 
+function onPlayerStateChange(event) {
+    // Keep UI in sync when user interacts with the player directly
+    updateMuteUI();
+}
+
 // Volume Slider Logic
 const volumeSlider = document.getElementById('volume-slider');
 
 function updateMuteUI() {
-    if (!player || !muteToggleBtn) return;
-    const isMuted = player.isMuted();
-    const currentVolume = player.getVolume();
+    if (!player || typeof player.isMuted !== 'function') return;
+    try {
+        const isMuted = player.isMuted();
+        const currentVolume = player.getVolume();
 
-    const icon = muteToggleBtn.querySelector('i');
-    if (isMuted || currentVolume === 0) {
-        icon.className = 'fas fa-volume-mute';
-        muteText.textContent = 'Unmute';
-        if (volumeSlider) volumeSlider.value = 0;
-    } else {
-        icon.className = 'fas fa-volume-up';
-        muteText.textContent = 'Mute';
-        if (volumeSlider) volumeSlider.value = currentVolume;
+        const icon = muteToggleBtn.querySelector('i');
+        if (isMuted || currentVolume === 0) {
+            icon.className = 'fas fa-volume-mute';
+            muteText.textContent = 'Unmute';
+            if (volumeSlider) volumeSlider.value = 0;
+        } else if (currentVolume < 50) {
+            icon.className = 'fas fa-volume-down';
+            muteText.textContent = 'Mute';
+            if (volumeSlider) volumeSlider.value = currentVolume;
+        } else {
+            icon.className = 'fas fa-volume-up';
+            muteText.textContent = 'Mute';
+            if (volumeSlider) volumeSlider.value = currentVolume;
+        }
+    } catch (e) {
+        console.warn('Could not update mute UI:', e);
     }
 }
 
 if (muteToggleBtn) {
     muteToggleBtn.addEventListener('click', () => {
-        if (!player) return;
+        if (!player || typeof player.isMuted !== 'function') return;
         if (player.isMuted()) {
             player.unMute();
             if (player.getVolume() === 0) player.setVolume(50);
@@ -362,7 +386,7 @@ if (muteToggleBtn) {
 
 if (volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
-        if (!player) return;
+        if (!player || typeof player.setVolume !== 'function') return;
         const vol = parseInt(e.target.value);
         player.setVolume(vol);
         if (vol > 0 && player.isMuted()) {
@@ -428,16 +452,13 @@ function createSermonCard(sermon) {
 }
 
 window.playSermon = function (videoId) {
-    if (player && player.loadVideoById) {
+    if (player && typeof player.loadVideoById === 'function') {
         player.loadVideoById(videoId);
         document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
         // update current index for cycling
         const idx = sermonData.findIndex(s => s.id === videoId);
         if (idx >= 0) currentSermonIndex = idx;
         showToast("Playing: " + videoId);
-    } else if (videoPlayerFrame) {
-        videoPlayerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
     }
 };
 
@@ -461,17 +482,22 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-if (youtubeSearchBtn && youtubeSearchInput && videoPlayerFrame) {
+if (youtubeSearchBtn && youtubeSearchInput) {
     youtubeSearchBtn.addEventListener('click', () => {
         const query = youtubeSearchInput.value.trim();
         const t = translations[currentLanguage];
-        if (query) {
-            const searchQuery = encodeURIComponent('Church of Elohim, 7th day ' + query);
-            videoPlayerFrame.src = `https://www.youtube.com/embed?listType=search&list=${searchQuery}&autoplay=1`;
-            showToast(t.toastSearching + ' ' + query);
-        } else {
-            videoPlayerFrame.src = `https://www.youtube.com/embed/videoseries?list=${UPLOADS_PLAYLIST_ID}&autoplay=1`;
-            showToast(t.toastShowingVideos);
+        if (player && typeof player.cuePlaylist === 'function') {
+            if (query) {
+                // Load search results as a playlist
+                const searchQuery = 'Church of Elohim, 7th day ' + query;
+                player.cuePlaylist({ listType: 'search', list: searchQuery });
+                player.playVideo();
+                showToast(t.toastSearching + ' ' + query);
+            } else {
+                player.cuePlaylist({ listType: 'playlist', list: UPLOADS_PLAYLIST_ID });
+                player.playVideo();
+                showToast(t.toastShowingVideos);
+            }
         }
     });
 
@@ -484,11 +510,14 @@ if (youtubeSearchBtn && youtubeSearchInput && videoPlayerFrame) {
 
 // Quick Browse Functionality
 const browseBtns = document.querySelectorAll('.btn-browse');
-if (browseBtns.length > 0 && videoPlayerFrame) {
+if (browseBtns.length > 0) {
     browseBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const t = translations[currentLanguage];
-            videoPlayerFrame.src = `https://www.youtube.com/embed/videoseries?list=${UPLOADS_PLAYLIST_ID}&autoplay=1`;
+            if (player && typeof player.cuePlaylist === 'function') {
+                player.cuePlaylist({ listType: 'playlist', list: UPLOADS_PLAYLIST_ID });
+                player.playVideo();
+            }
             document.querySelector('.stream-player').scrollIntoView({ behavior: 'smooth' });
             showToast(t.toastLoading + ' ' + btn.textContent.trim() + '...');
         });
@@ -592,11 +621,10 @@ if (checkLiveBtn) {
         const minute = now.getMinutes();
         const timeInDecimal = hour + (minute / 60);
 
-        const videoPlayerFrame = document.querySelector('.stream-player iframe');
         if ((day === 5 && timeInDecimal >= 18.5) || (day === 6 && timeInDecimal >= 9 && timeInDecimal < 16)) {
             // If it's live time, switch to live stream
-            if (videoPlayerFrame) {
-                videoPlayerFrame.src = `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
+            if (player && typeof player.loadVideoByUrl === 'function') {
+                player.loadVideoByUrl(`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}`);
             }
         } else {
             // Not live - cycle to the next sermon in the list
@@ -638,7 +666,6 @@ function updateStreamStatus() {
     const liveBadge = document.querySelector('.live-badge');
     const streamStatus = document.querySelector('.stream-status h3');
     const sermonTitle = document.querySelector('.sermon-title');
-    const videoPlayerFrame = document.querySelector('.stream-player iframe');
     const t = translations[currentLanguage];
 
     const now = new Date();
@@ -668,20 +695,20 @@ function updateStreamStatus() {
             if (streamStatus) streamStatus.textContent = serviceName;
             if (sermonTitle) sermonTitle.textContent = serviceStatusText;
 
-            const liveEmbedUrl = `https://www.youtube.com/embed/live?channel=${CHANNEL_ID}&autoplay=1&mute=1`;
-
-            if (videoPlayerFrame && !videoPlayerFrame.src.includes('embed/live')) {
-                videoPlayerFrame.src = liveEmbedUrl;
+            // Switch to live stream via the API
+            if (player && typeof player.loadVideoByUrl === 'function') {
+                try {
+                    const currentUrl = player.getVideoUrl ? player.getVideoUrl() : '';
+                    if (!currentUrl.includes('live')) {
+                        player.loadVideoByUrl(`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}`);
+                    }
+                } catch (e) { /* player not ready yet */ }
             }
         } else {
             liveBadge.innerHTML = '<i class="fas fa-circle"></i> OFFLINE';
             liveBadge.style.background = 'linear-gradient(135deg, #6c757d 0%, #495057 100%)';
             if (streamStatus) streamStatus.textContent = 'Service Not Currently Live';
             if (sermonTitle) sermonTitle.textContent = 'Browse our songs and activities below or visit our archives';
-
-            if (videoPlayerFrame && videoPlayerFrame.src.includes('embed/live')) {
-                videoPlayerFrame.src = `https://www.youtube.com/embed/videoseries?list=${UPLOADS_PLAYLIST_ID}&autoplay=0`;
-            }
         }
     }
 }

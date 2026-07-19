@@ -502,7 +502,8 @@ header .container {
     width: 100%;
 }
 
-.stream-player iframe {
+.stream-player iframe,
+.stream-player #yt-player {
     width: 100%;
     aspect-ratio: 16 / 9;
     height: auto;
