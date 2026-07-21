@@ -19,7 +19,7 @@ const translations = {
         "new-here-title": "New Here?",
         "new-here-desc": "We'd love to welcome you to our community. Here's what you can expect.",
         "mission-title": "Our Mission",
-        "mission-desc": "To share the love of Elohim and the message of Yahshuah within our community through service and truth.",
+        "mission-desc": "To share the love and truth of Elohim and his salvation through Yahshuah to all communities ",
         "community-title": "Community",
         "community-desc": "Find a place to belong. We have various ministries for all ages to grow in faith together.",
         "visit-title": "Visit Us",
@@ -426,17 +426,34 @@ document.addEventListener('DOMContentLoaded', function () {
 // Compact PDF Viewer Logic
 function initLiteViewer() {
     const modal = document.getElementById('liteModal');
-    const iframe = document.getElementById('liteIframe');
+    const viewerContainer = document.getElementById('litePdfViewer');
+    const toolbar = document.getElementById('litePdfToolbar');
     const closeBtn = document.getElementById('liteClose');
     const triggers = document.querySelectorAll('.lite-trigger');
+    let litePdfViewer = null;
 
-    if (!modal || !iframe || !closeBtn) return;
+    if (!modal || !viewerContainer || !toolbar || !closeBtn) return;
+
+    const shouldOpenPdfDirectly = () => {
+        return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+    };
 
     triggers.forEach(trigger => {
+        trigger.setAttribute('target', '_blank');
+        trigger.setAttribute('rel', 'noopener');
+
         trigger.addEventListener('click', function (e) {
+            if (shouldOpenPdfDirectly()) {
+                return;
+            }
+
             e.preventDefault();
             const url = this.getAttribute('href');
-            iframe.src = url;
+            if (litePdfViewer) {
+                litePdfViewer.destroy();
+            }
+            litePdfViewer = new PDFViewer('litePdfViewer', 'litePdfToolbar');
+            litePdfViewer.loadPDF(url);
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
         });
@@ -446,7 +463,10 @@ function initLiteViewer() {
         modal.classList.remove('show');
         document.body.style.overflow = '';
         setTimeout(() => {
-            if (iframe) iframe.src = '';
+            if (litePdfViewer) {
+                litePdfViewer.destroy();
+                litePdfViewer = null;
+            }
         }, 300);
     };
 

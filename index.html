@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Church of Elohim, 7th day</title>
     <meta name="description"
@@ -81,7 +82,7 @@
                 <div class="event-card">
                     <div class="event-details">
                         <h3 data-i18n="mission-title"><i class="fas fa-heart"></i> Our Mission</h3>
-                        <p data-i18n="mission-desc">To share the love of Elohim and his message of salvation through Yahshuah to all communities near and far</p>
+                        <p data-i18n="mission-desc">To share the love and truth of Elohim and his salvation through Yahshuah to all communities </p>
                     </div>
                 </div>
                 <div class="event-card">
@@ -310,8 +311,9 @@
             <button id="liteClose" class="lite-close" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
+            <div id="litePdfToolbar" class="pdf-toolbar"></div>
             <div class="lite-iframe-container">
-                <iframe id="liteIframe" src="" title="PDF Viewer"></iframe>
+                <div id="litePdfViewer" class="lite-pdf-viewer" title="PDF Viewer"></div>
             </div>
         </div>
     </div>
@@ -319,6 +321,11 @@
     <button id="backToTop" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="js/pdf-viewer.js"></script>
     <script src="js/index.js"></script>
     <script src="js/global.js"></script>
 </body>

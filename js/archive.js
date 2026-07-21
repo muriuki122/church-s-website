@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- 4. HELPER FUNCTION TO GET CORRECT DOCUMENT PATH ---
-function getDocumentPath(doc) {
+    function getDocumentPath(doc) {
     // Return explicit URL if provided
     if (doc.pdfUrl) {
         return doc.pdfUrl;
@@ -235,6 +235,14 @@ function getDocumentPath(doc) {
         .replace(/[^a-zA-Z0-9\-\.]/g, '');
     return `pdfs/${sanitizedTitle}.pdf`;
 };
+
+    function shouldOpenPdfDirectly() {
+        return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+    }
+
+    function openPdfDirectly(pdfPath) {
+        window.open(encodeURI(pdfPath), '_blank', 'noopener');
+    }
 
     // --- 5. YOUR REAL DOCUMENT DATA ---
     function getDocumentData() {
@@ -1142,21 +1150,31 @@ function getDocumentPath(doc) {
 
         currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
 
-        // Initialize using extremely fast native Iframe instead of slow canvas
-        const viewerContainer = document.getElementById('pdf-viewer');
+        if (shouldOpenPdfDirectly()) {
+            openPdfDirectly(pdfPath);
+            showNotification(`Opening: ${doc.title}`, 'info');
+            return;
+        }
+
+        // Render every page into one scrollable viewer for mobile and Edge support.
         const toolbar = document.getElementById('pdf-toolbar');
 
         modalTitle.textContent = doc.title;
 
-        // Hide custom toolbar to prioritize native viewer
-        if (toolbar) toolbar.style.display = 'none';
+        if (toolbar) toolbar.style.display = 'flex';
 
-        // Load the PDF instantly using native browser PDF engine
-        viewerContainer.innerHTML = `<iframe src="${pdfPath}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
+        if (pdfViewerInstance) {
+            pdfViewerInstance.destroy();
+        }
+        pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
+        pdfViewerInstance.loadPDF(pdfPath);
 
         // Set download links
         modalDownload.href = pdfPath;
         modalDownload.download = doc.fileName || doc.title;
+        if (modalExternal) {
+            modalExternal.href = pdfPath;
+        }
 
         updateModalNavigation();
 
@@ -1180,20 +1198,30 @@ function getDocumentPath(doc) {
         // Set the current preview index to -1 to disable navigation
         currentPreviewIndex = -1;
 
-        // Use fast native browser iframe
-        const viewerContainer = document.getElementById('pdf-viewer');
+        if (shouldOpenPdfDirectly()) {
+            openPdfDirectly(pdfPath);
+            showNotification(`Opening: ${lesson.title}`, 'info');
+            return;
+        }
+
         const toolbar = document.getElementById('pdf-toolbar');
 
         modalTitle.textContent = lesson.title;
 
-        if (toolbar) toolbar.style.display = 'none';
+        if (toolbar) toolbar.style.display = 'flex';
 
-        // Load naturally
-        viewerContainer.innerHTML = `<iframe src="${pdfPath}#toolbar=0&view=FitH" width="100%" height="100%" style="border:none; border-radius: 4px;"></iframe>`;
+        if (pdfViewerInstance) {
+            pdfViewerInstance.destroy();
+        }
+        pdfViewerInstance = new PDFViewer('pdf-viewer', 'pdf-toolbar');
+        pdfViewerInstance.loadPDF(pdfPath);
 
         // Set download links
         modalDownload.href = pdfPath;
         modalDownload.download = lesson.title;
+        if (modalExternal) {
+            modalExternal.href = pdfPath;
+        }
 
         // Update navigation buttons (disable them for lessons)
         updateModalNavigation();
@@ -1207,9 +1235,10 @@ function getDocumentPath(doc) {
     function closeModal() {
         modal.classList.remove('visible');
 
-        // Clear native iframe to stop background tasks
-        const viewerContainer = document.getElementById('pdf-viewer');
-        if (viewerContainer) viewerContainer.innerHTML = '';
+        if (pdfViewerInstance) {
+            pdfViewerInstance.destroy();
+            pdfViewerInstance = null;
+        }
 
         document.body.style.overflow = '';
         currentPreviewIndex = -1;
