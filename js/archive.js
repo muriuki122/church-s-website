@@ -236,14 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return `pdfs/${sanitizedTitle}.pdf`;
 };
 
-    function shouldOpenPdfDirectly() {
-        return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
-    }
-
-    function openPdfDirectly(pdfPath) {
-        window.open(encodeURI(pdfPath), '_blank', 'noopener');
-    }
-
     // --- 5. YOUR REAL DOCUMENT DATA ---
     function getDocumentData() {
         return [
@@ -1150,13 +1142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentPreviewIndex = mainFilteredDocuments.findIndex(d => d.id === docId);
 
-        if (shouldOpenPdfDirectly()) {
-            openPdfDirectly(pdfPath);
-            showNotification(`Opening: ${doc.title}`, 'info');
-            return;
-        }
-
-        // Render every page into one scrollable viewer for mobile and Edge support.
+        // Use the shared PDF.js viewer; it switches to page-by-page mode on mobile.
         const toolbar = document.getElementById('pdf-toolbar');
 
         modalTitle.textContent = doc.title;
@@ -1197,12 +1183,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set the current preview index to -1 to disable navigation
         currentPreviewIndex = -1;
-
-        if (shouldOpenPdfDirectly()) {
-            openPdfDirectly(pdfPath);
-            showNotification(`Opening: ${lesson.title}`, 'info');
-            return;
-        }
 
         const toolbar = document.getElementById('pdf-toolbar');
 

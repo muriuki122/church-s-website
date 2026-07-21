@@ -10,6 +10,7 @@ class PDFViewer {
         this.scale = 1;
         this.resizeTimeout = null;
         this.renderToken = 0;
+        this.pagedMode = false;
 
         if (!this.container) return;
 
@@ -80,9 +81,13 @@ class PDFViewer {
         window.addEventListener('resize', () => {
             if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(() => {
-                if (this.pdfDoc) this.renderAllPages();
+                if (this.pdfDoc) this.renderDocument();
             }, 300);
         });
+    }
+
+    shouldUsePagedMode() {
+        return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
     }
 
     ensurePDFJS() {
@@ -126,6 +131,7 @@ class PDFViewer {
             this.numPages = this.pdfDoc.numPages;
             this.pageNum = 1;
             this.currentPDF = url;
+            this.pagedMode = this.shouldUsePagedMode();
 
             const downloadBtn = document.getElementById('pdf-download');
             const openBtn = document.getElementById('pdf-open');
@@ -143,7 +149,7 @@ class PDFViewer {
                 };
             }
 
-            await this.renderAllPages();
+            await this.renderDocument();
             this.updateControls();
             this.hideLoading();
         } catch (error) {
@@ -151,6 +157,45 @@ class PDFViewer {
             this.showError('Failed to load the full PDF. Please download or open it in a new tab.');
             this.hideLoading();
         }
+    }
+
+    async renderDocument() {
+        this.pagedMode = this.shouldUsePagedMode();
+
+        if (this.pagedMode) {
+            await this.renderSinglePage(this.pageNum || 1);
+            return;
+        }
+
+        await this.renderAllPages();
+    }
+
+    async renderSinglePage(num) {
+        if (!this.pdfDoc || !this.pagesWrapper) return;
+
+        const token = ++this.renderToken;
+        const pageNumber = Math.min(Math.max(num, 1), this.numPages);
+
+        this.pageNum = pageNumber;
+        this.pagesWrapper.innerHTML = '';
+        this.showLoading(`Loading page ${pageNumber} of ${this.numPages}...`);
+
+        const pageShell = document.createElement('section');
+        pageShell.className = 'pdf-page-shell';
+        pageShell.dataset.pageNumber = String(pageNumber);
+        pageShell.setAttribute('aria-label', `Page ${pageNumber} of ${this.numPages}`);
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page-canvas';
+        pageShell.appendChild(canvas);
+        this.pagesWrapper.appendChild(pageShell);
+
+        await this.renderPageToCanvas(pageNumber, canvas);
+        if (token !== this.renderToken) return;
+
+        this.container.scrollTop = 0;
+        this.hideLoading();
+        this.updateControls();
     }
 
     async renderAllPages() {
@@ -210,6 +255,11 @@ class PDFViewer {
     scrollToPage(num) {
         if (!this.pagesWrapper || num < 1 || num > this.numPages) return;
 
+        if (this.pagedMode) {
+            this.renderSinglePage(num);
+            return;
+        }
+
         const page = this.pagesWrapper.querySelector(`[data-page-number="${num}"]`);
         if (!page) return;
 
@@ -219,6 +269,7 @@ class PDFViewer {
     }
 
     updateCurrentPageFromScroll() {
+        if (this.pagedMode) return;
         if (!this.pagesWrapper) return;
 
         const pages = Array.from(this.pagesWrapper.querySelectorAll('.pdf-page-shell'));
@@ -245,13 +296,13 @@ class PDFViewer {
     async zoomIn() {
         if (this.scale >= 2.5) return;
         this.scale += 0.25;
-        await this.renderAllPages();
+        await this.renderDocument();
     }
 
     async zoomOut() {
         if (this.scale <= 0.5) return;
         this.scale -= 0.25;
-        await this.renderAllPages();
+        await this.renderDocument();
     }
 
     updateControls() {

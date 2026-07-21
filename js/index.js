@@ -434,19 +434,8 @@ function initLiteViewer() {
 
     if (!modal || !viewerContainer || !toolbar || !closeBtn) return;
 
-    const shouldOpenPdfDirectly = () => {
-        return window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
-    };
-
     triggers.forEach(trigger => {
-        trigger.setAttribute('target', '_blank');
-        trigger.setAttribute('rel', 'noopener');
-
         trigger.addEventListener('click', function (e) {
-            if (shouldOpenPdfDirectly()) {
-                return;
-            }
-
             e.preventDefault();
             const url = this.getAttribute('href');
             if (litePdfViewer) {
