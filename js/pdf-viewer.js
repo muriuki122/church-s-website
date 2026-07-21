@@ -118,6 +118,10 @@ class PDFViewer {
     async loadPDF(url) {
         const loaded = await this.waitForPDFJS();
         if (!loaded) {
+            if (typeof this.onError === 'function') {
+                this.onError(url);
+                return;
+            }
             this.showError('PDF viewer is still loading. Please use Download/Open PDF.');
             return;
         }
@@ -154,6 +158,10 @@ class PDFViewer {
             this.hideLoading();
         } catch (error) {
             console.error('Error loading PDF:', error);
+            if (typeof this.onError === 'function') {
+                this.onError(url, error);
+                return;
+            }
             this.showError('Failed to load the full PDF. Please download or open it in a new tab.');
             this.hideLoading();
         }

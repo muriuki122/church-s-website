@@ -434,17 +434,39 @@ function initLiteViewer() {
 
     if (!modal || !viewerContainer || !toolbar || !closeBtn) return;
 
+    const showFallbackViewer = (url) => {
+        toolbar.innerHTML = '';
+        viewerContainer.innerHTML = `
+            <iframe src="${encodeURI(url)}#view=FitH&page=1" title="PDF Viewer"></iframe>
+        `;
+    };
+
     triggers.forEach(trigger => {
         trigger.addEventListener('click', function (e) {
             e.preventDefault();
             const url = this.getAttribute('href');
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            viewerContainer.innerHTML = '<div class="pdf-viewer-loader inline-loader"><i class="fas fa-spinner fa-spin"></i> <span>Opening document...</span></div>';
+
             if (litePdfViewer) {
                 litePdfViewer.destroy();
             }
-            litePdfViewer = new PDFViewer('litePdfViewer', 'litePdfToolbar');
-            litePdfViewer.loadPDF(url);
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+
+            if (typeof PDFViewer !== 'function') {
+                showFallbackViewer(url);
+                return;
+            }
+
+            try {
+                litePdfViewer = new PDFViewer('litePdfViewer', 'litePdfToolbar');
+                litePdfViewer.onError = () => showFallbackViewer(url);
+                litePdfViewer.loadPDF(url);
+            } catch (error) {
+                console.error('Home PDF viewer failed:', error);
+                showFallbackViewer(url);
+            }
         });
     });
 
